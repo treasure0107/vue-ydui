@@ -1,0 +1,160 @@
+<template>
+  <div class="verCode">
+    <div class="verCode-tip">
+      <slot name="tip"></slot>
+    </div>
+    <div class="verCode-con">
+      <p class="verCode-num"><label>手机号码</label><input class="smsCode" v-model="phone" type="number"
+                                                       placeholder="请填写您的新手机号码"></p>
+      <p class="verCode-code"><label>验&nbsp;&nbsp;证&nbsp;&nbsp;码</label><input v-model="code" class="smsCode"
+                                                                               type="text" placeholder="请填写短信验证码"><input
+        class="getCode" @click="getCode" type="text" :value="value" :disabled="disabled" readonly></p>
+    </div>
+    <!--<yd-countdown :time="60" timetype="second"></yd-countdown>-->
+    <h2 class="verCode-rele" @click="editUserMobile">完成</h2>
+  </div>
+</template>
+<style scoped>
+  .verCode-tip {
+    font-family: "PingFang Medium", 'Droid Sans Fallback', sans-serif;
+    font-size: 0.26rem;
+    color: #9d9ea0;
+    height: 0.97rem;
+    line-height: 0.97rem;
+    padding-left: 0.5rem;
+  }
+
+  .verCode-tip h1 {
+    font-weight: normal;
+  }
+
+  .verCode-con {
+    padding-left: 0.5rem;
+    background-color: #fff;
+  }
+
+  .verCode-con p {
+    height: 0.88rem;
+    line-height: 0.88rem;
+  }
+
+  .verCode-num {
+    border-bottom: 0.01rem solid #e5e8ee;
+  }
+
+  .verCode-con label {
+    font-family: "PingFang Medium", 'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color: #333;
+    margin-right: 0.4rem;
+  }
+
+  .verCode-con .smsCode {
+    font-family: "PingFang Medium", 'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    width: 3.32rem;
+    outline: 0;
+    border: 0;
+  }
+
+  .verCode-num input {
+    border: 0;
+  }
+
+  .verCode-con .getCode {
+    font-family: "PingFang Medium", 'Droid Sans Fallback', sans-serif;
+    font-size: 0.24rem;
+    color: #6198d4;
+    width: 1.5rem;
+    height: 0.4rem;
+    padding-left: 0.19rem;
+    border: 0;
+    outline: 0;
+    border-left: 0.01rem solid #6198d4;
+  }
+
+  .verCode-rele {
+    font-family: "PingFang bold", 'Droid Sans Fallback', sans-serif;
+    font-size: 0.32rem;
+    color: #fff;
+    width: 6.39rem;
+    text-align: center;
+    height: 0.92rem;
+    line-height: 0.92rem;
+    margin: 1.12rem 0.55rem 0;
+    background-color: #6198d4;
+    border-radius: 0.05rem;
+  }
+</style>
+<script>
+  import apicom from '../config/api.js'
+  export default {
+    data() {
+      return {
+        titleval: "修改手机号",
+        origPhone: '',
+        phone: "",
+        code: "",
+        disabled: false,
+        value: "获取验证码",
+        count: 60
+      }
+    },
+    created() {
+      this.origPhone = this.$route.params.origPhone;
+      document.title = this.titleval
+    },
+    methods: {
+      getCode() {
+        //base/sendMsg
+        const mobile = this.phone;
+        this.$http.post(apicom.apihost + 'base/sendMsg', {
+          type: 4,
+          mobile: mobile
+        }, {emulateJSON: true}).then(res => {
+          console.log(res);
+        }, err => {
+          alert(err);
+        });
+        alert("请输入验证码123456");
+        let codeTime = setInterval(() => {
+          if (this.count == 0) {
+            this.disabled = false;
+            this.value = "重新发送";
+            this.count = 60;
+            clearInterval(codeTime);
+          } else {
+            this.disabled = true;
+            this.value = this.count + "s";
+            this.count--;
+          }
+        }, 1000)
+      },
+      //user/editUserMobile 更改手机号码
+      editUserMobile() {
+        const postUrl = apicom.apihost + 'user/editUserMobile';
+        //请求数据
+        const mobile = this.phone;
+        const code = this.code;
+        if (mobile == "" || mobile == undefined) {
+          alert('新手机号码不能为空');
+        } else if (code == "" || code == undefined) {
+          alert('验证码不能为空');
+        } else if (localStorage.uid != "" || localStorage.uid != undefined) {
+          this.$http.post(postUrl, {
+            uid: localStorage.uid,
+            mobile: mobile,
+            code: code
+          }, {emulateJSON: true}).then(res => {
+            console.log(res);
+            this.$router.push({path: '/infosOfme'});
+          }, err => {
+            alert(err);
+          })
+        }
+      },
+    }
+  }
+</script>
+

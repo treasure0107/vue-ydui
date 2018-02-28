@@ -1,0 +1,125 @@
+
+<template>
+    <div>    
+        <yd-cell-group title="">
+            <yd-cell-item arrow type="div" class="dr_header">
+                <div slot="left" class="wl_left">
+                    <div v-bind:style="{backgroundImage: 'url(' + vistinfo.logoUrl + ')'}">
+                        
+                    </div>
+                    <div>
+                        <p>{{vistinfo.visitNickName}}</p>
+                        <p></p>
+                    </div>
+                </div>
+                <span slot="right" class="dcode"></span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>手机号码</label><span>{{vistinfo.mobile}}</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>所在区域</label><span>{{vistinfo.area}}</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>参观时间</label><span>{{vistinfo.startTime}}</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>装修预算</label><span>{{vistinfo.decorateBudget}}</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>项目面积</label><span>{{vistinfo.decorateSize}}</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>装修时间</label><span>{{vistinfo.decorateDate}}</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+    </div>
+</template>
+<script>
+export default {
+    data(){
+        return {
+            titleval:"参观申请详情",
+            vistinfo:{},
+            vid:'',
+            uid:''
+        }
+    },
+    created () {
+        this.vid=this.$route.params.vid;
+        this.uid=this.$route.params.uid;
+        document.title = this.titleval;
+        this.getVisitInfo()   
+    },
+    mounted () {
+         
+    },
+    methods: {
+        // goIndex(){
+        //     this.$router.push('/index')
+        // }
+        getVisitInfo(){
+            this.$http.post(this.$api.apihost+'visit/getVisitInfo',{
+                vid:this.vid,
+                uid:this.uid
+            },{emulateJSON:true}).then(function(res){
+                console.log(res.body); 
+                const vistinfo=res.body.obj;
+                this.vistinfo=vistinfo; 
+            },function(res){
+                console.log(res.body);
+            });
+        }      
+    }
+}
+</script>
+<style scoped>
+.dr_header{
+    height: 1.5rem;
+}
+  .wl_left{
+        overflow: hidden;
+    }
+    .wl_left>div{
+        float:left;
+        display: inline-block;
+    }
+    .wl_left>div:first-child{
+        width: 0.5rem;
+        height: 0.5rem;
+        background-image: url(../images/vueimg/qbjl.svg);
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        background-size: 100%;
+    }
+    .wl_left>div:last-child{
+        margin-left:0.3rem;
+    }
+    .wl_left p{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#333333;
+    }
+    .dcode {
+    width: 0.4rem;
+    height: 0.4rem;
+    background-image: url(../images/vueimg/erweima.svg);
+    background-repeat: no-repeat;
+  }
+   .ap_item{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+   }
+   .ap_item label{
+        color:#333333;
+   }
+   .ap_item span{
+        color:#9d9ea0;
+        padding:0.5rem;
+   }
+</style>

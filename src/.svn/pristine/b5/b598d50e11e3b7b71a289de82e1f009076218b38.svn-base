@@ -1,0 +1,443 @@
+<template>
+  <div>
+    <!--<iframe id="geoPage" width=0 height=0 frameborder=0  style="display:none;" scrolling="no"-->
+    <!--src="https://apis.map.qq.com/tools/geolocation?key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4&referer=myapp">-->
+    <!--</iframe>-->
+    <!--<iframe id="juli" width=0 height=0 frameborder=0  style="display:none;" scrolling="no"-->
+    <!--src="http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455;39.949227,116.394310&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4">-->
+    <!--</iframe>-->
+    <div class="content">
+      <div class="content_title">
+        <div class="main_title">哇，您太有眼光了</div>
+        <div class="tit">
+          《{{proDate.title}}》在业主评价中获得<span class="active">{{proDate.score}}分</span>，好评率<span
+          class="active">{{proDate.likeCount}}%</span>
+        </div>
+      </div>
+      <div class="con_main" v-if="haveData">
+        <yd-cell-group class="cell_group">
+          <div class="icon_lab">
+            <label slot="left" class="icon_font">手机号码</label>
+            <input class="yd_input" slot="right" required :showSuccessIcon="false"
+                   :showErrorIcon="false" type="number"
+                   regex="mobile" placeholder="填写您的手机号码" v-model="phoneNum">
+          </div>
+
+          <yd-cell-item class="ic_area">
+            <span slot="left" class="icon_font">所在区域</span>
+            <input slot="right" class="yd_input" readonly type="text" @click.stop="showAddress = true"
+                   v-model="modelAddress" placeholder="选择所在省市区" style="color: #d4d4d4;">
+            <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow_icon">
+          </yd-cell-item>
+          <yd-cityselect v-model="showAddress" :done="result2" :items="district">
+          </yd-cityselect>
+
+          <yd-cell-item>
+            <p slot="left" class="icon_font">参观时间</p>
+            <yd-datetime class="yd_input date_input" type="datetime" startDate="2012-03-16 15:13"
+                         endDate="2019-10-21 22:21" v-model="startTimes" slot="right">
+            </yd-datetime>
+            <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow_icon">
+          </yd-cell-item>
+
+          <div class="icon_lab">
+            <label slot="left" class="icon_font">装修预算</label>
+            <input class="yd_input" slot="right" required :showSuccessIcon="false"
+                   :showErrorIcon="false" type="text" placeholder="填写您的装修预算" v-model="decorateBudget">
+            <span class="unit_t">万</span>
+          </div>
+          <div class="icon_lab">
+            <label slot="left" class="icon_font">项目面积</label>
+            <input class="yd_input" slot="right" required :showSuccessIcon="false"
+                   :showErrorIcon="false" type="text" placeholder="填写您的项目面积" v-model="decorateSize">
+            <span class="unit_t">平方米</span>
+          </div>
+          <yd-cell-item>
+            <p slot="left" class="icon_font">装修日期</p>
+            <yd-datetime class="yd_input date_input" type="date" startDate="2009-10-21" endDate="2029-10-21"
+                         v-model="decorateDate" slot="right"></yd-datetime>
+            <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow_icon">
+          </yd-cell-item>
+        </yd-cell-group>
+      </div>
+      <div class="distancePos">
+        <svg x="0px" y="0px" viewBox="0 0 14 17" style="enable-background:new 0 0 14 17;" xml:space="preserve" class="navigation_svg">
+           <g>
+	             <path class="st0" d="M6.7,0.1c-3.6,0-6.5,2.9-6.5,6.5s4.3,9.7,6.5,9.7c2.2,0,6.5-6.1,6.5-9.7S10.3,0.1,6.7,0.1L6.7,0.1z M6.7,9.9
+		                 C5,9.9,3.5,8.4,3.5,6.6s1.5-3.3,3.3-3.3c1.8,0,3.3,1.5,3.3,3.3C10,8.4,8.5,9.9,6.7,9.9L6.7,9.9z"/>
+           </g>
+        </svg>
+        该现场距离您 {{proDate.distance}}
+      </div>
+      <button type="button" class="btn-block" @click="sureapply">申请免费参观</button>
+
+    </div>
+  </div>
+</template>
+<style scoped>
+  .arrow_icon {
+    width: 0.14rem;
+  }
+
+  .con_main {
+    padding-left: 0.5rem;
+    background-color: #fff;
+  }
+
+  .m-cell-box .cell-item {
+    padding-left: 0;
+  }
+
+  input[type="text"], input[type="number"], input[type="button"], button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .content_title {
+    padding: 0.32rem 0.5rem;
+  }
+
+  .content_title .main_title {
+    font-size: 0.42rem;
+    font-family: 'PingFang Heavy';
+    color: #333;
+    padding-bottom: 0.2rem;
+  }
+
+  .tit {
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Regular';
+    margin-right: 1.6rem;
+    line-height: 0.429rem;
+  }
+
+  .cell_group .yd_input {
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+
+  input.yd_input {
+    border: 0;
+  }
+
+  .m-cell-box {
+    margin-bottom: 0;
+  }
+
+  .m-cell-box.cell_group {
+    margin-bottom: 0.18rem;
+  }
+
+  .active {
+    color: #ff6464;
+    padding-left: 0.1rem;
+  }
+
+  .distancePos {
+    font-size: 0.22rem;
+    color: #9D9EA0;
+    height: 1.2rem;
+    line-height: 1rem;
+    margin-left: 0.4rem;
+    font-family: 'PingFang Medium';
+  }
+
+  .navigation_svg {
+    width: 0.22rem;
+    vertical-align: middle;
+  }
+
+  .st0 {
+    fill-rule: evenodd;
+    clip-rule: evenodd;
+    fill: #6198D4;
+  }
+
+  .btn-block {
+    width: 6.8rem;
+    height: 0.92rem;
+    font-size: 0.32rem;
+    color:#fff;
+    border-radius: 0.04rem;
+    background-color: #6198D4;
+    box-shadow: 4px 6.928px 13px 0px rgba(69, 101, 146, 0.3);
+    margin: 0 auto;
+    font-family: 'PingFang Bold';
+  }
+
+  .date_input {
+    height: 0.88rem;
+    line-height: 0.88rem;
+    font-size: 0.28rem;
+    font-family: 'PingFang Medium';
+  }
+
+  .cityselect-content li {
+    height: 0.5rem;
+  }
+
+  .icon_font {
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+    padding-right: 0.24rem;
+  }
+
+  /*.cell-icon {*/
+    /*margin-right: 0;*/
+  /*}*/
+
+  .icon_lab {
+    height: 0.88rem;
+    line-height: 0.88rem;
+    background-color: #fff;
+    border-bottom: 1px solid #d9d9d9;
+  }
+
+  .cell-item:not(:last-child):after {
+    margin-left: 0;
+  }
+
+  .cell_group .yd_input[data-v-9c4b4a70] {
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+
+  .yd_input::-webkit-input-placeholder {
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+  input[type=text]:not(.spinner-input) input[type=text]:not(.spinner-input) {
+    height: 0.88rem;
+  }
+  .unit_t {
+    display: inline-block;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+    float: right;
+    margin-right: 0.5rem;
+  }
+  .m-cell {
+    border-bottom: 0 !important;
+  }
+  .m-cell:after {
+    border-bottom: 0 !important;
+  }
+
+  .cell-right .datetime-input, .cell-right input[type=date], .cell-right input[type=number] ,.cell-right input[type=text] {
+    height: 0.88rem !important;
+    line-height: 0.88rem;
+    min-height: 0.88rem !important;
+    font-size: 0.28rem !important;
+  }
+  .cell-left .icon_font{
+    padding-right:0;
+    margin-left:-0.09rem !important;
+  }
+  .m-cell:after {
+    border-bottom: 0 !important;
+  }
+  .cell-item{
+    padding-right: 0.5rem !important;
+  }
+  .cell-right {
+    min-height: 0.88rem !important;
+    padding-right:0 !important;
+  }
+  .cell-right input{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    width: 4.56rem;
+    padding-left: 0.4rem;
+    border: none;
+  }
+  .cell-right .datetime-input{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    height: 0.88rem;
+    line-height: 0.88rem;
+    width: 5.02rem !important;
+    padding-left: 0.4rem !important;
+  }
+  .cell-arrow:after {
+    font-size: 0.25rem;
+    margin-right: 0.5rem;
+    margin-left: 0.05rem;
+  }
+</style>
+
+
+<script type="text/babel">
+  //  前提是已经安装了 ydui-district
+  import District from 'ydui-district/dist/jd_province_city_area_id';
+  import {DateTime} from 'vue-ydui/dist/lib.rem/datetime';
+  import apicom from '../config/api.js'
+
+  export default {
+    data() {
+      return {
+        showAddress: false,
+        modelAddress: '',
+        district: District,
+        startTimes: '2017-08-09 09:00',
+        endTimes: "",
+        decorateDate: '',
+        phoneNum: '',
+        decorateBudget: '',
+        decorateSize: '',
+        detailDate: '',
+        proDate: '',
+        haveData:true,
+        phoneMobile:""
+      }
+    },
+    created() {
+//      this.getUserInfo();
+      this.getProInfo();
+      this.getLastVisitInfo();
+//      this.geidis();
+    },
+    methods: {
+//      getUserInfo(){
+//        this.$http.post(apicom.apihost + 'user/getUserInfo', {
+//          uid: localStorage.uid //用户id
+//        }, {emulateJSON: true}).then(res => {
+////          console.log(res.body.obj);
+//          this.phoneMobile=res.body.obj.mobile;
+//        }, err => {
+//          console.log(err);
+//        });
+//      },
+      getLastVisitInfo() {
+        //visit/getLastVisitInfo
+        this.$http.post(apicom.apihost + 'visit/getLastVisitInfo', {
+          uid: localStorage.uid
+        }, {emulateJSON: true}).then(res => {
+          if(res.body.obj==""){
+            this.haveData=false;
+          }else{
+            this.haveData=true;
+            const visitInfo = res.body.obj;
+            this.phoneNum = visitInfo.mobile;     //参观人手机号
+            this.startTime = visitInfo.startTime;   //参观开始时间
+            this.decorateDate = visitInfo.decorateDate;    //装修日期
+            this.decorateBudget = visitInfo.decorateBudget;  //装修预算
+            this.decorateSize = visitInfo.decorateSize;    //装修项目面积
+            this.modelAddress = visitInfo.province + " " + visitInfo.city + " " + visitInfo.area; //所在地址
+          }
+        }, err => {
+          console.log(err);
+        });
+      },
+      result2(ret) {
+//        this.model = ret.itemValue1 + ' ' + ret.itemValue2 + ' ' + ret.itemValue3;
+        this.modelAddress = ret.itemName1 + ' ' + ret.itemName2 + ' ' + ret.itemName3;
+      },
+      plustime(startTime) {
+        let data1 = startTime;
+        var arr = data1.split(/[- : \/]/);
+        var data2 = new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4]).getTime();
+//        let data2 = new Date(data1).getTime();
+        // let data3=new Date(data2);
+        let diftime = 60 * 60 * 1000;
+        data2 = data2 + diftime;
+        const data3 = new Date(data2).Format("yyyy-MM-dd hh:mm");
+        return data3;
+      },
+      getProInfo() {
+        this.$http.post(apicom.apihost + 'project/getProInfo', {
+          pid: this.$route.params.pid  //项目Id
+        }, {emulateJSON: true}).then(res => {
+          this.proDate = res.body.obj;
+        }, err => {
+          console.log(err);
+        });
+      },
+      sureapply() {
+        //拼接url
+        const startTime = this.startTimes;
+        const endTime = this.plustime(startTime);
+        const arr = this.modelAddress.split(" ");
+        const provance = arr[0];
+        const city = arr[1];
+        const area = arr[2];
+        const uid = this.$route.params.visitUid;
+        const pid = this.$route.params.pid;
+        const postUrl = apicom.apihost + 'visit/applyVisit';
+        if (this.phoneNum == "") {
+          alert("请填写手机号码");
+          return false;
+        } else if (provance == "" || city == "" || area == "") {
+          alert("请选择地区");
+          return false;
+        }
+
+//        if(this.phoneMobile==undefined){
+//          alert(this.phoneMobile);
+//          this.$http.post(apicom.apihost + 'updateUserInfo',{
+//            uid: 600000,
+//            logoUrl:'',
+//            nickName:'',
+//            userName:'',
+//            sex:'',
+//            email:'',
+//            mobile:this.phoneNum
+//          },{emulateJSON: true}).then(res=>{
+//            console.log(res.body);
+//          },err=>{
+//            console.log(err);
+//          })
+//        }
+        this.$http.post(postUrl, {
+          uid: uid,  //用户id
+          visitUid: localStorage.uid,  //参观人用户id
+          pid: pid,  //项目id
+          mobile: this.phoneNum,  //参观人手机号
+          province: provance,  //所在地址-省
+          city: city,  //所在地址-市
+          area: area,  //所在地址-区
+          startTime: startTime,  //参观开始时间
+          endTime: endTime,  //参观结束时间
+          decorateBudget: this.decorateBudget,  //装修预算
+          decorateDate: this.decorateDate,  //装修日期
+          decorateSize: this.decorateSize,  //装修项目面积
+        }, {emulateJSON: true}).then(res => {
+          const vid = res.body.obj.vid;
+          //跳转 vid
+          this.$router.push({name: "applicationDetails", params: {vid: vid}})
+        }, err => {
+          console.log(err);
+        })
+
+      },
+//       geidis(){
+//           // this.$http.jsonp('http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4',jsonp:"callback").then(function(data){
+//           //     console.log(data);
+//           // });
+//            let _url = "http://apis.map.qq.com/ws/distance/v1";
+//           this.$http.jsonp(
+//               _url,
+//               {params :{
+//                   mode: "driving",
+//                   from:"39.983171,116.308479",
+//                   to:"39.996060,116.353455",
+//                   key:"36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4"
+//               }})
+//           .then(function(data){
+//                   console.log(data);
+//               },function(data){
+////                   console.log(data);
+//               });
+//       }
+    }
+
+  }
+
+</script>
+

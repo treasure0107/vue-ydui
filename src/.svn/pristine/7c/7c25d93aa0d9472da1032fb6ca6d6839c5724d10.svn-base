@@ -1,0 +1,188 @@
+
+<template>
+    <yd-layout>
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link" class="dr_header">
+                <div slot="left" class="wl_left">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        <p>姓名</p>
+                        <p>个人签名</p>
+                    </div>
+                </div>
+                <span slot="right" class="dcode">fgf</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        
+        <yd-cell-group title="我申请的记录">
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="qbjl">全部记录</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="dcgjl">带参观记录</span>
+                <span slot="right">9</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="dpjjl">待评价记录</span>
+                <span slot="right">9</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group title="客户申请的记录">
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="order" size=".42rem"></yd-icon>
+                <span slot="left">等候参观名单</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="like-outline" size=".42rem"></yd-icon>
+                <span slot="left">客户参观记录</span>
+                <span slot="right">9</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="order" size=".42rem"></yd-icon>
+                <span slot="left">相册</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="like-outline" size=".42rem"></yd-icon>
+                <span slot="left">授权子账号</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-tabbar slot="bottom">
+            <yd-tabbar-item title="工地" link="/" active>
+                <yd-icon name="home" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="区域" link="/districtSiteList">
+                <yd-icon name="shopcart-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            
+            <yd-tabbar-item title="发现" link="/">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="我的" link="/content">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+        </yd-tabbar>
+
+    </yd-layout>
+</template>
+<script>
+    export default {
+
+    }
+</script>
+<style type="text/css">
+.dr_header{
+    height: 1.5rem;
+}
+  .wl_left{
+        overflow: hidden;
+    }
+    .wl_left>div{
+        float:left;
+        display: inline-block;
+    }
+    .wl_left>div:first-child{
+        width: 0.5rem;
+        height: 0.5rem;
+        background-image: url(../images/vueimg/qbjl.svg);
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        position: relative;
+        top: 0.13rem;
+    }
+    .wl_left>div:last-child{
+        margin-left:0.3rem;
+    }
+    .wl_left p:first-child{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#333333;
+    }
+    .wl_left p:last-child{
+        font-size: 0.22rem;
+        font-family: "PingFang Regular", sans-serif;
+        color:#333333;
+    }
+.cell-title{
+    background-color: #f4f8ff !important;
+}
+.dcode{
+    background-image: url(../images/vueimg/qbjl.svg);
+    background-repeat: no-repeat;
+}
+    .qbjl{
+        background-image: url(../images/vueimg/qbjl.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .dcgjl{
+        background-image: url(../images/vueimg/dcgjl.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .dpjjl{
+        background-image: url(../images/vueimg/dpjjl.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .a_item{
+        padding:0.3rem 0.54rem 0.3rem 0.28rem;
+        height: 2.7rem;
+        background-color: #fff;
+        margin-bottom: 0.18rem;
+        overflow: hidden;
+    }
+    .a_item>img{
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%; 
+        float:left;
+    }
+    .a_item_left{
+        float: right;
+        position: relative;
+        width:calc(100% - 3.7em)
+    }
+    .a_item_left>h1{
+        font-size: 0.24rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#9d9ea0;
+        margin-left: 0.26px;
+        margin-bottom: 0.2rem;
+    }
+    .a_item_left>button{
+        font-size: 0.18rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#6198d4;
+        width: 1.26rem;
+        height: 0.34rem;
+        border:0.02rem solid #6198d4;
+        border-radius: 0.17rem;
+        position: absolute;
+        top:0.9rem;
+        right: 0.2rem;
+    }
+    .a_item_left>p{
+        font-size: 0.32rem;
+        font-family: "PingFang Heavy", sans-serif;
+        color:#333333;
+    }
+    .a_item_left>div{
+        font-size: 0.22rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#bcbcbc;
+        margin-top:0.48rem;
+    }
+    .a_item_left>div span:first-child{
+        margin-right: 0.32rem;
+    }
+    .a_item_left>div span:last-child{
+        float: right;
+    }
+    .m-cell:after{
+        border:0 !important;
+    }
+</style>

@@ -1,0 +1,129 @@
+
+<template>
+    <yd-layout>
+        <yd-cell-group>
+            <yd-cell-item>
+                <span slot="left" class="searchicon"></span>
+                <yd-input slot="right" v-model="quecontent"  placeholder="请输入问题关键词" @keyup.native.enter="searchQus"></yd-input>
+            </yd-cell-item>
+        </yd-cell-group>
+
+        <template>
+    <yd-accordion accordion v-for="(item,index) in quelist" :key="index">
+        <yd-accordion-item :title="item.title">
+            <div>
+                <p class="cp_open">{{item.qid}}</p>
+                <div class="cp_obtn"><button>已解决</button><button>未解决</button></div>
+            </div>
+        </yd-accordion-item>
+    </yd-accordion>
+</template>
+        <yd-tabbar slot="bottom">
+            <!-- <yd-tabbar-item title="首页" link="#" active>
+            </yd-tabbar-item> -->
+
+            <div class="cp_footer">
+                <router-link to="/feedback">
+                意见反馈
+                </router-link>
+            </div>
+
+        </yd-tabbar>
+
+    </yd-layout>
+</template>
+<script type="text/babel">
+export default {
+    data(){
+        return {
+            titleval:"常见问题",
+            quecontent: '',
+            page: 0,
+            pageSize: 10,
+            quelist:[{
+                title:'weretr',
+                qid:'1234'
+            }]
+        }
+    },
+    created () {
+        document.title = this.titleval;
+        this.getHelp()
+    },
+    mounted () {
+
+    },
+    watch:{
+        quecontent:'isQuate'
+    },
+    methods: {
+        // goIndex(){
+        //     this.$router.push('/index')
+        // }
+        isQuate(){
+            if (this.quecontent=="") {
+                this.getHelp()
+            }
+        },
+        searchQus(){
+            this.$http.post(this.$api.apihost+'help/searchHelp',{
+                keyWord:this.quecontent
+            },{emulateJSON:true}).then((res)=>{
+                const quelist=res.body.obj;
+                this.quelist=quelist;
+            },(res)=>{
+                console.log(res.body);
+            });
+        },
+        getHelp(){
+            this.$http.post(this.$api.apihost+'help/getHelp',{
+                startRow:this.page,
+                rowCount:this.pageSize,
+            },{emulateJSON:true}).then((res)=>{
+                const quelist=res.body.obj.helpList;
+                this.quelist=quelist;
+            },(res)=>{
+                console.log(res.body);
+            });
+        }
+    }
+}
+</script>
+<style scoped>
+.searchicon{
+    width: 0.8rem;
+    height: 0.5rem;
+    background-image: url(../images/visit/search.svg);
+    background-repeat: no-repeat;
+}
+.cp_obtn button{
+font-size: 0.22rem;
+    color:#6198d4;
+    font-family: "PingFang Medium" ,sans-serif;
+    width: 1.28rem;
+    border:1px solid #6198d4;
+    margin: 0 0.3rem 0.3rem 0.5rem;
+    padding: 0 0.2rem;
+    height: 0.5rem;
+    border-radius: 0.04rem;
+}
+.cp_open{
+    font-size: 0.22rem;
+        color:#9d9ea0;
+        font-family: "PingFang Medium" ,sans-serif;
+        padding:0.5rem;
+        line-height: 2;
+}
+.m-cell-box{
+    margin: 0.3rem 0.5rem;
+}
+    .cp_footer{
+        width: 100%;
+        height: 0.98rem;
+        text-align: center;
+        line-height: 0.98rem;
+        font-size: 0.36rem;
+        color:#6198d4;
+        font-family: "PingFang Bold" ,sans-serif;
+    }
+</style>

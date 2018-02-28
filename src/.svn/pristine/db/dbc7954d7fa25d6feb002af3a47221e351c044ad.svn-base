@@ -1,0 +1,75 @@
+import index from '../page/index.vue'
+import districtSiteList from '../page/districtSiteList.vue'
+import content from '../page/content.vue'
+import login from '../page/login.vue'
+import register from '../page/register.vue'
+import changePassword from '../page/changePassword.vue'
+import freeVisit from '../page/freeVisit.vue'
+import space from '../page/space.vue'
+import discover from '../page/discover.vue'
+import myinfo from '../page/myinfo.vue'
+import waitVisitList from '../page/waitVisitList.vue'
+import applyByperson from '../page/applyByperson.vue'
+import settingByperson from '../page/settingByperson'
+import detailInSite from '../page/detailInSite'
+
+export default [
+  {
+    path: '/',
+    component: index
+  },
+  {
+    path: '/content',
+    component: content
+  },
+  {
+    path: '/districtSiteList',
+    component: districtSiteList
+  },
+  {
+    path: '/login',
+    component: login
+  },
+  {
+    path: '/register',
+    component: register
+  },
+  {
+    path: '/changePassword',
+    component: changePassword
+
+  },
+  {
+    path: '/freeVisit',
+    component: freeVisit
+
+  },
+  {
+    path: '/space',
+    component: space
+  },
+  {
+    path: '/discover',
+    component: discover
+  },
+  {
+    path: '/myinfo',
+    component: myinfo
+  },
+  {
+    path: '/waitVisitList',
+    component: waitVisitList
+  },
+  {
+    path: '/applyByperson',
+    component: applyByperson
+  },
+  {
+    path: '/settingByperson',
+    component: settingByperson
+  },
+  {
+    path: '/detailInSite',
+    component: detailInSite
+  }
+]

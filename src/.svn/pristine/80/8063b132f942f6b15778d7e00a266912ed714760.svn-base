@@ -1,0 +1,226 @@
+
+
+<template>
+    <div class="c_detail_coms">
+        <div><span @click="moreinfo"></span><span class="c_detail_yuyue" @click="applywatch"></span></div>
+        <div class="c_detail_share" v-show="showmore"><span @click="praiseRecord">{{recount.praiseCount}}</span><span>{{recount.commentCount}}</span><span @click="noticePre"></span></div>
+        <div v-show="showmore">
+            <input type="text" name="" placeholder="写评论" @keyup.13="addComment($event)"/>
+            <ul>
+                <li>
+                    <div class="c_detail_comitm"><i>张三</i><span>感觉不错，想去看看</span></div>
+                    <ul>
+                        <li class="c_detail_recomitm">
+                            <div><i>李四</i>回复<i>张三</i><span>可以，想去看看</span></div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="c_detail_comitm"><i>张三</i><span>感觉不错，想去看看</span></div>
+                    <ul>
+                        <li class="c_detail_recomitm">
+                            <div><i>李四</i>回复<i>张三</i><span>可以，想去看看</span></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <i class="c_detail_packup">{{allorup}}</i>
+        </div>
+    </div>
+</template>
+<script>
+import comapi from '../config/api.js'
+export default {
+    props:{
+        rid:{
+            type:[String,Number],
+            required:true
+        }
+    },
+    data(){
+        return {
+            showmore:false,
+            allorup:"全文",
+            comimg:comapi.imghost,
+            recount:{},
+            recordClist:[],
+            page: 1,
+            pageSize: 10,
+            ispraise:1
+
+        }
+    },
+    created(){
+        this.getRecordCount()
+        this.getRecordComment()
+    },
+    methods:{
+        // 点赞
+        praiseRecord(){
+            this.$http.post(comapi.apihost+'project/praiseRecord',{
+                rid:this.rid,
+                uid:localStorage.uid,
+                status:this.ispraise
+            },{emulateJSON:true}).then((res)=>{
+                if (this.ispraise=1) {
+                    this.ispraise=0
+                }else{
+                    this.ispraise=1
+                }
+                 this.getRecordCount()   
+            },(err)=>{
+
+            });
+        },
+        addComment(e){
+            this.$http.post(comapi.apihost+'project/addComment',{
+
+            },{emulateJSON:true}).then((res)=>{
+                this.getRecordComment()
+            },(err)=>{
+
+            });
+        },
+        noticePre(){
+            this.$emit('isfeedback','ok')
+        },
+        getRecordComment(){
+            this.$http.post(comapi.apihost+'project/getRecordComment',{
+                rid:19,
+                page:this.page,
+                recordNum:this.pageSize
+            },{emulateJSON:true}).then((res)=>{
+                // const recordClist = res.body.obj;
+                // this.recordClist=recordClist;
+            },(err)=>{
+
+            });
+        },
+        getRecordCount(){
+            this.$http.post(comapi.apihost+'project/getRecordCount',{
+                pid:this.rid
+            },{emulateJSON:true}).then((res)=>{
+                const recount = res.body.obj;
+                this.recount=recount;
+            },(err)=>{
+
+            });
+        },
+        moreinfo(){
+            this.showmore=!this.showmore
+        },
+        alltext(){
+            this.isActive=false;
+        },
+        applywatch(){
+            this.$router.push({ name: 'freeVisit', params: { siteId: this.siteId }})
+        }
+    }
+}
+</script>
+<style scoped>
+/*评论 s*/
+.c_detail_share{
+    position: absolute;
+    left:0.8rem;
+    top:0;
+}
+.c_detail_share span{
+    display: inline-block;
+    width: 33.3333%;
+    height: 0.3rem;
+    line-height: 0.3rem;
+    text-align: center;
+    padding-left:0.4rem;
+}
+.c_detail_share span:nth-child(1){
+    background-image: url(../images/vueimg/dzan.svg);
+    background-repeat:no-repeat;
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.2rem center;
+}
+.c_detail_share span:nth-child(2){
+    background-image: url(../images/vueimg/pingl.svg);
+    background-repeat:no-repeat;
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.2rem center;
+}
+.c_detail_share span:nth-child(3){
+    background-image: url(../images/vueimg/zfa.svg);
+    background-repeat:no-repeat;
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.4rem center;
+}
+
+.c_detail_yuyue{
+    float:right;
+    width: 1rem;
+    height: 0.4rem;
+    display: inline-block;
+    background-image: url(../images/vueimg/yuyue.svg);
+    background-repeat: no-repeat;
+    color:#6198d4;
+}
+
+.c_detail_packup{
+    display: block;
+    margin:0.3rem 0;
+}
+.c_detail_recomitm{
+    line-height: 0.16rem;
+}
+
+.c_detail_comitm{
+    margin-top: 0.26rem;
+    margin-bottom: 0.26rem;
+}
+
+.c_detail_coms>div:first-child span:first-child{
+    float:left;
+    width: 0.4rem;
+    height: 0.3rem;
+    display: inline-block;
+    background-image: url(../images/vueimg/more.svg);
+    background-repeat: no-repeat;
+}
+.c_detail_coms{
+    position: relative;
+}
+.c_detail_coms i{
+    color:#6198d4;
+}
+.c_detail_coms>div:first-child{
+    margin-top:0.18rem;
+    margin-bottom: 0.3rem;
+    overflow: hidden;
+}
+.c_detail_coms>div:first-child span:last-child{
+    float:right;
+}
+.c_detail_coms>div:nth-child(2){
+    font-family: "PingFang Medium";
+    font-size: 0.3rem;
+    color:#fff;
+    width: 3.48rem;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    background-color: #8795a5;
+    border-radius: 0.04rem;
+}
+.c_detail_coms>div:nth-child(3){
+    font-family: "PingFang Medium";
+    font-size: 0.22rem;
+    color:#5a5a5a;
+    background-color: #eef1f6;
+    border-radius: 0.04rem;
+    padding:0.2rem 0.26rem;
+}
+.c_detail_coms>div:nth-child(3) input{
+    width: 5.46rem;
+    height: 0.64rem;
+    background-color: #fff;
+    margin-bottom: 0.26rem;
+    text-indent: 0.3rem;
+}
+/*评论 e*/   
+</style>

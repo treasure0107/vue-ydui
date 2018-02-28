@@ -1,0 +1,472 @@
+<template>
+    <yd-layout>
+        <div>
+            <div class="a_item" v-for="(item,imdex) in listpro">
+                <!-- <img :src="comimg+item.coverImgUrl+'?w=35&h=35'"> -->
+                <div class="a_itemimg" :style="{backgroundImage:'url('+comimg+item.coverImgUrl+')'}">
+                </div>
+                <router-link :to="{name:'detailInSite',params:{siteId:item.pid}}">
+                    <div class="a_item_left">
+                        <h1>
+                            <span>{{item.title}}</span>
+                            <button @click.prevent="gpsTo(item.address,item.position)">{{item.distance}}</button>
+                        </h1>
+                        <p>{{item.content}}</p>
+                        <div>
+                            <span>
+                                <i>
+                                    <img src="../images/vueimg/budget_icon.svg">
+                                </i>
+                                预算:{{parseFloat(item.budget)}}万
+                            </span>
+                            <span>
+                                <i>
+                                    <img src="../images/vueimg/area_icon.svg">
+                                </i>
+                                面积:{{parseFloat(item.proSize)}}m
+                                <sup>2</sup>
+                            </span>
+                            <span>
+                                <i>
+                                    <img src="../images/vueimg/stime_icon.svg">
+                                </i>
+                                已开工{{DateDiff(nowtime,item.startDate)}}天
+                            </span>
+                        </div>
+                    </div>
+                </router-link>
+            </div>
+        </div>
+        <yd-infinitescroll :on-infinite="getPro" ref="infinitescrollDemo">
+            <yd-list theme="1" slot="list">
+                <div class="a_item" v-for="(item,imdex) in list">
+                    <!-- <img :src="comimg+item.coverImgUrl+'?w=35&h=35'"> -->
+                    <div class="a_itemimg" :style="{backgroundImage:'url('+comimg+item.coverImgUrl+')'}">
+                    </div>
+                    <router-link :to="{name:'detailInSite',params:{siteId:item.pid}}">
+                        <div class="a_item_left">
+                            <h1>
+                                <span>{{item.title}}</span>
+                                <button @click.prevent="gpsTo(item.address,item.position)">{{item.distance}}</button>
+                            </h1>
+                            <p>{{item.content}}</p>
+                            <div>
+                                <span>
+                                    <i>
+                                        <img src="../images/vueimg/budget_icon.svg">
+                                    </i>
+                                    预算:{{parseFloat(item.budget)}}万
+                                </span>
+                                <span>
+                                    <i>
+                                        <img src="../images/vueimg/area_icon.svg">
+                                    </i>
+                                    面积:{{parseFloat(item.proSize)}}m
+                                    <sup>2</sup>
+                                </span>
+                                <span>
+                                    <i>
+                                        <img src="../images/vueimg/stime_icon.svg">
+                                    </i>
+                                    已开工{{DateDiff(nowtime,item.startDate)}}天
+                                </span>
+                            </div>
+                        </div>
+                    </router-link>
+                </div>
+            </yd-list>
+            <!-- 数据全部加载完毕显示 -->
+            <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+            <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+            <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+        </yd-infinitescroll>
+        <!-- <div class="index_advertising" v-for="item in adlist">
+            <a :href="item.adUrl">
+                <img :src="item.adPicUrl">
+                <span>广告</span>
+            </a>
+        </div> -->
+        <yd-tabbar slot="bottom">
+            <yd-tabbar-item title="工地" link="/" active>
+                <div slot="icon">
+                    <svg version="1.0" x="0px" y="0px" viewBox="0 0 43 40" style="enable-background:new 0 0 43 40;" xml:space="preserve">
+                        <g>
+                        <path class="footer_svgs" d="
+                            M25.9,31.4c0-0.9-0.7-2.9-2.9-2.9h-2.9c-1.9,0-2.9,1.4-2.9,2.9V40h-6.6c-2.8,0-4.9-2.4-4.9-4.8V21.9H2.6
+                            c-1.4,0-2-1-2.3-1.6c-0.1-0.2-0.6-1.5,1-3.2L18,1.4C18.9,0.5,20.1,0,21.4,0c1.3,0,2.4,0.5,3.3,1.4l17.1,15.7c0,0,0,0,0,0c1.6,1.7,1.2,3,1,3.2c-0.3,0.6-0.9,1.6-2.3,1.6h-3.2v13.3c0,2.4-2.2,4.8-5,4.8h-6.5V31.4L25.9,31.4L25.9,31.4z"/>
+                        </g>
+                    </svg>
+                </div>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="区域" link="/district">
+                <div slot="icon">
+                    <svg x="0px" y="0px" viewBox="0 0 44 40" style="enable-background:new 0 0 44 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svg" d="M31.5,27.3c-0.5-0.1-1,0.3-1.1,0.8c-0.1,0.5,0.3,1,0.8,1.1c7.6,1.1,10.4,3.1,10.4,4.1C41.6,35.2,34,38,22,38
+                                c-12,0-19.6-2.8-19.6-4.7c0-1,2.8-3,10.3-4.1c0.5-0.1,0.9-0.6,0.8-1.1c-0.1-0.5-0.6-0.9-1.1-0.8c-3.6,0.5-12,2.1-12,6
+                                C0.4,37.7,11.3,40,22,40c10.7,0,21.6-2.3,21.6-6.7C43.6,29.4,35.2,27.8,31.5,27.3z"/>
+                            <path class="footer_svg" d="M28.1,12.5c0-3.4-2.7-6.1-6.1-6.1c-3.4,0-6.1,2.7-6.1,6.1s2.7,6.1,6.1,6.1C25.4,18.6,28.1,15.8,28.1,12.5z
+                                 M17.9,12.5c0-2.3,1.9-4.1,4.1-4.1c2.3,0,4.1,1.9,4.1,4.1c0,2.3-1.9,4.1-4.1,4.1C19.7,16.6,17.9,14.8,17.9,12.5z"/>
+                            <path class="footer_svg" d="M21.3,35.3l0.7,0.6l0.7-0.6c0.5-0.5,12.2-11.8,12.2-22.4C34.9,5.8,29.1,0,22,0C14.9,0,9.1,5.8,9.1,12.9
+                                C9.1,23.7,20.8,34.8,21.3,35.3z M22,2c6,0,10.9,4.9,10.9,10.9c0,8.3-8.5,17.7-10.9,20.3c-2.5-2.5-10.9-11.7-10.9-20.3
+                                C11.1,6.9,16,2,22,2z"/>
+                        </g>
+                    </svg>
+                </div>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="发现" link="/discover">
+                <div slot="icon">
+                    <svg x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svg" d="M20,0C11.9,0,4.6,4.9,1.5,12.3S0.1,28.4,5.9,34.1c5.7,5.7,14.3,7.4,21.8,4.3C35.1,35.4,40,28.1,40,20
+                                C40,9,31,0,20,0L20,0z M20,37.8c-7.2,0-13.7-4.3-16.4-11C0.8,20.2,2.3,12.5,7.4,7.4c5.1-5.1,12.7-6.6,19.4-3.9
+                                c6.7,2.8,11,9.2,11,16.4C37.8,29.8,29.8,37.8,20,37.8L20,37.8z"/>
+                            <path class="footer_svg" d="M30,8.5L15.6,15c-0.2,0.1-0.4,0.3-0.6,0.6L8.6,30c-0.2,0.4-0.1,0.9,0.2,1.2c0.3,0.3,0.8,0.4,1.2,0.2L24.5,25
+                                c0.2-0.1,0.4-0.3,0.6-0.6L31.5,10c0.2-0.4,0.1-0.9-0.2-1.2C30.9,8.4,30.4,8.4,30,8.5L30,8.5z M23.2,23.2l-11.4,5.1l5.1-11.4
+                                l11.4-5.1L23.2,23.2L23.2,23.2z"/>
+                            <path class="footer_svg" d="M20,20 M18.8,21.2c0.6,0.6,1.7,0.6,2.3,0c0.6-0.6,0.6-1.7,0-2.3c-0.6-0.6-1.7-0.6-2.3,0
+                                C18.2,19.5,18.2,20.5,18.8,21.2"/>
+                        </g>
+                    </svg>
+                </div>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="我的" link="/myinfo">
+                <div slot="icon">
+                    <svg x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svg" d="M8.1,19c-0.1,0-0.2,0-0.3,0C7.9,19,8,19,8.1,19L8.1,19L8.1,19z M37.7,30.8c0-0.1,0-0.1,0-0.2
+                                C37.7,30.6,37.7,30.7,37.7,30.8L37.7,30.8z M39.7,9C39.7,9,39.7,9,39.7,9L39.7,9C39.7,8.9,39.7,8.9,39.7,9L39.7,9z M37.7,9
+                                C37.7,9,37.7,9,37.7,9C37.7,9,37.7,8.9,37.7,9L37.7,9L37.7,9z M38.9,38.6c-0.3-2.1-0.9-4.1-1.8-5.9c-0.2-0.4-0.4-0.7-0.6-1.1
+                                c0,0,0,0,0,0c-0.9-1.5-2-2.9-3.2-4.1l0,0c-0.3-0.3-0.6-0.5-0.8-0.8c-2.1-1.8-4.4-3.1-7-4c0.5-0.3,0.9-0.5,1.3-0.9
+                                c0.5-0.4,1-0.8,1.4-1.2c2.3-2.3,3.6-5.3,3.6-8.6c0-3.2-1.3-6.3-3.6-8.6C26,1.3,23,0,19.8,0c-0.1,0-0.1,0-0.2,0c-0.1,0-0.1,0-0.2,0
+                                c-3.2,0-6.1,1.3-8.4,3.6c-2.3,2.3-3.6,5.3-3.6,8.6c0,3.2,1.3,6.3,3.6,8.6c0.4,0.4,0.9,0.8,1.4,1.2c0.4,0.3,0.9,0.6,1.3,0.9
+                                c-2.5,0.8-4.9,2.2-7,4C6.6,27,6.3,27.2,6,27.5c-1.3,1.2-2.3,2.6-3.2,4.1c-0.2,0.4-0.4,0.7-0.6,1.1c-0.9,1.9-1.5,3.9-1.8,5.9
+                                c-0.1,0.7,0.4,1.3,1,1.4c0.1,0,0.1,0,0.2,0c0,0,0.1,0,0.1,0c0.5-0.1,0.9-0.5,0.9-1c0.6-3.8,2.4-7.3,5-10c3.1-3.2,7.4-5.1,12-5.1h0
+                                c4.6,0,8.8,2,11.9,5.1c2.6,2.7,4.5,6.1,5,10c0.1,0.5,0.5,0.9,0.9,1c0,0,0,0,0,0c0,0,0.1,0,0.1,0c0.1,0,0.1,0,0.2,0
+                                C38.5,39.9,39,39.3,38.9,38.6L38.9,38.6z M19.6,21.8C19.6,21.8,19.6,21.8,19.6,21.8c-4.6,0-8.6-3.2-9.7-7.4c0,0,0-0.1,0-0.1
+                                c-0.2-0.7-0.3-1.4-0.3-2.2c0-0.7,0.1-1.5,0.3-2.2c0,0,0-0.1,0-0.1C11,5.5,15.1,2,19.6,2h0.1c4.6,0,8.6,3.4,9.7,7.8c0,0,0,0.1,0,0.1
+                                c0.2,0.7,0.3,1.4,0.3,2.2c0,0.7-0.1,1.5-0.3,2.2c0,0,0,0.1,0,0.1c-1.1,4.2-5.1,7.4-9.7,7.4C19.7,21.8,19.7,21.8,19.6,21.8
+                                L19.6,21.8z M19.6,21.8L19.6,21.8z"/>
+                        </g>
+                    </svg>
+                </div>
+            </yd-tabbar-item>
+        </yd-tabbar>
+    </yd-layout>
+</template>
+<script>
+export default {
+    data () {
+        return {
+            titleval:"工地库",
+            latitude:'',
+            longitude:'',
+            comimg:this.$api.imghost,
+            pagenum:0,
+            page: 0,
+            pageSize: 10,
+            list: [],
+            listpro:[],
+            nowtime:'',
+            adlist:[]
+        }
+    },
+    created () {
+        localStorage.uid=100001;
+        localStorage.nickname='Jeffrey';
+        localStorage.headimgurl='../../static/img/default_himg.svg';
+        localStorage.coverImgUrl='../../static/img/myoverimg.jpg';
+        this.getLocation()
+        // this.getAd()
+        // this.wlogin()
+        this.getProByPush()
+        this.getPro()
+        document.title=this.titleval
+        var date = Date.parse(new Date());
+        this.nowtime=parseInt(date);
+    },
+    methods:{
+        getLocation(){
+            //判断是否支持 获取本地位置
+            if (navigator.geolocation)
+            {
+                navigator.geolocation.getCurrentPosition(this.showPosition);
+            }
+            else{
+                x.innerHTML="浏览器不支持定位.";
+            }
+        },
+        showPosition(position){
+            var lat=position.coords.latitude;
+            var lng=position.coords.longitude;
+            this.latitude=lat;
+            this.longitude=lng;
+        },
+        gpsTo(address,position){
+            var pArr=position.split(",");
+            window.location.href="http://apis.map.qq.com/tools/routeplan/eword="+address+"&epointx="+pArr[1]+"&epointy="+pArr[0]+"?referer=myapp&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4"
+        },
+        // 广告
+        // getAd(){
+        //     this.$http.post(this.$api.apihost+'base/getAd',{
+        //         adType:1
+        //     },{emulateJSON:true}).then((res)=>{
+        //         var adlist=res.body.obj;
+        //         this.adlist=adlist;
+        //     },(err)=>{
+
+        //     });
+        // },
+        locationByH5(uid,wxOpenId,latitude,longitude){
+            this.$http.post(this.$api.apihost+'user/locationByH5',{
+                uid:uid,
+                wxOpenId:wxOpenId,
+                latitude:latitude,
+                longitude:longitude
+            },{emulateJSON:true}).then((res)=>{
+
+            },(err)=>{
+
+            });
+        },
+        getUserInfos(code){
+            this.$http.get(this.$api.apihost+'user/login?code='+code,{emulateJSON:true}).then((res)=>{
+                const nickname=res.body.obj.nickName;
+                const openid=res.body.obj.userName;
+                const headimgurl=res.body.obj.logoUrl;
+                const coverImgUrl=res.body.obj.coverImgUrl;
+                const coverImgUrlFollow=res.body.obj.coverImgUrlFollow;
+                const uid=res.body.obj.uid
+                localStorage.openid=openid;
+                localStorage.uid=uid;
+                localStorage.nickname=nickname;
+                localStorage.headimgurl=headimgurl;
+                localStorage.coverImgUrl=coverImgUrlFollow;//我的关注封面图地址
+                localStorage.coverImgUrls=coverImgUrl;//我的空间封面图地址
+                var latitude=this.latitude;
+                var longitude=this.longitude;
+                this.locationByH5(uid,openid,latitude,longitude);
+            },(err)=>{
+                    // alert("获取用户id失败："+err);
+            });
+        },
+        wlogin(){
+            var Request=undefined;
+            Request=this.GetRequest();
+            var code=Request["code"];
+            // var code=reqdata.code;
+            if (code) {
+                // alert("code:"+code)
+                if (!localStorage.openid) {
+                    this.getUserInfos(code);
+                }
+                else{
+                    // alert("用户名称(地址中有code)："+localStorage.nickname);
+                    var uid=localStorage.uid;
+                    var openid=localStorage.openid;
+                    var latitude=this.latitude;
+                    var longitude=this.longitude;
+                    this.locationByH5(uid,openid,latitude,longitude);
+                }
+            }else{
+                if (!localStorage.openid) {
+                    window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2e3cf63e9127ed76&redirect_uri=http%3A%2F%2Fwww.onlineblm.com%2Fyy%2Findex.html&response_type=code&scope=snsapi_userinfo&state=erer45435#wechat_redirect";
+                }else{
+                    var uid=localStorage.uid;
+                    var openid=localStorage.openid;
+                    var latitude=this.latitude;
+                    var longitude=this.longitude;
+                    this.locationByH5(uid,openid,latitude,longitude);
+                }
+            }
+        },
+        GetRequest() {
+            var url = location.href; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var num= url.indexOf("?");
+                var str = url.substr(num+1);
+                var strs = str.split("&");
+                for ( var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        },
+        //计算天数差的函数
+        DateDiff(sDate1,  sDate2){//sDate1是时间戳，sDate2是2006-12-18格式
+            var  aDate,  oDate1,  oDate2,  iDays
+           oDate1=sDate1
+           // aDate  =  sDate2.split("-")
+           var arr = sDate2.split(/[- : \/]/);
+            oDate2 = new Date(arr[0], arr[1]-1, arr[2]);
+           // oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])
+           iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
+           return  iDays
+        },
+        getProByPush(){
+            this.$http.post(this.$api.apihost+'project/getProByPush',{
+                location:1,
+                uid:localStorage.uid
+            },{emulateJSON:true}).then((res)=>{
+                const _list = res.body.obj;
+                this.listpro = [...this.listpro, ..._list];
+            },(err)=>{
+
+            });
+        },
+        getPro(){
+            this.$http.post(this.$api.apihost+'project/getPro',{
+                startRow:this.page,
+                rowCount:this.pageSize,
+                uid:localStorage.uid
+            },{emulateJSON:true}).then((res)=>{
+                const _list = res.body.obj.projectList;
+                var stime=_list[0].startDate;
+                this.list = [...this.list, ..._list];
+                var count=res.body.obj.count;
+                var pagecount=Math.ceil(count/this.pageSize);
+                if (_list.length < this.pageSize || this.pagenum == pagecount) {
+                    /* 所有数据加载完毕 */
+                    this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                    return;
+                }
+                /* 单次请求数据完毕 */
+                this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                this.pagenum++;
+                this.page+=this.pageSize;
+            },(err)=>{
+
+            });
+        }
+    }
+}
+</script>
+<style scoped>
+.a_itemimg{
+    display: inline-block;
+    width: 0.68rem;
+    height: 0.68rem;
+    border-radius: 50%;
+    /*background: url(data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQAB…2e88vqfX83wp6j/QzfDpeCn82HUGxJms/J+Vi8h0/LZR0ejl6eXsy5eFPlihM3YxjMYx//2Q==) center center no-repeat;*/
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 0.1rem;
+}
+.index_advertising{
+    height: 1.2rem;
+    background-color: #ccc;
+    border:0.04rem solid #fff;
+    overflow: hidden;
+    position: relative;
+}
+.index_advertising img{
+    width: 100%;
+}
+.index_advertising span{
+    position: absolute;
+    right: 0.2rem;
+    top:0.2rem !important;
+    color:#fff;
+    display: inline-block;
+    width: 1rem;
+    height: 0.4rem;
+    line-height: 0.4rem;
+    text-align: center;
+    border-radius: 0.05rem;
+    background-color: rgba(0,0,0,0.6);
+}
+#geoPage{
+    display: none;
+}
+.a_item{
+    padding:0.3rem 0.54rem 0.3rem 0.28rem;
+  /*  height: 2.7rem;*/
+    background-color: #fff;
+    margin-bottom: 0.18rem;
+    overflow: hidden;
+}
+.a_item>img{
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    float:left;
+}
+.a_item_left{
+    float: right;
+    width:calc(100% - 3.7em)
+}
+.a_item_left>h1{
+    font-size: 0.24rem;
+    font-family: "PingFang Regular",'Droid Sans Fallback', sans-serif;
+    color:#9d9ea0;
+    margin-bottom: 0.2rem;
+    overflow: hidden;
+}
+.a_item_left>h1 span{
+    display: inline-block;
+    width: 3.8rem;
+    overflow: hidden;
+    float: left;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    font-weight: normal;
+}
+.a_item_left>h1 button{
+    font-size: 0.24rem;
+    /*font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;*/
+    color:#6198d4;
+    min-width: 1rem;
+    height: 0.4rem;
+    padding-left: 0.4rem;
+    padding-right: 0.2rem;
+    border:0;
+    float: right;
+    background-image: url(../images/vueimg/navig_icon.svg);
+    background-repeat:no-repeat;
+    background-size: 0.24rem;
+    background-position: 0.12rem center;
+    /*top:0.9rem;
+    right: 0.2rem;*/
+}
+.a_item_left>p{
+    font-size: 0.32rem;
+    font-family: "PingFang Heavy",'Droid Sans Fallback', sans-serif;
+    font-weight: bold;
+    color:#333333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+}
+.a_item_left>div{
+    font-size: 0.22rem;
+    /*font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;*/
+    color:#bcbcbc;
+    margin-top:0.3rem;
+    position: relative;
+}
+.a_item_left>div span i img{
+    width: 0.22rem;
+    height: 0.22rem;
+}
+.a_item_left>div span i{
+    display: inline-block;
+    position: relative;
+    top: 0.04rem;
+    right: 0.04rem;
+}
+.a_item_left>div span:first-child{
+    margin-right: 0.32rem;
+}
+.a_item_left>div span:last-child{
+    position: absolute;
+    right: 0;
+    bottom:0;
+}
+</style>

@@ -1,0 +1,4 @@
+export default {
+    apihost:'http://192.168.1.240/yuyue/',//开发环境的api
+    imghost : 'http://192.168.1.240/images/'
+}

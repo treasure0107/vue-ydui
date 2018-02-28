@@ -1,0 +1,25 @@
+<template>
+  <div class="maindiv">
+    <!-- <ul>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/content">About</router-link></li>
+    </ul> -->
+    <router-view class="view" keep-alive transition transition-mode="out-in"></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  components: {}
+}
+</script>
+
+<style type="text/css">
+    .maindiv{
+        height: 100%;
+        background-color: #f4f8ff;
+    }
+</style>
+<style scoped>
+  @import './style/base/base.css';
+</style>

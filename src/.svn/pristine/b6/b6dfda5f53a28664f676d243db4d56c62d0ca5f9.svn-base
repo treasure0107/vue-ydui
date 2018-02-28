@@ -1,0 +1,94 @@
+
+<template>
+    <div>    
+        <yd-cell-group title="" class="dr_headers">
+            <yd-cell-item arrow href="#" type="link" class="dr_header">
+                <div slot="left">
+                    <p class="sp_item">头像</p>
+                </div>
+                <span slot="right" class="dcode">fdgfg</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>昵称</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>用户名</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>手机号</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>邮件地址</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="sp_item">修改密码</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="sp_item">关于我们</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="sp_item">帮助与反馈</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="sp_item"><label>退出</label></p>
+            </yd-cell-item>
+        </yd-cell-group>
+    </div>
+</template>
+<script>
+export default {
+
+}
+</script>
+<style type="text/css">
+.dr_headers{
+    margin-bottom: 0 !important;
+}
+   .dr_header{
+    height: 1.5rem;
+    /*border-bottom: 1px solid #d9d9d9;*/
+}
+.dr_header:after{
+        margin-left: .24rem;
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid #d9d9d9;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.dcode{
+    background-image: url(../images/vueimg/qbjl.svg);
+    background-repeat: no-repeat;
+}
+     .ap_item{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+   }
+   .sp_item{
+    font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#333333;
+   }
+   .ap_item label{
+        color:#333333;
+        display: inline-block;
+        width:1.2rem;
+   }
+   .ap_item span{
+        color:#9d9ea0;
+        padding:0.5rem;
+   }
+</style>

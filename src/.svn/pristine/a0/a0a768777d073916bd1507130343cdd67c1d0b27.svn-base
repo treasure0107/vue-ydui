@@ -1,0 +1,166 @@
+import index from '../page/index.vue'
+import districtSiteList from '../page/districtSiteList.vue'
+import login from '../page/login.vue'
+import register from '../page/register.vue'
+import changePassword from '../page/changePassword.vue'
+import freeVisit from '../page/freeVisit.vue'
+import space from '../page/space.vue'
+import discover from '../page/discover.vue'
+import myinfo from '../page/myinfo.vue'
+import waitVisitList from '../page/waitVisitList.vue'
+import applyByperson from '../page/applyByperson.vue'
+import settingByperson from '../page/settingByperson.vue'
+import detailInSite from '../page/detailInSite.vue'
+import reProject from '../page/reProject.vue'
+import attention from '../page/attention.vue'
+import detailInSpace from '../page/detailInSpace.vue'
+import applicationDetails from '../page/applicationDetails.vue'
+import waitingToVisit from '../page/waitingToVisit.vue'
+import proTitle from '../page/proTitle.vue'
+import district from '../page/district.vue'
+import projectAdd from '../page/projectAdd.vue'
+import coproblems from '../page/coproblems.vue'
+import feedback from '../page/feedback.vue'
+import aboutUs from '../page/aboutUs.vue'
+import empowerNewAcc from '../page/empowerNewAcc.vue'
+import aRecord from '../page/aRecord.vue'
+import aTitle from '../page/aTitle.vue'
+import aAddress from '../page/aAddress.vue'
+import aEdit from '../page/aEdit.vue'
+import authorizedSubAccList from '../page/authorizedSubAccList.vue'
+import aCount from '../page/aCount.vue'
+
+export default [
+  {
+    path: '/',
+    redirect: '/index'
+  },
+  {
+    path: '/index',
+    component: index
+  },
+  {
+    path: '/districtSiteList',
+    component: districtSiteList
+  },
+  {
+    path: '/login',
+    component: login
+  },
+  {
+    path: '/register',
+    component: register
+  },
+  {
+    path: '/changePassword',
+    component: changePassword
+
+  },
+  {
+    path: '/freeVisit/:siteId',
+    name: 'freeVisit',
+    component: freeVisit
+
+  },
+  {
+    path: '/space',
+    component: space
+  },
+  {
+    path: '/discover',
+    component: discover
+  },
+  {
+    path: '/myinfo',
+    component: myinfo
+  },
+  {
+    path: '/waitVisitList',
+    component: waitVisitList
+  },
+  {
+    path: '/applyByperson',
+    component: applyByperson
+  },
+  {
+    path: '/settingByperson',
+    component: settingByperson
+  },
+  {
+    path: '/detailInSite/:siteId',
+    name: 'detailInSite',
+    component: detailInSite
+  },
+  {
+    path: '/reProject',
+    component: reProject
+  },
+  {
+    path: '/attention',
+    component: attention
+  },
+  {
+    path: '/detailInSpace',
+    component: detailInSpace
+  },
+  {
+    path: '/applicationDetails',
+    component: applicationDetails
+  },
+  {
+    path: '/waitingToVisit',
+    component: waitingToVisit
+  },
+  {
+    path: '/proTitle',
+    component: proTitle
+  },
+  {
+    path: '/district',
+    component: district
+  },
+  {
+    path: '/projectAdd',
+    component: projectAdd
+  },
+  {
+    path: '/coproblems',
+    component: coproblems
+  },
+  {
+    path: '/feedback',
+    component: feedback
+  },
+  {
+    path: '/aboutUs',
+    component: aboutUs
+  },
+  {
+    path: '/empowerNewAcc',
+    component: empowerNewAcc
+  },
+  {
+    path: '/aRecord',
+    component: aRecord
+  },
+  {
+    path: '/aTitle',
+    component: aTitle
+  },
+  {
+    path: '/aAddress',
+    component: aAddress
+  },
+  {
+    path: '/aEdit',
+    component: aEdit
+  },
+  {
+    path: '/authorizedSubAccList',
+    component: authorizedSubAccList
+  },
+  {
+    path: '/aCount',
+    component: aCount
+  }
+]

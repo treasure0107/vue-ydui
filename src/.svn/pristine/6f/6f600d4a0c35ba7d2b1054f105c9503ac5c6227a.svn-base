@@ -1,0 +1,134 @@
+<template>
+  <div class="aEdit">
+    <div class="aEdit-head">
+      <h1>170平现代中式风格装修记-环保实用</h1>
+      <h2>预算: <label class="budget">50</label>万 / 面积: <label class="area">170</label>万 / 已开工<label class="day">10</label>天</h2>
+    </div>
+    <div class="aEdit-body">
+      <ul class="aEdit-record">
+        <li @click="show"><span class="aEdit-name">增加记录</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">编辑记录</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">编辑是否公开浏览</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">删除记录</span><i class="aEdit-back"></i></li>
+      </ul>
+    </div>
+    <div class="aEdit-info">
+      <h1><span>编辑项目信息</span><i class="more" @click="more"></i></h1>
+      <ul class="aEdit-deInfo">
+        <li @click="show"><span class="aEdit-name">项目地址</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">预算</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">面积</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">开工日期</span><i class="aEdit-back"></i></li>
+        <li @click="show"><span class="aEdit-name">提供预约</span><i class="aEdit-back"></i></li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    data(){
+      return{
+        arrowDown:require("../../images/space/arrow-down.svg"),
+        arrowTop:require("../../images/space/arrow-top.svg")
+      }
+    },
+    methods: {
+      show(e){
+        if($(e.target).find(".aEdit-back").css("display") == "none"){
+          $(e.target).find(".aEdit-back").show();
+        }else{
+          $(e.target).find(".aEdit-back").hide();
+        }
+      },
+      more(e){
+        if($(".aEdit-deInfo").css("display") == "none"){
+          $(e.target).css({"background":"url("+this.arrowDown+") center center no-repeat","background-size":"0.2rem 0.13rem"});
+          $(e.target).parent().siblings().slideDown();
+        }else{
+          $(e.target).css({"background":"url("+this.arrowTop+") center center no-repeat","background-size":"0.2rem 0.13rem"});
+          $(e.target).parent().siblings().slideUp();
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .aEdit-head{
+    padding-left:0.5rem;
+  }
+  .aEdit-head h1{
+    font-family: "PingFang Heavy", sans-serif;
+    font-size: 0.4rem;
+    color:#333;
+    width:4.29rem;
+    line-height: 1.1;
+    padding-top:0.38rem;
+    padding-bottom:0.2rem;
+  }
+  .aEdit-head h2{
+    font-family: "PingFang Light", sans-serif;
+    font-size: 0.22rem;
+    color: rgb(176, 176, 176);
+    padding-bottom:0.4rem;
+  }
+  .aEdit-record li:last-child{
+    border:0;
+  }
+  .aEdit-body,.aEdit-info{
+    padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .aEdit-info{
+    border-top:0.19rem solid #f4f8ff;
+  }
+  .aEdit-info h1{
+    font-size:0.28rem;
+    font-family: "PingFang Medium", sans-serif;
+    color:#333;
+    height:0.87rem;
+    line-height: 0.87rem;
+    overflow: hidden;
+    font-weight:normal;
+    border-bottom:0.01rem solid #e5e8ee;
+
+  }
+  .aEdit-info span{
+    float:left;
+  }
+  .aEdit-info .more{
+    float:right;
+    width:1.14rem;
+    height:100%;
+    background: url(../../images/space/arrow-top.svg) center center no-repeat;
+    background-size: 0.2rem 0.13rem;
+  }
+  .aEdit-deInfo{
+    display:none;
+  }
+  .aEdit-record li,.aEdit-deInfo li{
+    font-size:0.28rem;
+    font-family: "PingFang Medium", sans-serif;
+    color:#333;
+    height:0.87rem;
+    line-height: 0.87rem;
+    overflow: hidden;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .aEdit-name{
+    float:left;
+  }
+  .aEdit-back{
+    float:right;
+    width:0.33rem;
+    height:100%;
+    float:right;
+    margin-right:0.49rem;
+    background: url(../../images/space/project_selected.svg) center center no-repeat;
+    background-size:0.33rem 0.22rem;
+    display:none;
+  }
+</style>
+
+
+
+

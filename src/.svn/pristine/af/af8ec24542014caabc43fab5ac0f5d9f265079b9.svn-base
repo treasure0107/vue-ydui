@@ -1,0 +1,431 @@
+<template>
+  <div>
+    <yd-layout>
+      <yd-cell-group title="" class="clearbottom">
+        <yd-cell-item arrow href="/settingByperson" type="link" class="dr_header">
+          <div slot="left" class="wl_left">
+            <div v-bind:style="{backgroundImage: 'url(' + userinfos.logoUrl + ')'}">
+
+            </div>
+            <div>
+              <p>{{userinfos.nickName}}</p>
+            </div>
+          </div>
+          <span slot="right" class="dcode"></span>
+        </yd-cell-item>
+      </yd-cell-group>
+
+      <yd-cell-group title="我申请的记录" class="titlebk">
+        <yd-cell-item arrow href="/waitingToVisit" type="link">
+          <span slot="left" class="qbjl leftimg">全部记录</span>
+        </yd-cell-item>
+        <yd-cell-item arrow href="/waitingToVisit" type="link">
+          <span slot="left" class="dcgjl leftimg">待参观记录</span>
+          <span slot="right">{{userinfos.waitForVisit}}</span>
+        </yd-cell-item>
+        <yd-cell-item arrow href="/waitingToVisit" type="link">
+          <span slot="left" class="dpjjl leftimg">待评价记录</span>
+          <span slot="right">{{userinfos.waitForEvaluate}}</span>
+        </yd-cell-item>
+      </yd-cell-group>
+      <yd-cell-group title="客户申请的记录">
+        <yd-cell-item arrow href="/waitVisitList/1" type="link">
+          <span slot="left" class="dhcg leftimg">等候参观名单</span>
+          <span slot="right">{{userinfos.waitVisit}}</span>
+        </yd-cell-item>
+        <yd-cell-item arrow href="/waitVisitList/2" type="link">
+          <span slot="left" class="khcgjl leftimg">客户参观记录</span>
+        </yd-cell-item>
+      </yd-cell-group>
+      <yd-cell-group title="">
+        <yd-cell-item arrow href="/space" type="link">
+          <span slot="left" class="xc leftimg">相册</span>
+        </yd-cell-item>
+        <!--<yd-cell-item arrow href="/aRecord" type="link">-->
+        <div @click="autAccount" class="autAccountBox">
+          <yd-cell-item arrow class="cell_dec">
+            <!--<span slot="left" class="sqzzh leftimg" @click.native="showDec = true">授权子账号</span>-->
+            <yd-button slot="left" class="sqzzh leftimg account_dec arrow_right">授权子账号</yd-button>
+          </yd-cell-item>
+          <!--0 待审核 1 审核通过 2 审核不通过 3：无权限-->
+          <span class="applyOpenBtn" v-if="userinfos.subRule==0">待审核</span>
+          <span class="applyOpenBtn" v-else-if="userinfos.subRule==1" style="color:#6198d4">审核通过</span>
+          <span class="applyOpenBtn" v-else-if="userinfos.subRule==2">审核不通过</span>
+          <span class="applyOpenBtn" v-else-if="userinfos.subRule==3">无权限</span>
+        </div>
+
+      </yd-cell-group>
+      <yd-tabbar slot="bottom" class="bottomel">
+        <yd-tabbar-item title="工地" link="/">
+          <div slot="icon">
+            <svg version="1.0" x="0px" y="0px" viewBox="0 0 43 40" style="enable-background:new 0 0 43 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svg" d="M25.9,31.5c0-0.9-0.7-2.9-2.9-2.9h-2.9c-1.9,0-2.9,1.4-2.9,2.9v8.6h-6.6c-2.8,0-4.9-2.4-4.9-4.8V22H2.6
+    c-1.4,0-2-1-2.3-1.6c-0.1-0.2-0.6-1.5,1-3.2L18,1.5c0.9-0.9,2.1-1.4,3.3-1.4c1.3,0,2.4,0.5,3.3,1.4l17.1,15.7c0,0,0,0,0,0
+    c1.6,1.7,1.2,3,1,3.2C42.6,21,41.9,22,40.5,22h-3.2v13.3c0,2.4-2.2,4.8-5,4.8h-6.5V31.5L25.9,31.5L25.9,31.5z M23.9,26.7
+    c2.4,0,3.8,1.4,3.8,4.8v6.7h3.8c1.9,0,3.8-1.3,3.8-2.9V20.1l4.7,0c0.3,0,0.5-0.2,0.6-0.4c0.1-0.2-0.1-0.8-0.6-1.4l-16.5-15
+    c-0.6-0.6-1.5-1.1-2.2-1.1h0c-0.8,0-1.8,0.6-2.4,1.2L3,18.3c-0.5,0.5-0.7,1.1-0.6,1.4c0.1,0.3,0.2,0.4,0.5,0.4h4.8v15.2
+    c0,1.6,1.9,2.9,3.8,2.9h3.9v-6.7c0-3.4,1.4-4.8,3.8-4.8L23.9,26.7L23.9,26.7L23.9,26.7L23.9,26.7z"/>
+                        </g>
+                    </svg>
+          </div>
+        </yd-tabbar-item>
+        <yd-tabbar-item title="区域" link="/district">
+          <div slot="icon">
+            <svg x="0px" y="0px" viewBox="0 0 44 40" style="enable-background:new 0 0 44 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svg" d="M31.5,27.3c-0.5-0.1-1,0.3-1.1,0.8c-0.1,0.5,0.3,1,0.8,1.1c7.6,1.1,10.4,3.1,10.4,4.1C41.6,35.2,34,38,22,38
+                                c-12,0-19.6-2.8-19.6-4.7c0-1,2.8-3,10.3-4.1c0.5-0.1,0.9-0.6,0.8-1.1c-0.1-0.5-0.6-0.9-1.1-0.8c-3.6,0.5-12,2.1-12,6
+                                C0.4,37.7,11.3,40,22,40c10.7,0,21.6-2.3,21.6-6.7C43.6,29.4,35.2,27.8,31.5,27.3z"/>
+                            <path class="footer_svg" d="M28.1,12.5c0-3.4-2.7-6.1-6.1-6.1c-3.4,0-6.1,2.7-6.1,6.1s2.7,6.1,6.1,6.1C25.4,18.6,28.1,15.8,28.1,12.5z
+                                 M17.9,12.5c0-2.3,1.9-4.1,4.1-4.1c2.3,0,4.1,1.9,4.1,4.1c0,2.3-1.9,4.1-4.1,4.1C19.7,16.6,17.9,14.8,17.9,12.5z"/>
+                            <path class="footer_svg" d="M21.3,35.3l0.7,0.6l0.7-0.6c0.5-0.5,12.2-11.8,12.2-22.4C34.9,5.8,29.1,0,22,0C14.9,0,9.1,5.8,9.1,12.9
+                                C9.1,23.7,20.8,34.8,21.3,35.3z M22,2c6,0,10.9,4.9,10.9,10.9c0,8.3-8.5,17.7-10.9,20.3c-2.5-2.5-10.9-11.7-10.9-20.3
+                                C11.1,6.9,16,2,22,2z"/>
+                        </g>
+                    </svg>
+          </div>
+        </yd-tabbar-item>
+
+        <yd-tabbar-item title="发现" link="/discover">
+          <div slot="icon">
+            <svg x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svg" d="M20,0C11.9,0,4.6,4.9,1.5,12.3S0.1,28.4,5.9,34.1c5.7,5.7,14.3,7.4,21.8,4.3C35.1,35.4,40,28.1,40,20
+                                C40,9,31,0,20,0L20,0z M20,37.8c-7.2,0-13.7-4.3-16.4-11C0.8,20.2,2.3,12.5,7.4,7.4c5.1-5.1,12.7-6.6,19.4-3.9
+                                c6.7,2.8,11,9.2,11,16.4C37.8,29.8,29.8,37.8,20,37.8L20,37.8z"/>
+                            <path class="footer_svg" d="M30,8.5L15.6,15c-0.2,0.1-0.4,0.3-0.6,0.6L8.6,30c-0.2,0.4-0.1,0.9,0.2,1.2c0.3,0.3,0.8,0.4,1.2,0.2L24.5,25
+                                c0.2-0.1,0.4-0.3,0.6-0.6L31.5,10c0.2-0.4,0.1-0.9-0.2-1.2C30.9,8.4,30.4,8.4,30,8.5L30,8.5z M23.2,23.2l-11.4,5.1l5.1-11.4
+                                l11.4-5.1L23.2,23.2L23.2,23.2z"/>
+                            <path class="footer_svg" d="M20,20 M18.8,21.2c0.6,0.6,1.7,0.6,2.3,0c0.6-0.6,0.6-1.7,0-2.3c-0.6-0.6-1.7-0.6-2.3,0
+                                C18.2,19.5,18.2,20.5,18.8,21.2"/>
+                        </g>
+                    </svg>
+          </div>
+        </yd-tabbar-item>
+        <yd-tabbar-item title="我的" link="/myinfo" active>
+          <div slot="icon">
+            <svg x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+                        <g>
+                            <path class="footer_svgs" d="M39.3,38.6c-0.3-2.1-0.9-4.1-1.8-5.9c-0.2-0.4-0.4-0.7-0.6-1.1c0,0,0,0,0,0c-0.9-1.5-2-2.9-3.2-4.1l0,0
+    c-0.3-0.3-0.6-0.5-0.8-0.8c-2.1-1.8-4.4-3.1-7-4c0.5-0.3,0.9-0.5,1.3-0.9c0.5-0.4,1-0.8,1.4-1.2c2.3-2.3,3.6-5.3,3.6-8.6
+    c0-3.2-1.3-6.3-3.6-8.6c-2.2-2.2-5.2-3.5-8.4-3.6c-0.1,0-0.1,0-0.2,0C20,0,20,0,19.9,0c-3.2,0-6.1,1.3-8.4,3.6C9.2,5.9,8,8.9,8,12.1
+    c0,3.2,1.3,6.3,3.6,8.6c0.4,0.4,0.9,0.8,1.4,1.2c0.4,0.3,0.9,0.6,1.3,0.9c-2.5,0.8-4.9,2.2-7,4C7,27,6.7,27.2,6.4,27.5
+    c-1.3,1.2-2.3,2.6-3.2,4.1C3,32,2.8,32.3,2.6,32.7c-0.9,1.9-1.5,3.9-1.8,5.9c-0.1,0.7,0.4,1.3,1,1.4c0.1,0,36.4,0,36.4,0
+    C39,39.9,39.4,39.3,39.3,38.6L39.3,38.6z"/>
+                        </g>
+                    </svg>
+          </div>
+        </yd-tabbar-item>
+      </yd-tabbar>
+
+    </yd-layout>
+    <!--弹窗-->
+    <yd-popup v-model="showDec" position="center" width="90%" class="phone_model">
+      <p class="dec_tit">功能说明</p>
+      <div class="dec_con">该功能主要用于授权给其他用户编辑，更新制定项目</div>
+      <p style="text-align: center;" class="btn_modelP" @click="closeBtn">
+        <yd-button class="btn_open">申请开通</yd-button>
+      </p>
+    </yd-popup>
+  </div>
+
+</template>
+<script>
+  import comapi from '../config/api.js'
+
+  export default {
+    components: {
+      // footerBar
+    },
+    data() {
+      return {
+        titleval: "个人设置",
+        nameval: localStorage.nickname,
+        comimg: comapi.imghost,
+        userinfos: {
+          uid: "",
+          logoUrl: "http://www.berylmart.com/images/62f0b1f1aed1b8bb8fe0b4b064351454",
+          nickName: "",
+          waitForVisit: "",
+          waitForEvaluate: "",
+          waitVisit: "",
+          subRule: ""
+        },
+        showDec: false
+      }
+    },
+    created() {
+      this.getUserCount();
+      document.title = this.titleval
+    },
+    mounted() {
+
+    },
+    methods: {
+      getUserCount() {
+//        user/getUserInfo  0 待审核 1 审核通过 2 审核不通过 3：无权限
+        this.$http.post(comapi.apihost + 'user/getUserCount', {uid: '100001'}, {emulateJSON: true}).then((res) => {
+          console.log(res.body.obj);
+//          const userinfo = res.body.obj;
+//          if (userinfo.subRule == 0) {
+//            userinfo.userinfo = "待审核"
+//          } else if (userinfo.subRule == 1) {
+//            userinfo.subRule = "审核通过"
+//          } else if (userinfo.subRule == 2) {
+//            userinfo.subRule = "审核不通过"
+//          } else if (userinfo.subRule == 3) {
+//            userinfo.subRule = "无权限"
+//          }
+//          this.userinfos = userinfo;
+          this.userinfos = res.body.obj;
+        }, (err) => {
+
+        });
+
+      },
+      autAccount() {
+        this.showDec = true;
+      },
+      closeBtn() {
+        this.$http.post(comapi.apihost + 'user/applySubUserRule', {uid: '100001'}, {emulateJSON: true}).then((res) => {
+          console.log(res.body);
+//          this.showDec =false;
+        }, (err) => {
+
+        });
+      }
+    }
+  }
+</script>
+<style scoped>
+  .clearbottom {
+    margin-bottom: 0.08rem;
+  }
+
+  .bottomel {
+    position: fixed;
+    bottom: 0;
+  }
+
+  .leftimg {
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.1rem center;
+  }
+
+  .dr_header {
+    height: 1.5rem;
+  }
+
+  .wl_left {
+    overflow: hidden;
+  }
+
+  .wl_left > div {
+    float: left;
+    display: inline-block;
+  }
+
+  .wl_left > div:first-child {
+    width: 1rem;
+    height: 1.4rem;
+    background-image: url(../images/vueimg/defaulttx.svg);
+    background-repeat: no-repeat;
+    background-size: 0.8rem 0.8rem;
+    border-radius: 50%;
+    background-position: center center;
+  }
+
+  .wl_left > div:last-child {
+    margin-left: 0.3rem;
+    height: 1.4rem;
+    line-height: 1.4rem;
+  }
+
+  .wl_left p {
+    font-size: 0.28rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: #333333;
+  }
+
+  .dcode {
+    width: 0.4rem;
+    height: 0.4rem;
+    background-image: url(../images/vueimg/erweima.svg);
+    background-repeat: no-repeat;
+  }
+
+  .qbjl {
+    background-image: url(../images/vueimg/qbjl.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .dcgjl {
+    background-image: url(../images/vueimg/dcgjl.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .dpjjl {
+    background-image: url(../images/vueimg/dpjjl.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .dhcg {
+    background-image: url(../images/vueimg/dhcg.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .xc {
+    background-image: url(../images/vueimg/xc.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .khcgjl {
+    background-image: url(../images/vueimg/khcgjl.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .sqzzh {
+    background-image: url(../images/vueimg/sqzzh.svg);
+    background-repeat: no-repeat;
+    padding-left: 0.5rem;
+  }
+
+  .a_item {
+    padding: 0.3rem 0.54rem 0.3rem 0.28rem;
+    background-color: #fff;
+    margin-bottom: 0.18rem;
+    overflow: hidden;
+  }
+
+  .a_item > img {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    float: left;
+  }
+
+  .a_item_left {
+    float: right;
+    position: relative;
+    width: calc(100% - 3.7em)
+  }
+
+  .a_item_left > h1 {
+    font-size: 0.24rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: #9d9ea0;
+    margin-left: 0.26px;
+    margin-bottom: 0.2rem;
+  }
+
+  .a_item_left > button {
+    font-size: 0.18rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: #6198d4;
+    width: 1.26rem;
+    height: 0.34rem;
+    border: 0.02rem solid #6198d4;
+    border-radius: 0.17rem;
+    position: absolute;
+    top: 0.9rem;
+    right: 0.2rem;
+  }
+
+  .a_item_left > p {
+    font-size: 0.32rem;
+    font-family: "PingFang Heavy", sans-serif;
+    color: #333333;
+  }
+
+  .a_item_left > div {
+    font-size: 0.22rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: #bcbcbc;
+    margin-top: 0.48rem;
+  }
+
+  .a_item_left > div span:first-child {
+    margin-right: 0.32rem;
+  }
+
+  .a_item_left > div span:last-child {
+    float: right;
+  }
+
+  .m-cell:after {
+    border: 0 !important;
+  }
+
+  /*.arrow_right::after {*/
+  /*position: absolute;*/
+  /*content: url(../images/vueimg/arrow_right.svg);*/
+  /*width: 0.18rem;*/
+  /*right: 1.25rem;*/
+  /*top: 0.36rem;*/
+  /*color: #c9c9c9;*/
+  /*}*/
+
+  .cell_dec, .autAccountBox {
+    position: relative;
+  }
+
+  .applyOpenBtn {
+    position: absolute;
+    top: 0.34rem;
+    right: 0.6rem;
+    font-size: 0.28rem;
+    color: #ff6a68;
+    font-family: "PingFang Medium", sans-serif;
+  }
+
+  .cell_dec .cell-right {
+    float: right;
+    width: 0;
+  }
+
+  .account_dec {
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*position: absolute;*/
+    background-color: #fff !important;
+    font-size: 0.28rem;
+    color: #333;
+    text-align: left;
+    font-family: "PingFang Medium", sans-serif;
+  }
+
+  .dec_tit {
+    font-size: 0.42rem;
+    color: #6198d4;
+    font-family: 'PingFang Heavy';
+    margin: 0.54rem 0.46rem 0 0.46rem;
+    padding-bottom: 0.36rem;
+    text-align: center;
+    border-bottom: 0.01rem solid #e5e8ee;
+  }
+
+  .dec_con {
+    font-size: 0.32rem;
+    color: #6198d4;
+    font-family: 'PingFang Medium';
+    margin: 0.32rem 0.46rem 0.36rem 0.46rem;
+  }
+
+  .btn_open {
+    width: 5rem;
+    height: 0.92rem;
+    font-size: 0.32rem;
+    background-color: #6198d4;
+    border-radius: 0.06rem;
+    font-family: 'PingFang Bold';
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+</style>

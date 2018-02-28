@@ -1,0 +1,869 @@
+<template>
+    <div class="reProject">
+      <div class="reAdd" v-if="address">
+        <iframe id="mapPage" width="100%" height="100%" frameborder=0
+                src="http://apis.map.qq.com/tools/locpicker?search=1&type=1&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4&referer=myapp">
+        </iframe>
+      </div>
+      <div class="proTitle" v-else-if="title">
+        <div class="proTitle-head"></div>
+        <span class="determine" @click="location">确定</span>
+        <div class="proTitle-search">
+          <input type="text" placeholder="输入新标题" class="proNew-name">
+        </div>
+        <div class="proTitle-show">
+          <ul>
+            <li @click="select" :data-pid="item.pid" v-for="item in list"><span class="proTitle-name">{{item.title}}</span><i class="proTitle-back"></i></li>
+          </ul>
+        </div>
+      </div>
+      <div class="rePro" v-else>
+        <div class="reProject-head">
+          <textarea placeholder="项目状态介绍（必填项）" v-model="content"></textarea>
+          <ul class="reProject-headList">
+            <li class="reProject-headItem" :class="index==0?'active':''"  v-for="(item,index) in this.picUrlval" :style="'background: url('+comimg+item+'?w=120&h=120) center center no-repeat;background-size:cover;'" :data-imgurl="item">
+              <span class="reProject-headDel" @click="del" :data-picUrl="item"></span>
+              <div class="reProject-headCon" @click="cover">设为封面</div>
+            </li>
+            <li class="upload_img">
+              <form id= "uploadForm">
+                <label for="camear">+</label>
+                <input type="file" accept="image/*" @change="doUpload" id="camear" capture="camera"  name="file"/>
+              </form>
+            </li>
+          </ul>
+          <div class="reProject-title" @click="titleGet" v-if="titleLis!=''">{{titleLis}}</div>
+          <div class="reProject-title" @click="titleGet" v-else>项目标题 <span>(必填项)</span></div>
+        </div>
+        <div class="reProject-body">
+          <ul class="reProject-con">
+            <li>
+              <yd-cell-group>
+                <yd-cell-item>
+                    <span slot="left" class="re-area">所在地区</span>
+                 <input   slot="right" type="text" @click.stop="show2 = false" v-model="model2"  placeholder="请选择省市区" readonly v-if="getPro.province">
+                  <input  slot="right" type="text" @click.stop="show2 = true" v-model="model2"  placeholder="请选择省市区" readonly v-else>
+                  <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow-right">
+                </yd-cell-item>
+              </yd-cell-group>
+              <yd-cityselect v-model="show2" :done="result2" :items="district"></yd-cityselect>
+            </li>
+            <li>
+              <div class="reProject-address" v-if="getPro.address"><label>详细地址</label><span class="reProject-deAdd">{{getPro.address}}</span></div>
+              <div  @click="addGet" class="reProject-address" v-else-if="addList"><label>详细地址</label><span class="reProject-deAdd">{{addList}}</span></div>
+              <div  @click="addGet" class="reProject-address" v-else><label>详细地址</label><span class="reProject-deAdd">请选择项目地址</span></div>
+            </li>
+            <li class="reProject-budget">
+              <label>预&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;算</label><input type="text" placeholder="填写项目预算" v-model="budget" v-if="getPro.budget" readonly><input type="text" placeholder="填写项目预算" v-model="budget" v-else>
+              <span>万元</span>
+            </li>
+            <li>
+              <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积</label><input type="text" placeholder="填写项目面积" v-model="area"   v-if="getPro.proSize" readonly><input type="text" placeholder="填写项目面积" v-model="area" v-else>
+              <span>平方米</span>
+            </li>
+          </ul>
+          <yd-cell-group>
+            <yd-cell-item>
+              <span slot="left" class="reProject-date">开工日期</span>
+              <yd-datetime type="date" v-model="datetime"  slot="right" v-if="getPro.startDate!=''" readonly></yd-datetime>
+              <yd-datetime type="date" v-model="datetime"  slot="right" v-else></yd-datetime>
+              <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow-right">
+            </yd-cell-item>
+          </yd-cell-group>
+        </div>
+        <div class="reProject-foot">
+          <div class="reProject-footNav">
+            <span>是否需要提供预约？</span>
+            <div class="switch_case">
+              <yd-switch v-model="switch1" :disabled="other" color="#6198d4"></yd-switch>
+            </div>
+          </div>
+          <ul class="reProject-footDeco" v-show="switch1">
+            <li>
+              <yd-checkbox v-model="checkbox1">提供装修合同</yd-checkbox>
+              <ul class="deco_contract">
+                <li v-for="vale in getPro.contractImgList" :style="'background: url('+comimg+vale.imgUrl+'?w=60&h=46) center center no-repeat;'"></li>
+                <li v-for="vale in contrImg" :style="'background: url('+comimg+vale+'?w=60&h=46) center center no-repeat;'" :data-imgurl="vale" @click="delContrPic"></li>
+              </ul>
+              <form id= "uploa">
+                <label for="came">上传</label>
+                <input type="file" accept="image/*" @change="doContr" id="came" capture="camera"  name="file"/>
+              </form>
+            </li>
+            <li>
+              <yd-checkbox v-model="checkbox2">提供施工图纸</yd-checkbox>
+              <ul class="deco_construct">
+                <li v-for="val in getPro.constructImgList" :style="'background: url('+comimg+val.imgUrl+'?w=60&h=46) center center no-repeat;'"></li>
+                <li v-for="val in constImg" :style="'background: url('+comimg+val+'?w=60&h=46) center center no-repeat;'"  :data-imgurl="val" @click="delConstPic"></li>
+              </ul>
+              <form id= "upload">
+                <label for="camea">上传</label>
+                <input type="file" accept="image/*" @change="doConst" id="camea" capture="camera"  name="file"/>
+              </form>
+            </li>
+          </ul>
+          <!--<div class="reProject-footNav aRecord-look">-->
+          <!--<span>是否公开浏览？</span>-->
+          <!--<div class="switch_case">-->
+          <!--<yd-switch v-model="swit" color="#6198d4"></yd-switch>-->
+          <!--</div>-->
+          <!--</div>-->
+          <button class="reProject-send" @click="releasepro">发送</button>
+          <!--<v-Code>-->
+            <!--<h1 slot="tip">请提供您的手机号，以方便他人预约您的工地</h1>-->
+          <!--</v-Code>-->
+        </div>
+      </div>
+      <!--<div class="mask-action" v-show="reveal" @click="mask"></div>-->
+      <!--<div class="m-action">-->
+        <!--<ul>-->
+          <!--<li><label for="camear">拍摄</label> <input type="file" accept="image/*" @change="doUpload" id="camear" capture="camera" /></li>-->
+          <!--<li><form id= "uploadForm"><label for="picture">从手机相册中选择</label> <input type="file" accept="image/*" id="picture" @change="doUpload" name="file" multiple></form></li>-->
+          <!--<li><label class="cancel" @click="hide">取消</label></li>-->
+        <!--</ul>-->
+      <!--</div>-->
+      <div class="modal-mask" @click="fadeOut" v-show="disappear"></div>
+      <div class="modal" v-show="disappear">
+        <div class="modal-posi">
+          <div class="modal-con">
+            <div class="modal-img" :style="{backgroundImage:'url('+comimg+imgurl+')'}"></div>
+            <div class="modal-dele" @click="deleImg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</template>
+<script>
+  import District from 'ydui-district/dist/jd_province_city_area_id';
+  import vCode from '../components/verCode.vue'
+  export default {
+    components:{
+      vCode
+    },
+    data () {
+      return {
+        show2: false,
+        model2: '',
+        province:"",
+        city:"",
+        size:"",
+        pid:"",
+        district: District,
+        address: false,
+        addList: "",
+        title: false,
+        titleLis: "",
+        swit: false,
+        budget:"",
+        area:"",
+        content:"",
+        position:[],
+        disappear: false,
+        checkbox1: false,
+        checkbox2: false,
+        comimg:this.$api.imghost,
+        imgurl:"",
+        other: false,
+        picUrlval:[],
+        contrImg:[],
+        contractList:[],
+        constImg:[],
+        constructList:[],
+        list:[],
+        getPro:{
+          startDate:""
+        },
+        flage:"",
+        switch1: false,
+        datetime: '2017-08-08',
+        yearFormat: '<span style="color:#F00;">{value}<i style="font-size: 12px;margin-left: 1px;">年</i></span>',
+        monthFormat: '<span style="color:#0BB20C;">{value}<i style="font-size: 12px;margin-left: 1px;">月</i></span>',
+        dayFormat: '<span style="color:#FFB400;">{value}<i style="font-size: 12px;margin-left: 1px;">日</i></span>',
+      }
+    },
+    mounted(){
+      this.proTitle();
+      this.juMobile();
+    },
+    methods: {
+      juMobile(){
+        var u = navigator.userAgent;
+        if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+
+        } else if (u.indexOf('iPhone') > -1) {
+        }
+      },
+      titleGet(){
+        this.address=false;
+        this.title=true;
+      },
+      addGet(){
+        this.address=true;
+        this.title=false;
+        window.addEventListener('message' , (event)=> {
+          // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+          var  loc=event.data;
+          if (loc && loc.module === 'locationPicker') {
+            console.log('location', loc);
+            this.addList = loc.poiaddress;
+            this.position.push(loc.latlng.lat);
+            this.position.push(loc.latlng.lng);
+            this.address=false;
+          }
+        }, false)
+      },
+      result2(ret) {
+        this.model2 = ret.itemName1 + ' ' + ret.itemName2 + ' ' + ret.itemName3;
+        this.province=ret.itemName1;
+        this.city=ret.itemName2;
+        this.size=ret.itemName3;
+      },
+      del(e){
+       $(e.target).parent().remove();
+       let picUrl=$(e.target).data("picUrl");
+        let index=this.picUrlval.indexOf(picUrl);
+        this.picUrlval.splice(index,1);
+      },
+      cover(e){
+        $(e.target).parent().addClass("active").siblings().removeClass("active");
+      },
+      doUpload(){
+        var formData = new FormData($("#uploadForm" )[0]);
+        $.ajax({
+          url: this.$api.upimgurl,
+          type: 'POST',
+          data: formData,
+          async: false,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success:(data)=> {
+            let imgUrl=$.trim(data.substring(data.indexOf("MD5:") + 4, data.indexOf("</h1>")));
+            this.picUrlval.push(imgUrl);
+          },
+          error: (returndata)=> {
+            alert(returndata);
+          }
+        });
+      },
+      doContr(){
+        var formData = new FormData($("#uploa" )[0]);
+        $.ajax({
+          url: this.$api.upimgurl,
+          type: 'POST',
+          data: formData,
+          async: false,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success:(data)=> {
+            this.contrImg.push($.trim(data.substring(data.indexOf("MD5:") + 4, data.indexOf("</h1>"))));
+            if(this.contrImg.length){
+              this.checkbox1=true;
+            }
+          },
+          error: (returndata)=> {
+            alert(returndata);
+          }
+        });
+      },
+      doConst(){
+        var formData = new FormData($("#upload" )[0]);
+        $.ajax({
+          url: this.$api.upimgurl,
+          type: 'POST',
+          data: formData,
+          async: false,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success:(data)=> {
+            this.constImg.push($.trim(data.substring(data.indexOf("MD5:") + 4, data.indexOf("</h1>"))));
+                if(this.constImg.length){
+                  this.checkbox2=true;
+                }
+          },
+          error: (returndata)=> {
+            alert(returndata);
+          }
+        });
+      },
+      delConstPic(e){
+        this.disappear=true;
+        this.imgurl=$(e.target).data("imgurl");
+        this.flage = "const";
+      },
+      delContrPic(e){
+        this.disappear=true;
+        this.imgurl=$(e.target).data("imgurl");
+        this.flage = "contr";
+      },
+      fadeOut(){
+        this.disappear=false;
+      },
+      deleImg(){
+        if(this.flage=="const"){
+         let index=this.constImg.indexOf(this.imgurl);
+          this.constImg.splice(index,1);
+          this.disappear=false;
+          if(!$(".deco_construct li").length){
+            this.checkbox2=false;
+          }
+        }else if(this.flage=="contr"){
+          let ind=this.contrImg.indexOf(this.imgurl);
+          this.contrImg.splice(ind,1);
+          this.disappear=false;
+          if(!$(".deco_contract li").length){
+              this.checkbox1=false;
+          }
+        }
+      },
+//      标题
+      location(){
+        if($(".proNew-name").val()!==""){
+          this.titleLis = $(".proNew-name").val();
+          this.title=false;
+        }
+      },
+      select(e){
+        this.titleLis = $(e.target).find(".proTitle-name").text();
+        this.title=false;
+        this.pid=$(e.target).data("pid");
+        this.$http.post(this.$api.apihost+'project/getProInfo',{pid:this.pid},{emulateJSON:true}).then(function (response) {
+          if(response.body.obj !=""){
+            this.getPro=response.body.obj;
+            let data=response.body.obj;
+            if(data.allowVisit==1){
+              this.switch1=true;
+            }else{
+              this.switch1=false;
+            }
+            if(data.province){
+              this.model2=data.province+' '+data.city+' '+data.area;
+              this.province=data.province;
+              this.city=data.city;
+              this.size=data.area;
+            }
+            if(data.budget){
+              this.budget=data.budget;
+            }
+            if(data.proSize){
+              this.area=data.proSize;
+            }
+            this.datetime=data.startDate;
+            if(data.contractImgList.length){
+              this.checkbox1=true;
+              for(var b=0;b<data.contractImgList.length;b++){
+                this.contractList.push(data.contractImgList[b].imgUrl);
+              }
+            }
+            if(data.constructImgList.length){
+              this.checkbox2=true;
+              for(var i=0;i<data.constructImgList.length;i++){
+                this.constructList.push(data.constructImgList[i].imgUrl);
+              }
+            }
+          }
+          });
+      },
+      proTitle() {
+        this.$http.post(this.$api.apihost+'project/getProTitleList',{uid:localStorage.uid},{emulateJSON:true}).then(function (response) {
+          const _list = response.body.obj.titleList;
+          this.list = [...this.list, ..._list];
+        });
+      },
+      releasepro(){
+        let title = this.titleLis;
+        let province=this.province;
+        let city=this.city;
+        let area=this.size;
+        let position=this.position.join(",");
+        let budget=this.budget;
+        let proSize=this.area;
+        let coverImgUrl=$(".reProject-headList li.active").data("imgurl");
+        let startDate=this.datetime;
+        let allowVisit=(this.switch1== false ? 0:1);
+        let openStatus=1;
+        let content=this.content;
+        let imgUrlList="";
+        let contractImgList="";
+        let constructImgList="";
+        let address=this.addList;
+        if(this.contractList.length||this.contrImg.length){
+          contractImgList={};
+          contractImgList.list=this.contrImg.concat(this.contractList);
+          contractImgList=JSON.stringify(contractImgList);
+        }else{
+          contractImgList=""
+        }
+        if(this.constructList.length||this.constImg.length){
+          constructImgList={};
+          constructImgList.list=this.constImg.concat(this.constructList);
+          constructImgList=JSON.stringify(constructImgList);
+        }else{
+          constructImgList=""
+        }
+        if(this.picUrlval.length){
+          imgUrlList={};
+          imgUrlList.list=this.picUrlval;
+          imgUrlList=JSON.stringify(imgUrlList);
+        }else{
+          imgUrlList="";
+        }
+        if(this.content==""){
+          alert("请输入项目状态介绍");
+        }else if(!(this.picUrlval.length)){
+          alert("请上传项目图片");
+        }else if(this.titleLis==""){
+          alert("请选择项目标题");
+        }else{
+          this.$http.post(this.$api.apihost+'project/releasePro',{pid:this.pid,uid:localStorage.uid,title:title,province:province,city:city,area:area,address:address,position:position,budget:budget,proSize:proSize,coverImgUrl:coverImgUrl,startDate:startDate,allowVisit:allowVisit,contractImgList:contractImgList,constructImgList:constructImgList,content:content,openStatus:openStatus,imgUrlList:imgUrlList},{emulateJSON:true}).then(function (response) {
+            if(allowVisit == 1){
+              this.$http.post(this.$api.apihost+'user/getUserInfo',{uid:localStorage.uid},{emulateJSON:true}).then(function (res) {
+                if(res.body.obj.mobile){
+                  this.$router.go(-1);
+                }else{
+                  this.$router.push({path: '/vCode'});
+                }
+              });
+            }else{
+              this.$router.go(-1);
+            }
+          });
+        }
+      },
+  }
+  }
+</script>
+<style>
+  .arrow-right{
+    width: 0.14rem;
+    height:0.2rem;
+  }
+  .reAdd{
+    width:100%;
+    height:100%;
+  }
+  .modal-mask{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    width:100%;
+    height:100%;
+    background-color: #000000;
+    z-index:9999999;
+  }
+  .modal{
+    position:fixed;
+    top:2.88rem;
+    width:100%;
+    z-index:99999999;
+  }
+  .modal-img{
+    width:100%;
+    height:5.68rem;
+    /*background: url(http://192.168.1.240:4869/21cd8acad3628eb8499e1508fdd3fdab) center center no-repeat;*/
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+  }
+  .modal-dele{
+    width:0.45rem;
+    height:0.45rem;
+    background: url(../images/space/dele_img.svg) center center no-repeat;
+    background-size: 100%;
+    margin-left:0.48rem;
+    margin-top:0.27rem;
+    z-index:99999999;
+  }
+  #uploadForm{
+    width:100%;
+    height:100%;
+    position:relative;
+  }
+  #uploadForm label{
+    display:block;
+    width:100%;
+    height:100%;
+  }
+  #uploadForm input{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:none;
+    outline:none;
+    opacity:0;
+  }
+  #upload,#uploa{
+    float:right;
+    height:0.88rem;
+    line-height: 0.88rem;
+    position:relative;
+  }
+  #upload input,#uploa input{
+    width:0.75rem;
+    height:100%;
+    position:absolute;
+    right:0;
+    top:0;
+    opacity:0;
+  }
+  #upload label,#uploa label{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color: #b0b0b0;
+    display:inline-block;
+    height:100%;
+    padding-right:0.75rem;
+    background: url(../images/visit/arrow_right.svg) 0.68rem  center no-repeat;
+    background-size: 0.14rem 0.2rem;
+  }
+  .m-action li  input{
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:0;
+  }
+  .datetime-head>a:last-child{
+    color:#6198d4;
+  }
+  .reProject-head{
+      padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .reProject-head textarea{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size:0.26rem;
+    color:#9d9ea0;
+    text-indent:0.07rem;
+    width:6.51rem;
+    height: 1.05rem;
+    overflow-y:scroll ;
+    margin-top:0.28rem;
+    border:none;
+    margin-bottom:0.235rem;
+  }
+  .reProject{
+    height:100%;
+  }
+  .reProject-head textarea::-webkit-scrollbar{
+    display: none;
+   }
+  .reProject-headList:after{
+    content:"";
+    display:block;
+    clear:both;
+  }
+  .reProject-headList{
+    padding-bottom:0.2rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .reProject-headItem{
+    float:left;
+    width:1.4rem;
+    height:1.2rem;
+    /*background: url(../images/space/reProject.jpg) center center no-repeat;*/
+    background-size: cover;
+    position:relative;
+    margin-right:0.22rem;
+    margin-bottom:0.22rem;
+  }
+  .upload_img{
+    font-family: "PingFang Regular",'Droid Sans Fallback', sans-serif;
+    font-size: 1.2rem;
+    line-height: 0.783;
+    color:#b0b0b0;
+    float:left;
+    width:1.39rem;
+    text-align: center;
+    height:1.19rem;
+    border:0.01rem solid #b0b0b0;
+  }
+  .reProject-headList .reProject-headItem:nth-child(4)~.reProject-headItem{
+    margin-bottom:0;
+  }
+  .reProject-headDel{
+    width:0.31rem;
+    height:0.31rem;
+    position:absolute;
+    top:-0.155rem;
+    right:-0.155rem;
+    background: url(../images/space/dete.svg) center center no-repeat;
+    background-size: 100%;
+  }
+  .reProject-headDelete{
+    width:0.31rem;
+    height:0.31rem;
+  }
+  .reProject-headItem.active .reProject-headCon{
+    opacity:1;
+  }
+  .reProject-headCon{
+    color:#fff;
+    font-size:0.16rem;
+    position:absolute;
+    width:100%;
+    text-align: center;
+    height:1.2rem;
+    line-height: 1.2rem;
+    background-color: rgba(0,0,0,.3);
+    opacity:0;
+  }
+  .reProject-title{
+    font-family: "PingFang Heavy",'Droid Sans Fallback', sans-serif;
+    font-size: 0.38rem;
+    height:0.88rem;
+    line-height: 0.88rem;
+    width:6.51rem;
+    background: url(../images/visit/arrow_right.svg) right center no-repeat;
+    background-size: 0.14rem 0.2rem;
+  }
+  .reProject-title span{
+    font-family: "PingFang Heavy",'Droid Sans Fallback', sans-serif;
+    font-size: 0.25rem;
+    color:#ccc;
+  }
+  .reProject-body{
+    padding-left:0.5rem;
+    border-top:0.16rem solid #f4f8ff;
+    background-color: #fff;
+  }
+  .reProject-con li{
+    height:0.88rem;
+    line-height: 0.88rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .reProject-con li:nth-child(2){
+    border-top: 0.01rem solid #e5e8ee;
+  }
+  /*地区时间插件样式*/
+  .m-cell-box .cell-item{
+    height:0.88rem;
+    line-height: 0.88rem;
+    background-color: #fff;
+    padding-left:0;
+  }
+  .reProject-con li .re-area,.reProject-body .reProject-date{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color: #333;
+    margin-left:-0.07rem !important;
+  }
+  .m-cell:after{
+    border-bottom:0 !important;
+  }
+  .cell-right{
+    min-height:0.88rem !important;
+    padding-right:0.5rem !important;
+  }
+  .reProject-con .cell-right input{
+    font-size: 0.28rem !important;
+    color: #d4d4d4 !important;
+    height:0.88rem !important;
+  }
+  .reProject-body .m-cell-box{
+    margin-bottom:0;
+    background-color: #fff;
+  }
+  .m-cell-box .cell-right .datetime-input{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    height:0.88rem;
+    line-height: 0.88rem;
+    width:5.02rem !important;
+    padding-left:0.4rem !important;
+  }
+  /*样式结束*/
+  .reProject-address{
+    display:block;
+    width:6.51rem;
+    height:100%;
+    overflow: hidden;
+    background: url(../images/visit/arrow_right.svg) right center no-repeat,url(../images/visit/navigation.svg) 5.99rem center no-repeat;
+    background-size: 0.14rem 0.2rem,0.23rem 0.29rem;
+  }
+  .reProject-address label{
+    float:left;
+  }
+  .reProject-address .reProject-deAdd{
+    float:left;
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    padding-left:0.4rem;
+    width:4.6rem;
+    word-break:keep-all;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .reProject-con li label{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color:#333;
+  }
+  .reProject-con li input{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color:#d4d4d4;
+    width:4.56rem !important;
+    padding-left:0.4rem !important;
+    border:none;
+  }
+  .reProject-budget span{
+    margin-left:0.28rem;
+  }
+  .reProject-con li span{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color:#b0b0b0;
+  }
+  .reProject-foot{
+    border-top: 0.16rem solid #f4f8ff;
+  }
+  .reProject-footNav{
+    height:0.88rem;
+    line-height: 0.88rem;
+    overflow:hidden;
+    padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .reProject-footDeco{
+    padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .reProject-footNav span{
+    float:left;
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size: 0.28rem;
+    color:#333;
+  }
+  .reProject-footNav .switch_case{
+    float:right;
+    padding-top:0.3rem;
+    margin-right:0.49rem;
+  }
+  .switch_case input{
+    width:0.52rem;
+    height:0.32rem;
+    border-radius:0.16rem;
+  }
+  .switch_case .m-switch:after,.switch_case  .m-switch:before{
+    height:0.3rem;
+    width:0.3rem;
+    border-radius:0.15rem;
+  }
+  .switch_case  .m-switch:before{
+    width:0.5rem;
+  }
+  .reProject-footDeco>li{
+    height:0.88rem;
+    line-height: 0.88rem;
+    overflow: hidden;
+    border-top:0.01rem solid #e5e8ee;
+  }
+  .m-checkbox{
+    float:left;
+  }
+  .deco_contract,.deco_construct{
+    float:left;
+    margin-left:0.88rem;
+    padding-top:0.2rem;
+  }
+  .deco_contract li,.deco_construct li{
+    float:left;
+    width:0.6rem;
+    height:0.46rem;
+    background: url(../images/space/reProject01.jpg) right center no-repeat;
+    background-size:cover;
+    margin-left:0.15rem;
+  }
+  .reProject-footDeco .m-checkbox>.checkbox-icon{
+    width:0.39rem !important;
+    height:0.39rem !important;
+    vertical-align: middle;
+    border-radius:50%;
+    color:#6198d4 !important;
+  }
+  .reProject-footDeco .m-checkbox>.checkbox-text{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    font-size:0.24rem;
+    color: rgb(97, 152, 212);
+  }
+  .reProject-send{
+    font-family: "PingFang Bold",'Droid Sans Fallback', sans-serif;
+    font-size:0.32rem;
+    color:#fff;
+    width:6.4rem;
+    text-align: center;
+    height:0.92rem;
+    line-height: 0.92rem;
+    margin-top:0.56rem;
+    margin-bottom:0.34rem;
+    background-color: #6198d4;
+    border-radius:0.05rem;
+    border:none;
+    outline: none;
+    margin-left:0.5rem;
+  }
+  /*标题选择*/
+  .proTitle{
+    position:relative;
+    background-color: #fff;
+  }
+  .determine{
+    font-size:0.28rem;
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    color: rgb(97, 152, 212);
+    position:absolute;
+    top:0.22rem;
+    right:0.39rem;
+  }
+  .proTitle-head{
+    height:0.8rem;
+    border-bottom:0.01rem solid #e7effb;
+  }
+  .proTitle-search{
+    height:1.06rem;
+    line-height: 1.06rem;
+    margin-left:0.5rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .proTitle-search input{
+    font-size:0.28rem;
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    color: rgb(176, 176, 176);
+    width:100%;
+    border:none;
+    outline: none;
+  }
+  .proTitle-show{
+    padding-left:0.5rem;
+  }
+  .proTitle-show li{
+    font-size:0.28rem;
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    color:#333;
+    height:1.06rem;
+    line-height: 1.06rem;
+    overflow: hidden;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .proTitle-show li span{
+    float:left;
+  }
+  .proTitle-show li i{
+    width:0.33rem;
+    height:100%;
+    float:right;
+    margin-right:0.49rem;
+    background: url(../images/space/project_selected.svg) center center no-repeat;
+    background-size:0.33rem 0.22rem;
+    display:none;
+  }
+</style>

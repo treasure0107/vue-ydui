@@ -1,0 +1,92 @@
+
+<template>
+    <div>    
+        <yd-cell-group title="">
+            <yd-cell-item arrow type="div" class="dr_header">
+                <div slot="left" class="wl_left">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        <p>姓名</p>
+                        <p>个人签名</p>
+                    </div>
+                </div>
+                <span slot="right" class="dcode">fgf</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>手机号码</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>所在区域</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>参观时间</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>装修预算</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>项目面积</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>装修时间</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+    </div>
+</template>
+<script>
+export default {
+
+}
+</script>
+<style scoped>
+.dr_header{
+    height: 1.5rem;
+}
+  .wl_left{
+        overflow: hidden;
+    }
+    .wl_left>div{
+        float:left;
+        display: inline-block;
+    }
+    .wl_left>div:first-child{
+        width: 0.5rem;
+        height: 0.5rem;
+        background-image: url(../images/vueimg/qbjl.svg);
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        position: relative;
+        top: 0.13rem;
+    }
+    .wl_left>div:last-child{
+        margin-left:0.3rem;
+    }
+    .wl_left p:first-child{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#333333;
+    }
+    .wl_left p:last-child{
+        font-size: 0.22rem;
+        font-family: "PingFang Regular", sans-serif;
+        color:#333333;
+    }
+   .ap_item{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+   }
+   .ap_item label{
+        color:#333333;
+   }
+   .ap_item span{
+        color:#9d9ea0;
+        padding:0.5rem;
+   }
+</style>

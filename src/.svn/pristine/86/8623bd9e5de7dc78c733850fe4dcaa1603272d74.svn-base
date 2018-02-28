@@ -1,0 +1,200 @@
+import index from '../page/index.vue'
+import districtSiteList from '../page/districtSiteList.vue'
+import login from '../page/login.vue'
+import register from '../page/register.vue'
+import changePassword from '../page/changePassword.vue'
+import freeVisit from '../page/freeVisit.vue'
+import space from '../page/space.vue'
+import discover from '../page/discover.vue'
+import myinfo from '../page/myinfo.vue'
+import waitVisitList from '../page/waitVisitList.vue'
+import applyByperson from '../page/applyByperson.vue'
+import settingByperson from '../page/settingByperson.vue'
+import detailInSite from '../page/detailInSite.vue'
+import reProject from '../page/reProject.vue'
+import edProject from '../page/edProject.vue'
+import attention from '../page/attention.vue'
+import detailInSpace from '../page/detailInSpace.vue'
+import applicationDetails from '../page/applicationDetails.vue'
+import waitingToVisit from '../page/waitingToVisit.vue'
+import proTitle from '../page/proTitle.vue'
+import district from '../page/district.vue'
+import projectAdd from '../page/projectAdd.vue'
+import coproblems from '../page/coproblems.vue'
+import feedback from '../page/feedback.vue'
+import aboutUs from '../page/aboutUs.vue'
+import aNewCount from '../page/aNewCount.vue'
+import aTitle from '../page/aTitle.vue'
+import aAddress from '../page/aAddress.vue'
+import aEdit from '../page/aEdit.vue'
+import aSubCount from '../page/aSubCount.vue'
+import aCount from '../page/aCount.vue'
+import boutique from '../page/boutique.vue'
+
+export default [
+  {
+    path: '/',
+    redirect: '/index',
+  },
+  {
+    path: '/index',
+    component: index,
+    name: '工地库'
+  },
+  {
+    path: '/districtSiteList/:sitename',
+    component: districtSiteList,
+    name: 'districtSiteList'
+  },
+  {
+    path: '/login',
+    component: login,
+    name: '登录'
+  },
+  {
+    path: '/register',
+    component: register,
+    name: '注册'
+  },
+  {
+    path: '/changePassword',
+    component: changePassword,
+    name: '修改密码'
+
+  },
+  {
+    path: '/freeVisit/:pid/:visitUid',
+    component: freeVisit,
+    name: 'freeVisit'
+  },
+  {
+    path: '/space',
+    component: space,
+    name: '我的空间'
+  },
+  {
+    path: '/discover',
+    component: discover,
+    name: '发现'
+  },
+  {
+    path: '/myinfo',
+    component: myinfo,
+    name: '个人信息'
+  },
+  {
+    path: '/waitVisitList/:type',
+    component: waitVisitList,
+    name: 'waitVisitList'
+  },
+  {
+    path: '/applyByperson/:vid/:uid',
+    component: applyByperson,
+    name: 'applyByperson'
+  },
+  {
+    path: '/settingByperson',
+    component: settingByperson,
+    name: '个人设置'
+  },
+  {
+    path: '/detailInSite/:siteId',
+    component: detailInSite,
+    name: 'detailInSite'
+  },
+  {
+    path: '/reProject',
+    component: reProject,
+    name: '发布项目'
+  },
+  {
+    path: '/attention',
+    component: attention,
+    name: '关注'
+  },
+  {
+    path: '/detailInSpace/:siteId',
+    component: detailInSpace,
+    name: '空间详情'
+  },
+  {
+    path: '/applicationDetails/:vid',
+    component: applicationDetails,
+    name: 'applicationDetails'
+  },
+  {
+    path: '/waitingToVisit/:id',
+    component: waitingToVisit,
+    name: '等待参观'
+  },
+  {
+    path: '/proTitle',
+    component: proTitle,
+    name: '项目标题'
+  },
+  {
+    path: '/district',
+    component: district,
+    name: '区域'
+  },
+  {
+    path: '/projectAdd',
+    component: projectAdd,
+    name: '项目地址'
+  },
+  {
+    path: '/coproblems',
+    component: coproblems,
+    name: 'coproblems'
+  },
+  {
+    path: '/feedback',
+    component: feedback,
+    name: 'feedback'
+  },
+  {
+    path: '/aboutUs',
+    component: aboutUs,
+    name: '关于我们'
+  },
+  {
+    path: '/aTitle',
+    component: aTitle,
+    name: 'aTitle'
+  },
+  {
+    path: '/aAddress',
+    component: aAddress,
+    name: 'aAddress'
+  },
+  {
+    path: '/aEdit/:pidAll',
+    component: aEdit,
+    name: 'aEdit'
+  },
+  {
+    path: '/aCount',
+    component: aCount,
+    name: 'aCount'
+  },
+  {
+    path: '/aNewCount',
+    component: aNewCount,
+    name: 'aNewCount'
+  },
+  {
+    path: '/aSubCount',
+    component: aSubCount,
+    name: 'aSubCount'
+  },
+  {
+    path: '/edProject/:pid/:rid',
+    component: edProject,
+    name: 'edProject'
+  },
+  {
+    path: '/boutique',
+    component: boutique,
+    name: '精品'
+  }
+]

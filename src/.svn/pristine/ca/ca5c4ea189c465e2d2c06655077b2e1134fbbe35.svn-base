@@ -1,0 +1,207 @@
+import index from '../page/index.vue'
+import districtSiteList from '../page/districtSiteList.vue'
+import login from '../page/ule-user/login.vue'
+import register from '../page/ule-user/register.vue'
+import changePassword from '../page/ule-user/changePassword.vue'
+import freeVisit from '../page/freeVisit.vue'
+import space from '../page/ule-discover/space.vue'
+import discover from '../page/ule-discover/discover.vue'
+import myinfo from '../page/myinfo.vue'
+import waitVisitList from '../page/waitVisitList.vue'
+import applyByperson from '../page/applyByperson.vue'
+import settingByperson from '../page/settingByperson.vue'
+import detailInSite from '../page/detailInSite.vue'
+import reProject from '../page/ule-discover/reProject.vue'
+import edProject from '../page/ule-discover/edProject.vue'
+import attention from '../page/ule-discover/attention.vue'
+import detailInSpace from '../page/ule-discover/detailInSpace.vue'
+import applicationDetails from '../page/applicationDetails.vue'
+import waitingToVisit from '../page/waitingToVisit.vue'
+import proTitle from '../page/ule-discover/proTitle.vue'
+import district from '../page/district.vue'
+import projectAdd from '../page/ule-discover/projectAdd.vue'
+import coproblems from '../page/coproblems.vue'
+import feedback from '../page/feedback.vue'
+import aboutUs from '../page/aboutUs.vue'
+import aNewCount from '../page/ule-authorize/aNewCount.vue'
+import aRecord from '../page/ule-authorize/aRecord.vue'
+import aTitle from '../page/ule-authorize/aTitle.vue'
+import aAddress from '../page/ule-authorize/aAddress.vue'
+import aEdit from '../page/ule-authorize/aEdit.vue'
+import aSubCount from '../page/ule-authorize/aSubCount.vue'
+import aCount from '../page/ule-authorize/aCount.vue'
+import upimgdemo from '../page/upimgdemo.vue'
+
+export default [
+  {
+    path: '/',
+    redirect: '/index',
+    name: '工地库'
+  },
+  {
+    path: '/index',
+    component: index,
+    name: '工地库'
+  },
+  {
+    path: '/districtSiteList',
+    component: districtSiteList,
+    name: 'districtSiteList'
+  },
+  {
+    path: '/login',
+    component: login,
+    name: '登录'
+  },
+  {
+    path: '/register',
+    component: register,
+    name: '注册'
+  },
+  {
+    path: '/changePassword',
+    component: changePassword,
+    name: '修改密码'
+
+  },
+  {
+    path: '/freeVisit/:pid/:visitUid',
+    component: freeVisit,
+    name: '免费参观'
+  },
+  {
+    path: '/space',
+    component: space,
+    name: '我的空间'
+  },
+  {
+    path: '/discover',
+    component: discover,
+    name: '发现'
+  },
+  {
+    path: '/myinfo',
+    component: myinfo,
+    name: '个人设置'
+  },
+  {
+    path: '/waitVisitList',
+    component: waitVisitList,
+    name: '等待参观'
+  },
+  {
+    path: '/applyByperson',
+    component: applyByperson,
+    name: '个人申请'
+  },
+  {
+    path: '/settingByperson',
+    component: settingByperson,
+    name: '个人设置'
+  },
+  {
+    path: '/detailInSite/:siteId',
+    component: detailInSite,
+    name: 'detailInSite'
+  },
+  {
+    path: '/reProject',
+    component: reProject,
+    name: '发布项目'
+  },
+  {
+    path: '/attention',
+    component: attention,
+    name: '关注'
+  },
+  {
+    path: '/detailInSpace',
+    component: detailInSpace,
+    name: '空间详情'
+  },
+  {
+    path: '/applicationDetails/:vid',
+    component: applicationDetails,
+    name: '申请参观详情'
+  },
+  {
+    path: '/waitingToVisit',
+    component: waitingToVisit,
+    name: '等待参观'
+  },
+  {
+    path: '/proTitle',
+    component: proTitle,
+    name: '项目标题'
+  },
+  {
+    path: '/district',
+    component: district,
+    name: '区域'
+  },
+  {
+    path: '/projectAdd',
+    component: projectAdd,
+    name: '项目地址'
+  },
+  {
+    path: '/coproblems',
+    component: coproblems,
+    name: 'coproblems'
+  },
+  {
+    path: '/feedback',
+    component: feedback,
+    name: 'feedback'
+  },
+  {
+    path: '/aboutUs',
+    component: aboutUs,
+    name: '关于我们'
+  },
+  {
+    path: '/aRecord',
+    component: aRecord,
+    name: 'aRecord'
+  },
+  {
+    path: '/aTitle',
+    component: aTitle,
+    name: '授权标题'
+  },
+  {
+    path: '/aAddress',
+    component: aAddress,
+    name: 'aAddress'
+  },
+  {
+    path: '/aEdit',
+    component: aEdit,
+    name: 'aEdit'
+  },
+  {
+    path: '/aCount',
+    component: aCount,
+    name: '授权账号'
+  },
+  {
+    path: '/aNewCount',
+    component: aNewCount,
+    name: '授权新账号'
+  },
+  {
+    path: '/aSubCount',
+    component: aSubCount,
+    name: '授权子账号'
+  },
+  {
+    path: '/edProject',
+    component: edProject,
+    name: '编辑项目'
+  },
+  {
+    path: '/upimgdemo',
+    component: upimgdemo,
+    name: '上传demo'
+  }
+]

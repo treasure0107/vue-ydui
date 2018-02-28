@@ -1,0 +1,131 @@
+<template>
+  <div class="setmain">
+    <yd-cell-group title="">
+      <yd-cell-item arrow href="/coproblems" type="link">
+        <span slot="left" class="sp_item">帮助与反馈</span>
+      </yd-cell-item>
+      <yd-cell-item arrow href="/aboutUs" type="link">
+        <span slot="left" class="sp_item">版本更新说明</span>
+      </yd-cell-item>
+    </yd-cell-group>
+
+    <p class="quitout" @click="quitout">退出</p>
+
+  </div>
+</template>
+<script>
+  export default {
+    components: {
+      // footerBar
+    },
+    data() {
+      return {
+        titleval: "个人设置",
+        comimg: this.$api.imghost,
+        userinfo: {
+          uid: "",
+          logoUrl: "../images/vueimg/defaulttx.svg",
+          nickName: "",
+          userName: "",
+          email: "",
+          mobile: ""
+        }
+      }
+    },
+    created() {
+      this.getUserInfo()
+      document.title = this.titleval
+    },
+    mounted() {
+
+    },
+    methods: {
+      quitout() {
+        localStorage.clear();
+        // window.close();
+        this.$router.push('/login');
+        // WeixinJSBridge.call('closeWindow');
+      },
+      upimg() {
+        console.log(this.$api.upimgurl);
+        this.$http.post(this.$api.upimgurl).then((res) => {
+          console.log(res);
+        }, (err) => {
+
+        });
+      },
+      getUserInfo() {
+        this.$http.post(this.$api.apihost + 'user/getUserInfo', {
+          uid: localStorage.uid
+        }, {emulateJSON: true}).then((res) => {
+          const userinfo = res.body.obj;
+          this.userinfo = userinfo;
+        }, (err) => {
+
+        });
+      },
+      // 更新信息
+      updateUserInfo() {
+        this.$http.post(this.$api.apihost + 'user/updateUserInfo', {
+          uid: this.userinfo.uid,
+          logoUrl: this.userinfo.logoUrl,
+          nickName: this.userinfo.nickName,
+          userName: this.userinfo.userName,
+          mobile: this.userinfo.mobile,
+          email: this.userinfo.email
+        }, {emulateJSON: true}).then((res) => {
+          this.getUserInfo();
+        }, (err) => {
+
+        });
+      }
+    }
+  }
+</script>
+<style scoped>
+  .setmain {
+    padding-top: 0.5rem;
+  }
+
+  .ap_item {
+    font-size: 0.28rem;
+    font-family: "PingFang Medium", 'Droid Sans Fallback', sans-serif;
+  }
+
+  .sp_item {
+    font-size: 0.28rem;
+    font-family: "PingFang Medium", 'Droid Sans Fallback', sans-serif;
+    color: #333333;
+    padding-left: 0.3rem;
+  }
+
+  .quitout {
+    height: 1rem;
+    background-color: #fff;
+    width: 100%;
+    line-height: 1rem;
+    padding-left: 0.6rem;
+  }
+
+  .ap_item label {
+    color: #333333;
+    display: inline-block;
+    width: 1.2rem;
+    padding-left: 0.3rem;
+  }
+
+  .ap_item span {
+    color: #9d9ea0;
+    padding: 0.5rem;
+  }
+
+  .ap_item input {
+    color: #9d9ea0;
+    padding: 0.2rem;
+    border: 0;
+  }
+
+  .cell-item:not(:last-child):after {
+    border-bottom: 1px solid #d9d9d9 !important;
+  }
+</style>

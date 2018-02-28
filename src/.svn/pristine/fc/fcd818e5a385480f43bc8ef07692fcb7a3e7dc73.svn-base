@@ -1,0 +1,115 @@
+<template>
+  <div class="login_main">
+    <div class="main">
+      <!--<h1>登录页面</h1>-->
+      <div class="m-cell">
+        <div class="cell-item">
+          <!--<div class="cell-left">手机号：</div>-->
+          <div class="cell-right">
+            <input type="text" placeholder="输入用户名或手机号" autocomplete="off"/>
+          </div>
+        </div>
+        <div class="cell-item">
+          <!--<div class="cell-left">手机号：</div>-->
+          <div class="cell-right">
+            <input type="text" pattern="[0-9]*" placeholder="输入登录密码" autocomplete="off"/>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-block btn-primary">登录</button>
+      <div class="skip_btn">
+        <a href="javascript:void(0);">微信登录</a>
+        <a href="javascript:void(0);">注册</a>
+        <a href="javascript:void(0);">忘记密码？</a>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<style>
+  .login_main {
+    width: 100%;
+    height: 100%;
+    font-family: "PingFang SC";
+  }
+
+  .main {
+    width: 7.5rem;
+    margin: 0 auto;
+    padding-top: 0.3rem;
+  }
+
+  /*.main h1 {*/
+    /*font-size: 0.36rem;*/
+    /*color: rgb(255, 255, 255);*/
+    /*background-color: #000;*/
+    /*height: 0.778rem;*/
+    /*text-align: center;*/
+    /*line-height: 0.778rem;*/
+  /*}*/
+
+  .cell-item:not(:last-child):after{
+    margin-left: 0;
+  }
+  .cell-item input {
+    width: 100%;
+    font-size: 0.28rem;
+    color: rgb(212, 212, 212);
+    height: 1.06rem;
+    line-height: 1.06rem;
+    padding-left: 0.3rem;
+    font-family: 'PingFang Medium';
+
+  }
+
+  .btn-block {
+    width: 6.4rem;
+    height: 0.92rem;
+    border-radius: 0.06rem;
+    background-color: #6198D4;
+    box-shadow: 4px 6.928px 13px 0px rgba(69, 101, 146, 0.3);
+    margin: 0.64rem auto 0;
+    font-family: 'PingFang Bold';
+  }
+
+  .skip_btn {
+    font-size: 0.3rem;
+    color: rgb(183, 183, 183);
+    line-height: 0.933rem;
+    font-family: 'PingFang Medium';
+    position: relative;
+    top: 0.8rem;
+  }
+
+  .skip_btn a:first-child {
+    margin-left: 0.6rem;
+  }
+
+  .skip_btn a:nth-child(2) {
+    position: absolute;
+    right: 2.66rem;
+    color: #6198D4;
+  }
+
+  .skip_btn a:last-child {
+    position: absolute;
+    right: 0.6rem;
+  }
+</style>
+
+<script>
+
+
+  //    export default {
+  //        data() {
+  //            return {};
+  //        },
+  //        created() {
+  //
+  //        },
+  //        methods: {}
+  //    }
+</script>
+

@@ -1,0 +1,27 @@
+
+<template>
+<div>
+    <yd-cell-group>
+        <yd-cell-item>
+            <yd-input slot="right" regex="^\d{5,12}$" placeholder="您的联系电话"></yd-input>
+        </yd-cell-item>
+        <yd-cell-item>
+            <yd-textarea slot="right" placeholder="请描述您的具体问题"></yd-textarea>
+        </yd-cell-item>
+    </yd-cell-group>
+    <div>
+        <yd-button size="large" bgcolor="#6198d4" color="#FFF">Custom Color</yd-button>
+    </div>
+
+</div>
+</template>
+
+<script type="text/babel">
+    export default {
+        data() {
+            return {
+                
+            }
+        }
+    }
+</script>

@@ -1,0 +1,211 @@
+
+<template>
+    <div> 
+        <header class="sp_head">
+            <span :class="{'sp_active':!isactive}" @click="updateUserInfo">保存</span>
+            <span :class="{'sp_active':isactive}" @click="editinfo">编辑</span>
+        </header>   
+        <yd-cell-group title="" class="dr_headers">
+            <yd-cell-item arrow href="#" type="link" class="dr_header">
+                <div slot="left">
+                    <p class="sp_item">头像</p>
+                </div>
+                <span slot="right" class="dcodes">
+                    <img :src="userinfo.logoUrl">
+                </span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>昵称</label>
+                    <input type="" name="" v-model="userinfo.nickName" v-if="isedit">
+                    <span v-else>{{userinfo.nickName}}</span>
+                </p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>用户名</label>
+                    <input type="" name="" v-model="userinfo.userName" v-if="isedit">
+                    <span v-else>{{userinfo.userName}}</span>
+                </p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>手机号</label>
+                    <input type="" name="" v-model="userinfo.mobile" v-if="isedit">
+                    <span v-else>{{userinfo.mobile}}</span>
+                </p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>邮件地址</label>
+                    <input type="" name="" v-model="userinfo.email" v-if="isedit">
+                    <span v-else>{{userinfo.email}}</span>
+                </p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>二维码</label>
+                    <span class="mydconde"></span>
+                </p>
+            </yd-cell-item>
+        </yd-cell-group>
+
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="/changePassword" type="link">
+                <span slot="left" class="sp_item">修改密码</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="/aboutUs" type="link">
+                <span slot="left" class="sp_item">关于我们</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="/coproblems" type="link">
+                <span slot="left" class="sp_item">帮助与反馈</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="sp_item"><label>退出</label></p>
+            </yd-cell-item>
+        </yd-cell-group>
+    </div>
+</template>
+<script>
+import comapi from '../config/api.js'
+    export default {
+        components:{
+            // footerBar
+        },
+        data () {
+            return {
+                titleval:"个人设置",
+                isedit:false,
+                isactive:true,
+                comimg:comapi.imghost,
+                userinfo:{
+                    uid:"",
+                    logoUrl:"http://www.berylmart.com/images/62f0b1f1aed1b8bb8fe0b4b064351454",
+                    nickName:"",
+                    userName:"",
+                    email:"",
+                    mobile:""
+                }
+            }
+        },
+        created () {
+            this.getUserInfo()
+            document.title=this.titleval
+        },
+        mounted () {
+
+        },
+        methods:{
+            getUserInfo(){
+                this.$http.post(comapi.apihost+'user/getUserInfo',{
+                    uid:'100000'
+                },{emulateJSON:true}).then((res)=>{
+                    const userinfo = res.body.obj;
+                    this.userinfo=userinfo;
+                },(err)=>{
+
+                });
+            },
+            editinfo(){
+                this.isedit=true
+                this.isactive=false
+            },
+            updateUserInfo(){
+                this.$http.post(comapi.apihost+'user/updateUserInfo',{
+                    uid:this.userinfo.uid,
+                    logoUrl:this.userinfo.logoUrl,
+                    nickName:this.userinfo.nickName,
+                    userName:this.userinfo.userName,
+                    mobile:this.userinfo.mobile,
+                    email:this.userinfo.email
+            },{emulateJSON:true}).then((res)=>{
+                    this.getUserInfo();
+                    this.isedit=false;
+                    this.isactive=true;
+                },(err)=>{
+
+                });
+            }
+        }
+    }
+</script>
+<style type="text/css">
+.sp_head{
+    height: 0.8rem;
+    line-height: 0.8rem;
+    font-size: 0.28rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: #9d9ea0;
+    padding:0 0.5rem;
+}
+.sp_head span{
+    display: inline-block;
+    float:right;
+    margin-right: 0.3rem;
+}
+.sp_active{
+    color: #6198d4;
+}
+.mydconde{
+    width: 0.4rem;
+    height: 0.4rem; 
+    background-image: url(../images/vueimg/erweima.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0.4rem 0.4rem;
+}
+.dr_headers{
+    margin-bottom: 0 !important;
+}
+.dr_header{
+    height: 1.5rem;
+    /*border-bottom: 1px solid #d9d9d9;*/
+}
+.dr_header:after{
+    margin-left: .24rem;
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid #d9d9d9;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.dcodes{
+    display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem; 
+    overflow: hidden;
+    /*background-image: url(../images/vueimg/qbjl.svg);
+    background-repeat: no-repeat;*/
+}
+.dcodes img{
+    width: 100%;
+}
+     .ap_item{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+   }
+   .sp_item{
+    font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#333333;
+   }
+   .ap_item label{
+        color:#333333;
+        display: inline-block;
+        width:1.2rem;
+   }
+   .ap_item span{
+        color:#9d9ea0;
+        padding:0.5rem;
+   }
+   .ap_item input{
+        color:#9d9ea0;
+        padding:0.2rem;
+        border:0.01rem solid #6198d4;
+   }
+</style>

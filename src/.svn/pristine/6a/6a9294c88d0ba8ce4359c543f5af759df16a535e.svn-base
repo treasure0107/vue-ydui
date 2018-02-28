@@ -1,0 +1,17 @@
+import index from '../page/index.vue'
+import content from '../page/content.vue'
+import districtSiteList from '../page/districtSiteList.vue'
+export default [
+    {
+        path:'/',
+        component:index
+    },
+    {
+        path:'/content',
+        component:content
+    },
+    {
+        path:'/districtSiteList',
+        component:districtSiteList
+    }
+]

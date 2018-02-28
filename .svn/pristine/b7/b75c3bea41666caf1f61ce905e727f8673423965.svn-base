@@ -1,0 +1,64 @@
+/*加粗*/
+@font-face{
+    font-family: 'PingFang Bold';
+    src:url('../fonts/PingFang Bold.ttf');
+    /*src:
+    url('../fonts/PingFang Bold.eot?#font-splider') format('embedded-opentype'),
+    url('../fonts/PingFang Bold.ttf') format('truetype'),
+    url('../fonts/PingFang Bold.svg') format('svg');*/
+}
+/*极细*/
+@font-face{
+    font-family: 'PingFang ExtraLight';
+    src:url('../fonts/PingFang ExtraLight.ttf');
+    /*src:
+    url('../fonts/PingFang ExtraLight.eot?#font-splider') format('embedded-opentype'),
+    url('../fonts/PingFang ExtraLight.ttf') format('truetype'),
+    url('../fonts/PingFang ExtraLight.svg') format('svg');*/
+}
+/*特粗*/
+@font-face{
+    font-family: 'PingFang Heavy';
+    src:url('../fonts/PingFang Heavy.ttf');
+    /*src:
+    url('../fonts/PingFang Heavy.eot?#font-splider') format('embedded-opentype'),
+    url('../fonts/PingFang Heavy.ttf') format('truetype'),
+    url('../fonts/PingFang Heavy.svg') format('svg');*/
+}
+/*较细*/
+@font-face{
+    font-family: 'PingFang Light';
+    src:url('../fonts/PingFang Light.ttf');
+    /*src:
+    url('../fonts/PingFang Light.eot?#font-splider') format('embedded-opentype'),
+    url('../fonts/PingFang Light.ttf') format('truetype'),
+    url('/fonts/PingFang Light.svg') format('svg');*/
+}
+/*中等*/
+@font-face{
+    font-family: 'PingFang Medium';
+    src:url('../fonts/PingFang Medium.ttf');
+    /*src:
+    url('../fonts/PingFang Medium.eot?#font-splider') format('embedded-opentype'),
+    url('../fonts/PingFang Medium.ttf') format('truetype'),
+    url('../fonts/PingFang Medium.svg') format('svg');*/
+}
+/*常规*/
+@font-face{
+    font-family: 'PingFang Regular';
+    src:url('../fonts/PingFang Regular.ttf');
+    /*src:
+    url('../fonts/PingFang Regular.eot?#font-splider') format('embedded-opentype'),
+    url('../fonts/PingFang Regular.ttf') format('truetype'),
+    url('../fonts/PingFang Regular.svg') format('svg');*/
+}
+
+/*底部公用*/
+footer svg{
+    width: 0.4rem;
+}
+.tabbar-active{
+    color:#6198d4;
+}
+.footer_svgk{fill-rule:evenodd;clip-rule:evenodd;fill:#6198D4;}
+.footer_svgs{fill-rule:evenodd;clip-rule:evenodd;fill:#5A5A5A;}

@@ -1,0 +1,276 @@
+<template>
+    <div>
+        <div>
+            <div class="c_header">
+                <yd-flexbox>
+                    <yd-flexbox-item>
+                        <p>170平现代中式风格装修记-环保实用</p>
+                        <div>
+                            <span>预算:50万</span> /
+                            <span>面积:50万</span> /
+                            <span>已开工10天</span>
+                        </div>
+                    </yd-flexbox-item>
+                    <div class="c_header_right" id="dp_attenbtn">
+                        <router-link to="/reProject">
+                        <yd-button bgcolor="#fff" color="#6198d4">
+                            发布
+                        </yd-button>
+                        </router-link>
+                    </div>
+                </yd-flexbox>
+            </div>
+            <div class="c_detail">
+               <div class="c_leftimg">
+                    <img src="http://bj.web.tedu.cn/upload/20170213/20170213171244_289.png">
+                </div>
+                <div class="c_detail_main">
+                    <div>
+                        <p class="c_record">
+                            装修原则规范的股份赴敌甘负戈佛公分的发的规范化是大佛我给你个发送到赴敌甘负戈我哦个梵蒂冈梵蒂冈佛的还能广汇股份口号丰东股份更好化工还哦装修原则规范的股份赴敌甘负戈佛公分的发的规范化是大佛我给你个发送到赴敌甘负戈我哦个梵蒂冈梵蒂冈佛的还能广汇股份口号丰东股份更好化工还哦
+                        </p>
+                        <p class="c_detail_button">全文</p>
+                        <div class="c_imgs">
+                            <yd-grids-group :rows="3" title="">
+                                <yd-grids-item v-for="n in 9">
+                                    <span slot="icon"><img src="http://bj.web.tedu.cn/upload/20170213/20170213171244_289.png"></span>
+                                </yd-grids-item>
+                            </yd-grids-group>
+                        </div>
+                        <div class="c_detail_center">
+                            <p><span>深圳.龙岗</span><span>距离200m</span></p>
+                            <p>7月15日</p>
+                        </div>
+                        <div class="c_detail_coms">
+                            <div>
+                            <span></span>
+                            <router-link to="/reProject">
+                            <span class="c_detail_edit">编辑</span>
+                            </router-link>
+                            </div>
+                            <div class="c_detail_share"><span>6</span><span>6</span><span></span></div>
+                            <div>
+                                <input type="text" name="" placeholder="写评论"/>
+                                <ul>
+                                    <li>
+                                        <div class="c_detail_comitm"><i>张三</i><span>感觉不错，想去看看</span></div>
+                                        <ul>
+                                            <li class="c_detail_recomitm">
+                                                <div><i>李四</i>回复<i>张三</i><span>可以，想去看看</span></div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="c_detail_comitm"><i>张三</i><span>感觉不错，想去看看</span></div>
+                                        <ul>
+                                            <li class="c_detail_recomitm">
+                                                <div><i>李四</i>回复<i>张三</i><span>可以，想去看看</span></div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <i class="c_detail_packup">收起</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    export default {
+
+    }
+</script>
+<style type="text/css">
+.c_detail_share{
+    position: absolute;
+    left:0.8rem;
+    top:0;
+}
+.c_detail_share span{
+    display: inline-block;
+    width: 33.3333%;
+    height: 0.3rem;
+    line-height: 0.3rem;
+    text-align: center;
+    padding-left:0.4rem;
+}
+.c_detail_share span:nth-child(1){
+    background-image: url(../../images/vueimg/dzan.svg);
+    background-repeat:no-repeat;
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.2rem center;
+}
+.c_detail_share span:nth-child(2){
+    background-image: url(../../images/vueimg/pingl.svg);
+    background-repeat:no-repeat;
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.2rem center;
+}
+.c_detail_share span:nth-child(3){
+    background-image: url(../../images/vueimg/zfa.svg);
+    background-repeat:no-repeat;
+    background-size: 0.3rem 0.3rem;
+    background-position: 0.4rem center;
+}
+#dp_attenbtn button{
+    background-image: url(../../images/vueimg/fabu.svg);
+    background-repeat:no-repeat;
+    background-size: 0.6rem 0.4rem;
+    background-position: 0.2rem center;
+}
+.c_detail_packup{
+    display: block;
+    margin:0.3rem 0;
+}
+.c_detail_recomitm{
+    line-height: 0.16rem;
+    padding-left: 0.2rem;
+}
+.c_detail_comitm{
+    margin-top: 0.26rem;
+    margin-bottom: 0.26rem;
+}
+.c_detail_coms{
+    position: relative;
+}
+.c_detail_coms ul span{
+    margin-left: 0.3rem;
+}
+.c_detail_coms i{
+    color:#6198d4;
+}
+.c_detail_coms>div:first-child{
+    margin-top:0.18rem;
+    margin-bottom: 0.3rem;
+    overflow: hidden;
+}
+.c_detail_coms>div:first-child>span:first-child{
+    float:left;
+    width: 0.4rem;
+    height: 0.3rem;
+    display: inline-block;
+    background-image: url(../../images/vueimg/more.svg);
+    background-repeat: no-repeat;
+}
+.c_detail_edit{
+    float:right;
+    /*width: 0.4rem;*/
+    padding-left:0.4rem;
+    height: 0.3rem;
+    display: inline-block;
+    background-image: url(../../images/vueimg/edit.svg);
+    background-repeat: no-repeat;
+    color:#6198d4;
+}
+.c_detail_coms>div:nth-child(2){
+    font-family: "PingFang Medium";
+    font-size: 0.3rem;
+    color:#fff;
+    width: 3.48rem;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    background-color: #8795a5;
+    border-radius: 0.04rem;
+}
+.c_detail_coms>div:nth-child(3){
+    font-family: "PingFang Medium";
+    font-size: 0.22rem;
+    color:#5a5a5a;
+    background-color: #eef1f6;
+    border-radius: 0.04rem;
+    padding:0.2rem 0.26rem;
+}
+.c_detail_coms>div:nth-child(3) input{
+    width: 5.46rem;
+    height: 0.64rem;
+    background-color: #fff;
+    margin-bottom: 0.26rem;
+    text-indent: 0.3rem;
+}
+    .c_detail_center{
+        margin-top:0.26rem;
+    }
+    .c_detail_center p:first-child{
+        font-family: "PingFang Regular";
+        font-size: 0.22rem;
+        color:#6198d4;
+    }
+    .c_detail_center p:last-child{
+        font-family: "PingFang Medium";
+        font-size: 0.22rem;
+        color:#b0b0b0;
+    }
+    .c_imgs{
+        padding-right: 1.3rem;
+    }
+    .c_imgs img{
+        width: 100%;
+    }
+    .c_header{
+        width: 100%;
+        height: 2rem;
+        padding:0.38rem 0.36rem;
+    }
+    .c_header p{
+        font-family: "PingFang Heavy";
+        font-size: 0.4rem;
+        color:#333333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .c_header span{
+        font-family: "PingFang Medium";
+        font-size: 0.22rem;
+        color:#b0b0b0;
+    }
+    .c_leftimg{
+        width:16%;
+        background-color: #fff;
+        height: 100%;
+        float: left;
+    }
+    .c_leftimg img{
+        width:0.7rem;
+    }
+    .c_detail{
+        background-color: #fff;
+        overflow: hidden;
+        padding:0.4rem 0.36rem 0.4rem 0;
+    }
+    .c_header_right button{
+        font-family: "PingFang Bold";
+        font-size: 0.3rem;
+        width: 1.5rem;
+        height: 0.76rem;
+        border: 0.02rem solid #6198d4;
+        border-radius: 0.38rem;
+        text-align: center;
+        text-indent: 0.4rem;
+    }
+    .c_detail_button{
+        font-family: "PingFang Bold";
+        font-size: 0.3rem;
+        color:#6198d4;
+    }
+    .c_detail_main{
+        width: 84%;
+        float:right;
+    }
+    .c_record{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        font-size: 0.28rem;
+        color:#333333;
+        font-family: "PingFang Medium";
+        /*line-height: 0.2rem;*/
+    }
+</style>

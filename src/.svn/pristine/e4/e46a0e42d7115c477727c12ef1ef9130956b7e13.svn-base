@@ -1,0 +1,30 @@
+<template>
+    <div class="au_main">
+        <header class="au_header">
+            关于我们
+        </header>
+        <div>
+            <p class="au_body">我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~我们是一群有理想、有抱负、有情怀的年轻人~</p>
+        </div>
+    </div>
+</template>
+<style scoped>
+    .au_header{
+        font-size: 0.36rem;
+        color:#6198d4;
+        font-family: "PingFang Heavy",'Droid Sans Fallback' ,sans-serif;
+        padding:0.3rem 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .au_body{
+        padding:0.3rem 0;
+        font-size: 0.28rem;
+        color:#333333;
+        line-height: 2;
+        font-family: "PingFang Medium" ,'Droid Sans Fallback',sans-serif;
+    }
+    .au_main{
+        padding:0 0.5rem;
+        background-color: #fff;
+    }
+</style>

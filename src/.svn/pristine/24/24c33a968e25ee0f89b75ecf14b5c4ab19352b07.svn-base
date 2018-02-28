@@ -1,0 +1,188 @@
+<template>
+  <div>
+    <div class="account_search_con" @click="searchName">
+      <input type="text" placeholder="输入用户名或手机号" class="searchName" v-model="searchContent">
+      <svg x="0px" y="0px" viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;" xml:space="preserve" class="account_search">
+<g>
+	<path class="st011" d="M35.5,33.3l-7.9-7.9c2.2-2.7,3.5-6.1,3.5-9.8C31.1,7,24.1,0,15.5,0S0,7,0,15.5c0,8.6,7,15.5,15.5,15.5
+		c3.7,0,7.1-1.3,9.8-3.5l7.9,7.9c0.6,0.6,1.6,0.6,2.3,0C36.2,34.9,36.2,33.9,35.5,33.3L35.5,33.3z M3.3,15.5
+		c0-6.8,5.5-12.3,12.3-12.3c6.8,0,12.3,5.5,12.3,12.3c0,3.2-1.2,6.2-3.3,8.4c-0.1,0.1-0.3,0.2-0.4,0.3c-0.1,0.1-0.2,0.2-0.3,0.4
+		c-2.2,2-5.1,3.3-8.4,3.3C8.8,27.8,3.3,22.3,3.3,15.5L3.3,15.5z"/>
+</g>
+</svg>
+    </div>
+    <div class="search_res">查找结果</div>
+    <div>
+      <ul>
+        <li class="account_list">
+          <div class="account_img">
+            <svg x="0px" y="0px" viewBox="0 0 31 37" style="enable-background:new 0 0 31 37;" xml:space="preserve" class="account_head">
+<g>
+	<path class="st0001" d="M20.5,22.6c-0.1,0-0.2-0.1-0.2-0.1c-0.1-0.1-0.2-0.2-0.4-0.3c-0.1-0.2-0.2-0.4-0.3-0.6c-0.1-0.2-0.1-0.6-0.1-1
+		c0-0.4,0.1-0.9,0.3-1.4c1.2-1.2,2.2-2.7,2.9-4.6c0.8-1.8,1.2-3.6,1.2-5.4c0-2.8-0.8-5-2.4-6.5c-1.6-1.6-3.6-2.3-6-2.3
+		c-2.4,0-4.4,0.8-6,2.3C7.9,4.2,7.1,6.4,7.1,9.2c0,1.8,0.4,3.7,1.2,5.5c0.8,1.8,1.7,3.3,2.9,4.6c0.2,0.6,0.3,1.1,0.3,1.5
+		c0,0.4-0.1,0.7-0.3,1c-0.2,0.3-0.4,0.5-0.6,0.6c-0.2,0.1-0.3,0.2-0.4,0.2c-1.7,0.6-3.3,1.3-4.8,2.1c-1.5,0.8-2.7,1.7-3.8,2.7
+		c-1.1,1-1.6,2.1-1.6,3v1.1c0,1,0.4,1.8,1.3,2.5c0.9,0.7,2.1,1.2,3.7,1.6c1.6,0.4,3.2,0.6,4.9,0.8c1.7,0.2,3.6,0.2,5.6,0.2
+		C25.8,36.7,31,35,31,31.6v-1.1c0-1-0.5-2-1.6-3.1c-1.1-1-2.4-2-3.9-2.7C23.9,23.9,22.3,23.2,20.5,22.6L20.5,22.6L20.5,22.6z"/>
+</g>
+</svg>
+          </div>
+          <div class="account_news">
+            <p class="account_tit">ADA</p>
+            <P class="account_phone">手机号：15912345678</P>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <button type="button" class="btn-block btn-primary" @click="empowerSure">确定授权</button>
+  </div>
+</template>
+
+<style scoped>
+  ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+
+  :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+
+  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+
+  :-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium';
+  }
+
+  .account_search_con {
+    position: relative;
+  }
+
+  .searchName {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 0.88rem;
+    padding-left: 0.46rem;
+    padding-right: 0.46rem;
+    background-color: #fff;
+    margin-top: 0.18rem;
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+  }
+
+  .search_res {
+    display: block;
+    width: 100%;
+    height: 0.46rem;
+    line-height: 0.46rem;
+    padding-left: 0.46rem;
+    font-size: 0.22rem;
+    color: #b6b6b6;
+  }
+
+  .account_list {
+    width: 100%;
+    height: 1.3rem;
+    background-color: #fff;
+    padding-left: 0.46rem;
+  }
+
+  .account_tit {
+    font-size: 0.32rem;
+    color: #333;
+    font-family: 'PingFang Regular';
+    padding-top: 0.3rem;
+  }
+
+  .account_phone {
+    font-size: 0.22rem;
+    color: #333;
+    font-family: 'PingFang Regular';
+  }
+
+  .st011 {
+    fill-rule: evenodd;
+    clip-rule: evenodd;
+    fill: #909090;
+  }
+
+  .account_search {
+    width: 0.36rem;
+    position: absolute;
+    right: 0.46rem;
+    top: 0.46rem;
+  }
+
+  .st0001 {
+    fill-rule: evenodd;
+    clip-rule: evenodd;
+    fill: #D5D8DF;
+  }
+
+  .account_img {
+    width: 0.68rem;
+    height: 0.68rem;
+    background-color: #9D9EA0;
+    border-radius: 0.34rem;
+    text-align: center;
+    padding-top: 0.1rem;
+    float: left;
+    margin-top: 0.34rem;
+  }
+
+  .account_head {
+    width: 0.36rem;
+  }
+
+  .account_news {
+    float: left;
+    margin-left: 0.34rem;
+  }
+  .btn-block {
+    width: 6.6rem;
+    height: 0.92rem;
+    font-size:0.32rem;
+    border-radius: 0.06rem;
+    background-color: #6198D4 !important;
+    margin: 0.64rem auto 0;
+    font-family: 'PingFang Bold';
+  }
+</style>
+
+<script>
+  import apicom from '../config/api.js'
+
+  export default {
+    data() {
+      return {
+        searchContent:''
+      };
+    },
+    created() {
+
+    },
+    methods: {
+      searchName(){
+//        const searchUrl = apicom.apihost + 'user/getSubUserList';
+//        this.$http.post(searchUrl,{
+//
+//        },{emulateJSON:true}).then(res => {
+//          console.log(res);
+//        }, err => {
+//          console.log(err);
+//        });
+      },
+      empowerSure(){
+
+      }
+    }
+  }
+</script>
+

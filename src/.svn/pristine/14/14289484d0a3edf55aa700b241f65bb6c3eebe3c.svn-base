@@ -1,0 +1,43 @@
+<template>
+  <div class="proTitle">
+
+    <div class="proTitle-show">
+      <ul>
+        <li @click="show"><span class="proTitle-name">170平现代中式风格装修记</span><i class="proTitle-back"></i></li>
+        <li @click="show"><span class="proTitle-name">170平现代中式风格装修记</span><i class="proTitle-back"></i></li>
+        <li @click="show"><span class="proTitle-name">170平现代中式风格装修记</span><i class="proTitle-back"></i></li>
+        <li @click="show"><span class="proTitle-name">170平现代中式风格装修记</span><i class="proTitle-back"></i></li>
+        <li @click="show"><span class="proTitle-name">170平现代中式风格装修记</span><i class="proTitle-back"></i></li>
+        <li @click="show"><span class="proTitle-name">170平现代中式风格装修记</span><i class="proTitle-back"></i></li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    methods: {
+      show(e){
+        if($(e.target).find(".proTitle-back").css("display") == "none"){
+          $(e.target).find(".proTitle-back").show();
+        }else{
+          $(e.target).find(".proTitle-back").hide();
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .proTitle-show li i{
+    width:0.33rem;
+    height:100%;
+    float:right;
+    margin-right:0.49rem;
+    background: url(../images/space/project_selected.svg) center center no-repeat;
+    background-size:0.33rem 0.22rem;
+    display:none;
+  }
+</style>
+
+
+
+

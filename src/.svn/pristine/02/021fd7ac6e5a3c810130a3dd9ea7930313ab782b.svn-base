@@ -1,0 +1,217 @@
+
+<template>
+    <div>
+        <header class="sp_head">
+            <p>用户ID:<span>{{userinfo.uid}}</span><button class="save-edit" v-show="saveEdit" @click="saveEdits">保存</button></p>
+        </header>
+        <yd-cell-group title="" class="dr_headers">
+            <yd-cell-item arrow type="div" class="dr_header">
+                <div slot="left">
+                    <p class="sp_item">头像</p>
+                </div>
+                <!-- <span slot="right" class="dcodes" @click="upimg"> -->
+                <span slot="right" class="dcodes">
+                    <img :src="userinfo.logoUrl">
+                    <input class="file" name="file" type="file" accept="image/png,image/gif,image/jpeg" @change="update">
+                </span>
+            <!-- <input class="file" name="file" type="file" accept="image/png,image/gif,image/jpeg" @change="update"/> -->
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>昵称</label>
+                    <input type="" name="" id="editfocus" v-model="userinfo.nickName" @keyup="alertSave">
+                </p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left" class="ap_item"><label>邮件</label>
+                    <input type="" name="" v-model="userinfo.email" @keyup="alertSave">
+                </p>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item arrow href="/changePhone" type="link">
+                <p slot="left" class="ap_item"><label>手机号</label>
+                    <input type="" name="" v-model="userinfo.mobile">
+                </p>
+            </yd-cell-item>
+        </yd-cell-group>
+    </div>
+</template>
+<script>
+    export default {
+        data () {
+            return {
+                titleval:"我的信息",
+                saveEdit:false,
+                userinfo:{
+                    uid:"",
+                    logoUrl:require("../images/vueimg/defaulttx.svg"),
+                    nickName:"",
+                    userName:"",
+                    email:"",
+                    mobile:"",
+                    subRule:"3"
+                }
+            }
+        },
+        created () {
+            this.getUserInfo()
+            document.title=this.titleval
+        },
+        mounted () {
+
+        },
+        methods:{
+            alertSave(){
+                // 待开发
+                this.saveEdit=true;
+            },
+            saveEdits(){
+                this.updateUserInfo();
+                this.saveEdit=false;
+            },
+            update(e){
+                let file = e.target.files[0];
+                let param = new FormData(); //创建form对象
+                param.append('file',file,file.name);//通过append向form对象添加数据
+                param.append('chunk','0');//添加form表单中其他数据
+                // console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+                let config = {
+                    headers:{'Content-Type':'multipart/form-data'}
+                };  //添加请求头
+                this.$http.post(this.$api.upimgurl,param,config)
+                  .then((response)=>{
+                    console.log(response.data);
+                    var data=response.data;
+                    let imgUrl=$.trim(data.substring(data.indexOf("MD5:") + 4, data.indexOf("</h1>")));
+                    // this.picUrlval.push(imgUrl);
+                    console.log(imgUrl);
+                    this.userinfo.logoUrl=this.$api.imghost+imgUrl;
+                    this.updateUserInfo(); 
+                })
+            },
+            quitout(){
+                localStorage.clear();
+                // window.close();
+            },
+            upimg(){
+                console.log(this.$api.upimgurl);
+                this.$http.post(this.$api.upimgurl).then((res)=>{
+                    console.log(res);
+                },(err)=>{
+
+                });
+            },
+            getUserInfo(){
+                this.$http.post(this.$api.apihost+'user/getUserInfo',{
+                    uid:localStorage.uid
+                },{emulateJSON:true}).then((res)=>{
+                    const userinfo = res.body.obj;
+                    this.userinfo=userinfo;
+                },(err)=>{
+
+                });
+            },
+            // 更新信息
+            updateUserInfo(){
+                var reqjson={
+                        uid:this.userinfo.uid,
+                        logoUrl:this.userinfo.logoUrl,
+                        nickName:this.userinfo.nickName,
+                        userName:this.userinfo.userName,
+                        mobile:this.userinfo.mobile,
+                        email:this.userinfo.email
+                    }
+                    // let logurl=this.logoUrl;
+                    // let imgUrl=$.trim(logurl.substring(logurl.lastIndexOf("/")+1));
+               
+                this.$http.post(this.$api.apihost+'user/updateUserInfo',reqjson,{emulateJSON:true}).then((res)=>{
+                    this.getUserInfo();
+                    localStorage.headimgurl=this.userinfo.logoUrl;
+                },(err)=>{
+
+                });
+            }
+        }
+    }
+</script>
+<style type="text/css" scoped>
+
+.save-edit{
+    position: absolute;
+    right: 0.5rem;
+    top: 0.15rem;
+}
+.sp_head{
+    height: 0.8rem;
+    line-height: 0.8rem;
+    font-size: 0.28rem;
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    color: #9d9ea0;
+    padding:0 0.5rem;
+    position: relative;
+}
+.dr_headers{
+    margin-bottom: 0 !important;
+}
+.dr_header{
+    height: 1.5rem;
+    /*border-bottom: 1px solid #d9d9d9;*/
+}
+.dr_header:after{
+    margin-left: .24rem;
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid #d9d9d9;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.dcodes{
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.8rem;
+    overflow: hidden;
+    position: relative;
+    /*background-image: url(../images/vueimg/qbjl.svg);
+    background-repeat: no-repeat;*/
+}
+.file{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0.8rem;
+}
+.dcodes img{
+    width: 100%;
+    min-height: 100%;
+}
+     .ap_item{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+   }
+   .sp_item{
+    font-size: 0.28rem;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        color:#333333;
+        padding-left: 0.3rem;
+   }
+   .ap_item label{
+        color:#333333;
+        display: inline-block;
+        width:1.2rem;
+        padding-left: 0.3rem;
+   }
+   .ap_item input{
+        color:#9d9ea0;
+        padding:0.2rem;
+        border:0;
+   }
+</style>

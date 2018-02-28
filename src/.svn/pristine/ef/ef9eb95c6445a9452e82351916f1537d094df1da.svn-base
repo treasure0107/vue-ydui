@@ -1,0 +1,20 @@
+<template>
+    <div class="verCode">
+        <h1 class="verCode-tip">请提供您的手机号，以方便他人预约您的工地</h1>
+    </div>
+</template>
+
+<script>
+  export default {
+    data: function () {
+      return {
+        title: '我是頭部'
+      }
+    }
+  }
+</script>
+<style scoped>
+  .verCode-tip{
+    font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+  }
+</style>

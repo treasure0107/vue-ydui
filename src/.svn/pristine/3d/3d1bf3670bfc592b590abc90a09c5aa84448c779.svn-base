@@ -1,0 +1,28 @@
+<template>
+    <div>
+        <verCode></verCode>
+    </div>
+</template>
+<script>
+import verCode from '../components/verCode.vue'
+    export default {
+        components:{
+            verCode 
+        },
+        data(){
+            return {
+                titleval:"修改手机号",
+                origPhone:'',
+            }
+        },
+        created(){
+            this.origPhone=this.$route.params.origPhone;
+            document.title=this.titleval
+        },
+        methods:{
+        }
+    }
+</script>
+<style>
+
+</style>

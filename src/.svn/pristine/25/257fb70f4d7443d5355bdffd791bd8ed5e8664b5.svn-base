@@ -1,0 +1,30 @@
+<template>
+    <div class="space-head">
+        <div class="space-con">
+          <router-link to="" class="space-face">Home</router-link>
+        </div>
+    </div>
+</template>
+<script>
+    export default {
+    }
+</script>
+<style>
+  .space-head {
+    width:7.5rem;
+    height:2.88rem;
+    background:url(../images/space/space_banner.jpg) center center no-repeat;
+    position:relative;
+  }
+  .space-con{
+    position:absolute;
+    left:0.48rem;
+    bottom:-0.28rem;
+  }
+  .space-face{
+    width:1.42rem;
+    height:1.42rem;
+    background-color: #e3e8f4;
+    border:0.03rem solid #fff;
+  }
+</style>

@@ -1,0 +1,404 @@
+<template>
+    <div>
+        <div class="space-head" :style="{backgroundImage:'url('+myoverimg+')'}">
+            <!--<div class="attention-bk">-->
+                <!--<input class="overimg" name="file" type="file" accept="image/png,image/gif,image/jpeg" @change="changeCoverimg">-->
+            <!--</div>-->
+          <form id="attenBac">
+            <input type="file" accept="image/*" @change="atteBac"    name="file" multiple/>
+          </form>
+            <div class="space-con">
+                <router-link to="space" class="space-face" :style="{backgroundImage:'url('+myface+')'}"></router-link>
+                <router-link to="space" class="space-name">{{myname}}</router-link>
+            </div>
+        </div>
+        <div class="attention-body">
+        </div>
+        <div v-if="hasData">
+            <yd-infinitescroll :on-infinite="getRecordByFollow" ref="infinitescrollDemo">
+                <yd-list theme="1" slot="list">
+                    <div class="c_detail" :class="{c_detail_border:recordList.length!=index+1}" v-for="(item,index) in recordList">
+                        <div class="c_leftimg">
+                            <!-- <img :src="comimg+item.coverImgUrl+'?w=30&h=30'"> -->
+                            <div class="a_itemimg" :style="{backgroundImage:'url('+comimg+item.coverImgUrl+')'}">
+                            </div>
+                        </div>
+                        <div class="c_detail_main">
+                            <div>
+                                <router-link :to="'/detailInSite/'+item.pid">
+                                    <p class="att_title">{{item.title}}</p>
+                                </router-link>
+                                <p class="c_record lineclamp">
+                                    {{item.content}}
+                                </p>
+                                <p class="c_detail_button" @click="alltext">{{item.content.length>62?'全文':''}}</p>
+                                <div class="c_imgs">
+                                    <!-- <ul>
+                                        <li v-for="ite in item.recordImgList">
+                                            <img :src="comimg+ite.imgUrl">
+                                        </li>
+                                    </ul> -->
+                                    <!--<template>-->
+                                    <yd-lightbox>
+                                        <yd-lightbox-img v-for="(ite,ind) in item.recordImgList" :key="ind" :src="comimg+ite.imgUrl"></yd-lightbox-img>
+                                    </yd-lightbox>
+                                    <!--</template>-->
+                                </div>
+                                <div class="c_detail_center">
+                                    <p><span>{{item.city}}.{{item.area}}</span><span>&nbsp;距离{{item.distance}}</span></p>
+                                    <p>{{item.createTime}}</p>
+                                </div>
+                                <v-comment :rid="item.rid" :isEdit="isEdit" :visitUid="item.uid" :pid="item.pid"></v-comment>
+                            </div>
+                        </div>
+                    </div>
+                </yd-list>
+                 <!-- 数据全部加载完毕显示 -->
+                <span slot="doneTip"></span>
+                <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+                <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+            </yd-infinitescroll>
+        </div>
+        <div class="nodata" v-else>
+            <p>{{nodata}}</p>
+        </div>
+    </div>
+</template>
+<script>
+    import vComment from '../components/comment.vue'
+    export default {
+        components:{
+            vComment
+        },
+
+        data(){
+            return {
+                // isActive:true,
+                isEdit:false,
+                hasData:true,
+                myname:'姓名',
+                nodata:'暂时没有数据！',
+                myoverimg:require('../../static/img/myoverimg.jpg'),
+                myface:require('../../static/img/default_himg.svg'),
+                comimg:this.$api.imghost,
+                pagenum:0,
+                page:0,
+                pageSize:10,
+                recordList:[],
+                replayRid:''
+            }
+        },
+        created(){
+            this.getRecordByFollow()
+            if (localStorage.nickname) {
+                this.myname=localStorage.nickname
+            }
+            if (localStorage.coverImgUrl) {
+                this.myoverimg=localStorage.coverImgUrl
+            }
+            if (localStorage.headimgurl) {
+                this.myface=localStorage.headimgurl
+            }
+        },
+
+        methods:{
+//            changeCoverimg(e){
+//                let file = e.target.files[0];
+//                let param = new FormData(); //创建form对象
+//                param.append('file',file,file.name);//通过append向form对象添加数据
+//                param.append('chunk','0');//添加form表单中其他数据
+//                // console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+//                let config = {
+//                    headers:{'Content-Type':'multipart/form-data'}
+//                };  //添加请求头
+//                this.$http.post(this.$api.upimgurl,param,config)
+//                  .then(response=>{
+//                    var data=response.data;
+//                    let imgUrl=$.trim(data.substring(data.indexOf("MD5:") + 4, data.indexOf("</h1>")));
+//                    var coimg=this.$api.imghost+imgUrl;
+//                    this.$http.post(this.$api.apihost+'user/updateCoverImgUrl',{
+//                        uid:localStorage.uid,
+//                        coverImgUrlFollow:imgUrl,
+//                        coverImgUrl:''
+//                    },{emulateJSON:true}).then((res)=>{
+//                       this.myoverimg=coimg;
+//                        localStorage.coverImgUrl=this.myoverimg;
+//                    },(err)=>{
+//
+//                    });
+//                })
+//            },
+          atteBac(){
+            var formData = new FormData($("#attenBac" )[0]);
+            $.ajax({
+              url: this.$api.upimgurl,
+              type: 'POST',
+              data: formData,
+              async: false,
+              cache: false,
+              contentType: false,
+              processData: false,
+              success:(data)=> {
+                let imgUrl=$.trim(data.substring(data.indexOf("MD5:") + 4, data.indexOf("</h1>")));
+                let coimg=this.$api.imghost+imgUrl;
+                this.$http.post(this.$api.apihost+'user/updateCoverImgUrl',{
+                  uid:localStorage.uid,
+                  coverImgUrlFollow:imgUrl,
+                  coverImgUrl:''
+                },{emulateJSON:true}).then((res)=>{
+                  this.myoverimg=coimg;
+                  localStorage.coverImgUrl=this.myoverimg;
+                },(err)=>{
+
+                });
+              },
+              error: (returndata)=> {
+                alert(returndata);
+              }
+            });
+          },
+            // 分享，待开发
+            // feedbackIs(res){
+            //     // console.log(res);
+            // },
+            // 获取关注过的工地列表
+            getRecordByFollow(){
+                var uid;
+                if (localStorage.uid) {
+                    uid=localStorage.uid;
+                    this.$http.post(this.$api.apihost+'project/getRecordByFollow',{
+                        uid:uid,
+                        startRow:this.page,
+                        rowCount:this.pageSize
+                    },{emulateJSON:true}).then((res)=>{
+                      if(res.body.obj !=""){
+                        const recordList = res.body.obj.recordList;
+                        this.recordList = [...this.recordList, ...recordList];
+                        var count=res.body.obj.count;
+                        var pagecount=Math.ceil(count/this.pageSize);
+                        if (recordList.length < this.pageSize || this.pagenum == pagecount) {
+                          /* 所有数据加载完毕 */
+                          this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                          return;
+                        }
+                        /* 单次请求数据完毕 */
+                        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                        this.pagenum++;
+                        this.page+=this.pageSize;
+                      }
+                    },(err)=>{
+
+                    });
+                }else{
+                    this.hasData=false;
+                    this.nodata='未登录或登录失效';
+                }
+            },
+            alltext(e){
+                var  textval=$(e.target).text();
+                if (textval=='全文') {
+                     $(e.target).parent().find(".c_record").removeClass('lineclamp');
+                     $(e.target).text("收起");
+                }
+                if (textval=='收起') {
+                     $(e.target).parent().find(".c_record").addClass('lineclamp');
+                     $(e.target).text("全文");
+                }
+            }
+        }
+    }
+</script>
+<style scoped>
+  .a_itemimg{
+    display: inline-block;
+    width: 0.68rem;
+    height: 0.68rem;
+    border-radius: 50%;
+    /*background: url(data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQAB…2e88vqfX83wp6j/QzfDpeCn82HUGxJms/J+Vi8h0/LZR0ejl6eXsy5eFPlihM3YxjMYx//2Q==) center center no-repeat;*/
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 0.1rem;
+  }
+    /*回复*/
+    .aplayBtn{
+        position: fixed;
+        bottom:0;
+        left:0;
+        height: 1rem;
+        width: 100%;
+        background-color: #fff;
+        border:0.01rem solid #ccc;
+    }
+    .aplayBtn input{
+        width: 80%;
+        height: 0.8rem;
+        border:0;
+        padding:0;
+        margin:0;
+        text-indent: 0.2rem;
+    }
+    .aplayBtn button{
+        width: 15%;
+        height: 0.8rem;
+        border:0;
+        padding:0;
+        margin:0;
+        color:#fff;
+        background-color:#6198d4;
+        float:right;
+    }
+    /*我的空间-头部展示 s*/
+    .space-head {
+        width:7.5rem;
+        height:2.88rem;
+        background-repeat: no-repeat;
+        background-position: center;
+        position:relative;
+        background-size: cover;
+    }
+    #attenBac{
+      position:absolute;
+      left:0;
+      top:0;
+      width: 100%;
+      height: 100%;
+    }
+    #attenBac input{
+      width:100%;
+      height:100%;
+      opacity:0;
+    }
+    .space-con{
+        position:absolute;
+        left:0.48rem;
+        bottom:-0.28rem;
+        z-index: 2
+    }
+    .space-face{
+        display:inline-block;
+        width:1.42rem;
+        height:1.42rem;
+        background-repeat: no-repeat;
+        background-position: center;
+        /*border:0.03rem solid #fff;*/
+        vertical-align: middle;
+        margin-right:0.15rem;
+        background-size: cover;
+    }
+    .space-name{
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        color:#fff;
+        text-shadow: 0 3px 8px rgba(120, 115, 112, 0.52);
+    }
+    /*我的空间-头部展示 e*/
+    /*我的空间-记录列表 s*/
+    .attention-body{
+        height: 0.8rem;
+        background-color:#fff;
+    }
+    .nodata{
+        text-align: center;
+        padding:0.5rem 0;
+    }
+    /*标题*/
+    .att_title{
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        font-size: 0.24rem;
+        color:#333333;
+        margin-bottom: 0.3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+    /*记录封面*/
+    .c_leftimg{
+        /*width:16%;*/
+        width:0.6rem;
+        height: 0.6rem;
+        background-color: #fff;
+        height: 100%;
+        float: left;
+        text-align: center;
+        margin-left: 0.2rem;
+    }
+    .c_leftimg img{
+        width:0.6rem;
+        height: 0.6rem;
+        border-radius: 50%;
+    }
+    /*地区 时间*/
+    .c_detail_center{
+        /*margin-top:0.26rem;*/
+    }
+    .c_detail_center p:first-child{
+        font-family: "PingFang Regular",'Droid Sans Fallback', sans-serif;
+        font-size: 0.22rem;
+        color:#6198d4;
+    }
+    .c_detail_center p:last-child{
+        margin-top:0.1rem;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        font-size: 0.22rem;
+        color:#b0b0b0;
+    }
+
+    /*图片展示*/
+    .c_imgs{
+    padding: 0.26rem 0.8rem 0.26rem 0.28rem;
+    overflow: hidden;
+}
+.c_imgs img{
+    width: 30%;
+    height: 1.5rem;
+    margin: 0.05rem;
+    float: left;
+}
+    .c_imgs ul{
+        overflow: hidden;
+    }
+    .c_imgs li{
+        width: 32%;
+    text-align: center;
+    margin-right: 0.8%;
+    margin-bottom: 0.18rem;
+    float: left;
+    height: 1.4rem;
+    overflow: hidden;
+    }
+    /*记录详情*/
+    .c_detail{
+        background-color: #fff;
+        overflow: hidden;
+        padding:0.4rem 0.36rem 0.4rem 0;
+    }
+    .c_detail_border{
+    border-bottom: 0.01rem solid #ccc;
+}
+    .c_detail_button{
+        font-family: "PingFang Bold",'Droid Sans Fallback', sans-serif;
+        font-size: 0.3rem;
+        color:#6198d4;
+        margin-top: 0.1rem;
+    }
+    .c_detail_main{
+        width: 84%;
+        float:right;
+    }
+    .c_record{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        font-size: 0.28rem;
+        color:#333333;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+    }
+    .lineclamp{
+        -webkit-line-clamp: 3;
+    }
+    /*我的空间-记录列表 e*/
+</style>

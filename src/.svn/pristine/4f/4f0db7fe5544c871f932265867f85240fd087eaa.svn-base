@@ -1,0 +1,25 @@
+<template>
+  <div>
+    <v-Code>
+      <h1 slot="tip">请提供您的手机号，以方便他人预约您的工地</h1>
+    </v-Code>
+  </div>
+</template>
+<script>
+  import vCode from '../components/verCode.vue'
+  export default {
+    components:{
+      vCode
+    },
+    data(){
+      return {
+
+      }
+    },
+    methods:{
+    }
+  }
+</script>
+<style>
+
+</style>

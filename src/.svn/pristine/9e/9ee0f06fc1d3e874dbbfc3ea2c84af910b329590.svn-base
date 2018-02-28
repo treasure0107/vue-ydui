@@ -1,0 +1,85 @@
+<template>
+  <div class="proTitle">
+    <div class="proTitle-head"></div>
+    <span class="determine"  @click="submit">确定</span>
+    <div class="proTitle-show">
+      <ul>
+        <li @click="select" v-for="item in list"><span class="proTitle-name">{{item.title}}</span><i class="proTitle-back"></i></li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    data(){
+      return{
+        list:[]
+      }
+    },
+    created () {
+      this.proTitle();
+      console.log(this.$api);
+    },
+    methods: {
+      submit(){
+        this.$router.push('/aCount');
+      },
+      select(e){
+        if($(e.target).find(".proTitle-back").css("display") == "none"){
+          $(e.target).find(".proTitle-back").show();
+        }else{
+          $(e.target).find(".proTitle-back").hide();
+        }
+      },
+      proTitle() {
+        this.$http.post(this.$api.apihost+'project/getProTitleList',{uid:100001},{emulateJSON:true}).then(function (response) {
+          const _list = response.body.obj.titleList;
+          this.list = [...this.list, ..._list];
+        });
+      },
+    }
+  }
+</script>
+<style scoped>
+  .proTitle{
+    position:relative;
+    background-color: #fff;
+  }
+  .determine{
+    font-size:0.28rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: rgb(97, 152, 212);
+    position:absolute;
+    top:0.22rem;
+    right:0.39rem;
+  }
+  .proTitle-head{
+    height:0.8rem;
+    border-bottom:0.01rem solid #e7effb;
+  }
+  .proTitle-show{
+    padding-left:0.5rem;
+  }
+  .proTitle-show li{
+    font-size:0.28rem;
+    font-family: "PingFang Medium", sans-serif;
+    color:#333;
+    height:1.06rem;
+    line-height: 1.06rem;
+    overflow: hidden;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .proTitle-show li span{
+    float:left;
+  }
+  .proTitle-show li i{
+    width:0.33rem;
+    height:100%;
+    float:right;
+    margin-right:0.49rem;
+    background: url(../images/space/project_selected.svg) center center no-repeat;
+    background-size:0.33rem 0.22rem;
+    display:none;
+  }
+</style>
+

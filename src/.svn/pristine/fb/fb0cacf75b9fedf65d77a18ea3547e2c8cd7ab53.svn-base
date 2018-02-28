@@ -1,0 +1,43 @@
+
+<template>
+    <div>    
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="order" size=".42rem"></yd-icon>
+                <span slot="left">姓名</span>
+                <span slot="right">二维码</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left"><label>手机号码</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left"><label>所在区域</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left"><label>参观时间</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+
+        <yd-cell-group>
+            <yd-cell-item>
+                <p slot="left"><label>装修预算</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left"><label>项目面积</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+            <yd-cell-item>
+                <p slot="left"><label>装修时间</label><span>1591546516165165</span></p>
+            </yd-cell-item>
+        </yd-cell-group>
+    </div>
+</template>
+<script>
+export default {
+
+}
+</script>
+<style type="text/css">
+   
+</style>

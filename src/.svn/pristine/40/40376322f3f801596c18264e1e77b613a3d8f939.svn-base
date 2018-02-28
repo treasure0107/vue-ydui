@@ -1,0 +1,27 @@
+
+<template>
+    <yd-layout>    
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="order" size=".42rem"></yd-icon>
+                <span slot="left">申请项目：170平现代中式</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="like-outline" size=".42rem"></yd-icon>
+                <span slot="left">申请项目：170平现代中式</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <yd-icon slot="icon" name="like-outline" size=".42rem"></yd-icon>
+                <span slot="left">申请项目：170平现代中式</span>
+            </yd-cell-item>
+        </yd-cell-group>
+    </yd-layout>
+</template>
+<script>
+export default {
+
+}
+</script>
+<style type="text/css">
+   
+</style>

@@ -1,0 +1,344 @@
+<template>
+  <div>
+    <div class="cation_head">
+      <div class="cation_con">
+        <div class="cation_tit">
+          <p>{{detailsItem.title}}---服务品质第一</p>
+          <span class="good_rate">好评率:{{detailsItem.likeCount}}</span>
+        </div>
+
+        <div class="budget_area">预算: 50万 / 面积: {{detailsItem.proSize}} / 已开工{{DateDiff(nowtime, detailsItem.startDate)}}天</div>
+        <div class="visit_hours ">参观时间 {{detailsItem.startTime}}</div>
+      </div>
+      <div class="cation_img">
+        <img :src="detailsItem.logoUrl" alt="">
+      </div>
+    </div>
+    <div class="cation_content">
+      <div class="content_tit">
+        <span class="fac_name">项目服务商:{{detailsItem.nickName}}</span>
+        <router-link class="more_site" to="/">
+          <span>更多工地</span>
+          <span class="site_arrow"></span>
+        </router-link>
+      </div>
+      <div class="new_detail">
+        <p>项目地址:{{detailsItem.province}} {{detailsItem.city}} {{detailsItem.area}}</p>
+        <p class="phone_num">联系电话:{{detailsItem.visitMobile}}</p>
+      </div>
+      <div class="tel_phone">
+        <span class="n_icon">导航</span>
+        <!--<span class="p_icon" @click.native="showPhone = true">电话</span>-->
+        <yd-button class="p_icon" @click.native="showPhone = true">电话</yd-button>
+      </div>
+      <div class="kindly_reminder">
+        <p>温馨提示</p>
+        <p class="space_bd">1、您的申请信息已发送给服务商{{detailsItem.nickName}}</p>
+        <p class="space_bd">2、您可以主动联系服务商{{detailsItem.nickName}}</p>
+        <p class="space_bd">3、如果您对以上信息有任何疑问可以联系我们。</p>
+        <p class="space_bd">服务热线:
+          <span class="phone_service">0755-81234567</span>
+        </p>
+      </div>
+    </div>
+    <div class="cation_content cation_footer">
+      <p class="proposer_name">申请人:{{detailsItem.visitNickName}}</p>
+      <p class="space_bd">申请时间:{{detailsItem.createTime}}</p>
+      <p class="space_bd">联系电话:{{detailsItem.visitMobile}}</p>
+      <p class="space_bd">装修预算:{{detailsItem.budget}}</p>
+    </div>
+    <!--弹窗-->
+    <yd-popup v-model="showPhone" position="center" width="90%" class="phone_model">
+      <p class="phone_num">0755-123456</p>
+      <p style="text-align: center;" class="btn_modelP">
+        <yd-button @click.native="showPhone = false" class="btn_modelPl">取消</yd-button>
+        <yd-button @click.native="showPhone = false" class="btn_modelPr">呼叫</yd-button>
+      </p>
+    </yd-popup>
+  </div>
+</template>
+
+<style type="text/css" scoped>
+  body {
+    background-color: #f4f8ff;
+  }
+
+  .cation_head {
+    padding-top: 0.5rem;
+    background-color: #fff;
+    overflow: hidden;
+    padding-bottom: 0.7rem;
+  }
+
+  .cation_con {
+    width: 4.4rem;
+    float: left;
+    margin-left: 0.5rem;
+  }
+
+  .cation_tit p {
+    font-size: 0.4rem;
+    font-family: 'PingFang Heavy';
+    color: #333;
+  }
+
+  .cation_tit {
+    position: relative;
+  }
+
+  .good_rate {
+    font-size: 0.2rem;
+    color: #6198d4;
+    position: absolute;
+    right: 0.3rem;
+    top: 0.64rem;
+    width: 1.42rem;
+    height: 0.34rem;
+    border: 2px solid #a3c3e6;
+    text-align: center;
+    border-radius: 0.17rem;
+    font-family: 'PingFang Medium';
+    padding-bottom: 0.3rem;
+  }
+
+  .budget_area {
+    font-size: 0.22rem;
+    font-family: 'PingFang Medium';
+    color: #b0b0b0;
+    padding-top: 0.09rem;
+  }
+
+  .visit_hours {
+    font-size: 0.22rem;
+    color: #ff6d6d;
+    padding-top: 0.1rem;
+  }
+
+  /*右边的图片*/
+  .cation_img {
+    width: 1.8rem;
+    height: 1.8rem;
+    background-color: #666;
+    float: right;
+    margin-right: 0.4rem;
+    border-radius: 0.06rem;
+  }
+  .cation_img img{
+    width: 100%;
+    height: 100%;
+  }
+  .cation_content {
+    margin-top: 0.18rem;
+    background-color: #fff;
+    padding-left: 0.5rem;
+  }
+
+  .content_tit {
+    padding-top: 0.4rem;
+
+    padding-bottom: 0.4rem;
+    position: relative;
+  }
+
+  .content_tit .fac_name {
+    font-size: 0.32rem;
+    color: #333;
+    font-family: 'PingFang Bold';
+  }
+
+  .more_site {
+    font-size: 0.28rem;
+    color: #b0b0b0;
+    position: absolute;
+    right: 0.6rem;
+    top: 0.46rem;
+  }
+
+  .site_arrow {
+    position: absolute;
+    right: -0.20rem;
+    top: 0.09rem;
+    width: 0.12rem;
+    height: 0.2rem;
+    background-image: url("../images/visit/arrow_right.svg");
+    background-repeat: no-repeat;
+    background-size: 0.12rem 0.2rem;
+  }
+
+  .new_detail {
+    font-size: 0.24rem;
+    color: #9d9ea0;
+    font-family: 'PingFang Regular';
+    padding-bottom: 0.16rem;
+  }
+
+  .new_detail p {
+    height: 0.48rem;
+    line-height: 0.48rem;
+  }
+
+  .tel_phone {
+    padding-top: 0.1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e5e8ee;
+  }
+
+  .tel_phone span {
+    display: inline-block;
+    width: 1.36rem;
+    height: 0.42rem;
+    font-size: 0.24rem;
+    color: #6198d4;
+    border: 0.02rem solid #a3c3e6;
+    border-radius: 0.21rem;
+    text-align: center;
+    margin-right: 0.4rem;
+  }
+
+  .tel_phone .n_icon, .tel_phone .p_icon {
+    position: relative;
+  }
+
+  .tel_phone .n_icon {
+    line-height: 0.42rem;
+  }
+
+  .tel_phone .p_icon {
+    width: 1.36rem;
+    height: 0.42rem;
+    font-size: 0.24rem;
+    background-color: #fff;
+    color: #6198d4;
+    border: 2px solid #a3c3e6;
+    border-radius: 0.21rem;
+    padding: 0;
+    font-family: 'PingFang Medium';
+    box-sizing: border-box;
+  }
+
+  .tel_phone .n_icon::before {
+    position: absolute;
+    content: url("../images/visit/navigation .svg");
+    width: 0.22rem;
+    left: 0.16rem;
+    top: 0.04rem;
+  }
+
+  .tel_phone .p_icon::before {
+    position: absolute;
+    content: url("../images/visit/phoneimg.svg");
+    width: 0.22rem;
+    left: 0.16rem;
+    top: 0.04rem;
+  }
+
+  .phone_model .phone_num {
+    height: 1.4rem;
+    line-height: 1.4rem;
+    font-size: 0.36rem;
+    color: #6198d4;
+    font-family: 'PingFang Medium';
+    text-align: center;
+    border-bottom: 0.01rem solid #e5e8ee;
+  }
+
+  .btn_modelP .btn_modelPr, .btn_modelP .btn_modelPl {
+    height: 1rem;
+    line-height: 1rem;
+    font-size: 0.36rem;
+    color: #6198d4;
+    font-family: 'PingFang Medium';
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #fff;
+  }
+
+  .btn_modelP .btn_modelPl {
+    border-right: 0.01rem solid #e5e8ee;
+    width: 49%;
+  }
+  .btn_modelP .btn_modelPr{
+    width: 50%;
+  }
+  .kindly_reminder {
+    font-family: 'PingFang Regular';
+    padding-top: 0.4rem;
+    padding-bottom: 0.42rem;
+  }
+
+  .kindly_reminder p:first-child {
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+  }
+
+  .kindly_reminder .phone_service {
+    color: #333333;
+  }
+
+  .cation_footer {
+    padding-top: 0.4rem;
+    padding-bottom: 0.49rem;
+  }
+
+  .cation_footer .proposer_name {
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+  }
+
+  .space_bd {
+    font-size: 0.24rem;
+    color: #9d9ea0;
+    padding-top: 0.24rem;
+    font-family: 'PingFang Regular';
+  }
+</style>
+
+<script>
+  import apicom from '../config/api.js'
+  export default {
+    data() {
+      return {
+        showPhone: false,
+        detailsItem:{},
+        nowtime: ''
+      };
+    },
+    created() {
+      var date = Date.parse(new Date());
+      this.nowtime = date;
+      this.getVisitDetail();
+    },
+    methods: {
+      getVisitDetail() {
+        //拼接url
+        console.log(this.$route.params.vid);
+        const vId=this.$route.params.vid;
+        console.log(vId);
+        const postUrl = apicom.apihost + 'visit/getVisitDetail';
+        //请求数据
+
+        this.$http.post(postUrl, {
+          vid: vId
+        }, {emulateJSON: true}).then(res => {
+          console.log(res.body.obj);
+          this.detailsItem = res.body.obj;
+          console.log(this.detailsItem);
+        }, err => {
+          console.log(err);
+        })
+      },
+      //计算天数差的函数，通用
+      DateDiff(sDate1, sDate2) {//sDate1是时间戳，sDate2是2006-12-18格式
+        var aDate, oDate1, oDate2, iDays;
+        oDate1 = sDate1;
+        aDate = sDate2.split("-");
+        oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]);
+        iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);    //把相差的毫秒数转换为天数
+        return iDays
+      }
+    }
+  }
+</script>
+

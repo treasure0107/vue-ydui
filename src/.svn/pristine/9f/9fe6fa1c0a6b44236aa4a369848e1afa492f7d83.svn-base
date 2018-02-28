@@ -1,0 +1,160 @@
+<template>
+    <yd-layout>
+        <div class="a_item">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记</h1>
+                <button>距离200m</button>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span>预算:50万</span>
+                    <span>面积:170万</span>
+                    <span>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        <div class="a_item">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记</h1>
+                <button>距离200m</button>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span>预算:50万</span>
+                    <span>面积:170万</span>
+                    <span>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        <div class="a_item">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记</h1>
+                <button>距离200m</button>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span>预算:50万</span>
+                    <span>面积:170万</span>
+                    <span>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        <div class="a_item">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记</h1>
+                <button>距离200m</button>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span>预算:50万</span>
+                    <span>面积:170万</span>
+                    <span>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        <div class="a_item">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记</h1>
+                <button>距离200m</button>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span>预算:50万</span>
+                    <span>面积:170万</span>
+                    <span>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        <div class="a_item">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记</h1>
+                <button>距离200m</button>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span>预算:50万</span>
+                    <span>面积:170万</span>
+                    <span>已开工10天</span>
+                </div>
+            </div>
+        </div>
+
+        <yd-tabbar slot="bottom">
+            <yd-tabbar-item title="工地" link="/" active>
+                <yd-icon name="home" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="区域" link="/districtSiteList">
+                <yd-icon name="shopcart-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+
+            <yd-tabbar-item title="发现" link="/">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="我的" link="/content">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+        </yd-tabbar>
+
+    </yd-layout>
+</template>
+<script>
+    export default {
+
+    }
+</script>
+<style type="text/css">
+    .a_item{
+        padding:0.3rem 0.54rem 0.3rem 0.28rem;
+        height: 2.7rem;
+        background-color: #fff;
+        margin-bottom: 0.18rem;
+        overflow: hidden;
+    }
+    .a_item>img{
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%;
+        float:left;
+    }
+    .a_item_left{
+        float: right;
+        position: relative;
+        width:calc(100% - 3.7em)
+    }
+    .a_item_left>h1{
+        font-size: 0.24rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#9d9ea0;
+        margin-left: 0.26rem;
+        margin-bottom: 0.2rem;
+    }
+    .a_item_left>button{
+        font-size: 0.18rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#6198d4;
+        width: 1.26rem;
+        height: 0.34rem;
+        border:0.02rem solid #6198d4;
+        border-radius: 0.17rem;
+        position: absolute;
+        top:0.9rem;
+        right: 0.2rem;
+    }
+    .a_item_left>p{
+        font-size: 0.32rem;
+        font-family: "PingFang Heavy", sans-serif;
+        color:#333333;
+    }
+    .a_item_left>div{
+        font-size: 0.22rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#bcbcbc;
+        margin-top:0.48rem;
+    }
+    .a_item_left>div span:first-child{
+        margin-right: 0.32rem;
+    }
+    .a_item_left>div span:last-child{
+        float: right;
+    }
+</style>

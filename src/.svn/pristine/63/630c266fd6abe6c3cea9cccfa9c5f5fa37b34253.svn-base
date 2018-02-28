@@ -1,0 +1,166 @@
+<template>
+  <div class="aCount">
+      <div class="aCount-head">
+        <span class="aCount-face" :style="'background:url('+getUser.logoUrl+') center center no-repeat;background-size:cover;'"></span>
+        <div class="aCount-con">
+          <h1>{{getUser.nickName}}</h1>
+          <h2>手机号：{{getUser.mobile}}</h2>
+        </div>
+      </div>
+      <h2 class="aCount-area">已授权工地</h2>
+      <div class="aCount-body">
+        <yd-infinitescroll :on-infinite="loadList" ref="infinitescrollDemo">
+          <yd-list theme="1" slot="list">
+              <ul class="aCount-title">
+                <li v-for="(item,index) in list" :key="index"><span class="aCount-name" @click="right(item.suid,item.pid)">{{item.title}}</span><button class="aCount-cancel" @click="cancelAuthorize(item.suid,item.pid)">取消授权</button></li>
+              </ul>
+        </yd-list>
+        <!-- 数据全部加载完毕显示 -->
+        <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+        <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+        <img slot="loadingTip" src="http://static.ydcss.com/upload·s/ydui/loading/loading10.svg"/>
+        </yd-infinitescroll>
+      </div>
+    <div class="aCount-new" @click="href">授权新项目</div>
+  </div>
+</template>
+
+<script>
+    export default {
+      data(){
+        return{
+          page: 0,
+          pageSize: 10,
+          list: [],
+          getUser:{}
+        }
+      },
+      created () {
+        // this.geidis()
+        this.loadList();
+        this.getUserInfo();
+      },
+      methods:{
+        getUserInfo() {
+          this.$http.post(this.$api.apihost+'user/getUserInfo',{uid:localStorage.uid},{emulateJSON:true}).then(function (response) {
+            this.getUser=response.body.obj;
+          });
+        },
+        loadList() {
+          this.$http.post(this.$api.apihost+'user/getSubUserPro',{uid:localStorage.uid,suid:localStorage.suid,startRow:this.page,rowCount:this.pageSize},{emulateJSON:true}).then(function (response) {
+            if(response.body.obj!=""){
+              const _list = response.body.obj.subUserProjectList;
+              this.list = [...this.list, ..._list];
+              if (_list.length < this.pageSize || this.page == 3) {
+                /* 所有数据加载完毕 */
+                this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                return;
+              }
+              /* 单次请求数据完毕 */
+              this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+              this.page++;
+            }
+          });
+        },
+        cancelAuthorize(suid,pid){  //点击取消授权
+          this.$http.post(this.$api.apihost + 'user/cancelProAuthorize',{uid:localStorage.uid,suid:suid,pid:pid},{emulateJSON:true}).then(res => {
+            console.log(res);}, err =>{console.log(err);});
+        },
+        right(suid,pid){
+          this.$router.push({ name: 'aEdit', params:{suid:suid , pid:pid}});
+        },
+        href(){
+          this.$router.push('/aTitle')
+        }
+      }
+    }
+</script>
+<style scoped>
+    .aCount-head:after{
+      content:"";
+      display:block;
+      clear:both;
+    }
+    .aCount-head {
+      padding:0.26rem 0 0.26rem 0.46rem;
+      margin-top:0.18rem;
+      background-color: #fff;
+    }
+    .aCount-face{
+      float:left;
+      width:1rem;
+      height:1rem;
+      border-radius:50%;
+      background: url(../images/space/defau-face.svg) center center no-repeat;
+      background-size: cover;
+    }
+  .aCount-con{
+    float:left;
+    padding-left:0.24rem;
+  }
+    .aCount-con h1{
+      font-family: "PingFang bold", sans-serif;
+      font-size: 0.36rem;
+      color:#333;
+      font-weight:normal;
+      margin-bottom:0.1rem;
+    }
+    .aCount-con h2{
+      font-family: "PingFang Medium", sans-serif;
+      font-size: 0.22rem;
+      color:#9d9ea0;
+      font-weight:normal;
+    }
+  .aCount-area{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.22rem;
+    color:#b6b6b6;
+    height:0.46rem;
+    line-height: 0.46rem;
+    font-weight:normal;
+    padding-left:0.46rem;
+  }
+    .aCount-title{
+      background-color: #fff;
+    }
+  .aCount-title li{
+    height:1.06rem;
+    line-height:1.06rem;
+    overflow: hidden;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .aCount-name{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#333;
+    float:left;
+    padding-left:0.46rem;
+  }
+  .aCount-cancel{
+    font-size:0.24rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: rgb(157, 158, 160);
+    float:right;
+    width:1.43rem;
+    text-align: center;
+    height:0.54rem;
+    line-height: 0.54rem;
+    margin-right:0.46rem;
+    border:0.01rem solid #ccc;
+    border-radius:0.1rem;
+    margin-top:0.25rem;
+  }
+  .aCount-new{
+    position:fixed;
+    bottom:0;
+    left:0;
+    font-size:0.36rem;
+    font-family: "PingFang bold", sans-serif;
+    color: #6198d4;
+    width:100%;
+    text-align: center;
+    height:1rem;
+    line-height: 1rem;
+    background-color: #fff;
+  }
+</style>

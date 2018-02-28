@@ -1,0 +1,221 @@
+<template>
+  <div>
+    <div class="account_search_con">
+      <input type="text" placeholder="输入用户id或手机号" class="searchName" v-model="searchContent">
+      <svg x="0px" y="0px" viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;" xml:space="preserve" class="account_search" @click="searchName">
+<g>
+	<path class="st011" d="M35.5,33.3l-7.9-7.9c2.2-2.7,3.5-6.1,3.5-9.8C31.1,7,24.1,0,15.5,0S0,7,0,15.5c0,8.6,7,15.5,15.5,15.5
+		c3.7,0,7.1-1.3,9.8-3.5l7.9,7.9c0.6,0.6,1.6,0.6,2.3,0C36.2,34.9,36.2,33.9,35.5,33.3L35.5,33.3z M3.3,15.5
+		c0-6.8,5.5-12.3,12.3-12.3c6.8,0,12.3,5.5,12.3,12.3c0,3.2-1.2,6.2-3.3,8.4c-0.1,0.1-0.3,0.2-0.4,0.3c-0.1,0.1-0.2,0.2-0.3,0.4
+		c-2.2,2-5.1,3.3-8.4,3.3C8.8,27.8,3.3,22.3,3.3,15.5L3.3,15.5z"/>
+</g>
+</svg>
+    </div>
+    <div v-show="userContent">
+      <div class="search_res">查找结果</div>
+        <div class="account_list">
+          <div class="account_img" :style="{backgroundImage:'url('+userNews.logoUrl+')'}">
+            <!--<img :src="userNews.logoUrl" alt="">-->
+          </div>
+          <div class="account_news">
+            <p class="account_tit">{{userNews.nickName}}</p>
+            <P class="account_phone">手机号：{{userNews.mobile}}</P>
+          </div>
+        </div>
+    </div>
+    <button type="button" class="btn-block btn-primary" @click="empowerSure(userNews.uid)">确定授权</button>
+  </div>
+</template>
+
+<style scoped>
+  ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium','Droid Sans Fallback', sans-serif;
+  }
+
+  :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium','Droid Sans Fallback', sans-serif;
+  }
+
+  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium','Droid Sans Fallback', sans-serif;
+  }
+
+  :-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #d4d4d4;
+    font-family: 'PingFang Medium','Droid Sans Fallback', sans-serif;
+  }
+
+  .account_search_con {
+    position: relative;
+  }
+
+  .searchName {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 0.88rem;
+    padding-left: 0.46rem;
+    padding-right: 0.46rem;
+    background-color: #fff;
+    margin-top: 0.18rem;
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium','Droid Sans Fallback', sans-serif;
+  }
+
+  .search_res {
+    display: block;
+    width: 100%;
+    height: 0.46rem;
+    line-height: 0.46rem;
+    padding-left: 0.46rem;
+    font-size: 0.22rem;
+    color: #b6b6b6;
+  }
+
+  .account_list {
+    width: 100%;
+    height: 1.3rem;
+    background-color: #fff;
+    padding-left: 0.46rem;
+  }
+
+  .account_tit {
+    font-size: 0.32rem;
+    color: #333;
+    font-family: 'PingFang Regular','Droid Sans Fallback', sans-serif;
+    padding-top: 0.26rem;
+  }
+
+  .account_phone {
+    font-size: 0.22rem;
+    color: #333;
+    padding-top: 0.06rem;
+    font-family: 'PingFang Regular','Droid Sans Fallback', sans-serif;
+  }
+
+  .st011 {
+    fill-rule: evenodd;
+    clip-rule: evenodd;
+    fill: #909090;
+  }
+
+  .account_search {
+    width: 0.36rem;
+    position: absolute;
+    right: 0.46rem;
+    top: 0.46rem;
+  }
+
+  .st0001 {
+    fill-rule: evenodd;
+    clip-rule: evenodd;
+    fill: #D5D8DF;
+  }
+
+  .account_img {
+    width: 0.68rem;
+    height: 0.68rem;
+    /*background-color: #9D9EA0;*/
+    border-radius: 0.34rem;
+    text-align: center;
+    /*padding-top: 0.1rem;*/
+    float: left;
+    margin-top: 0.34rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /*.account_img img {*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*border-radius: 0.34rem;*/
+  /*}*/
+
+  .account_head {
+    width: 0.36rem;
+  }
+
+  .account_news {
+    float: left;
+    margin-left: 0.34rem;
+  }
+
+  .btn-block {
+    width: 6.6rem;
+    height: 0.92rem;
+    font-size: 0.32rem;
+    border-radius: 0.06rem;
+    background-color: #6198D4 !important;
+    margin: 0.64rem auto 0;
+    font-family: 'PingFang Bold','Droid Sans Fallback', sans-serif;
+    font-weight:bold;
+  }
+</style>
+
+<script>
+  import apicom from '../config/api.js'
+
+  export default {
+    data() {
+      return {
+        searchContent: '',
+        userContent:false,
+        userNews: {}
+      };
+    },
+    created() {
+
+    },
+    methods: {
+      searchName() {
+        const searchUrl = apicom.apihost + 'user/getUserInfoByUM';
+        this.$http.post(searchUrl, {
+          user: this.searchContent
+        }, {emulateJSON: true}).then(res => {
+          console.log(res.body.obj);
+  //          console.log(res.body.obj.mobile);
+  //          console.log(res.body.obj.userName);
+          this.userNews = res.body.obj;
+//          console.log(res.body.obj.uid);
+          if(this.searchContent==""){
+            this.userContent=false;
+            alert("搜索的内容不能为空")
+          }else if(this.userNews.mobile==undefined ||this.userNews.userName==undefined){
+            alert("没有搜索到帐号")
+          }
+          else{
+            this.userContent=true;
+          }
+
+        }, err => {
+          console.log(err);
+        });
+      },
+//      empowerSure(uid) {  //申请授权
+//        const applyUrl = apicom.apihost + 'user/proAuthorize';
+//        this.$http.post(applyUrl, {
+//          uid:uid
+//        }, {emulateJSON: true}).then(res => {
+//          console.log(res.body.obj);
+//          this.$router.push({name: "aTitle"})
+//        }, err => {
+//          console.log(err);
+//        });
+//      },
+      empowerSure(uid) {  //申请授权
+        if(uid){
+          localStorage.suid=uid;
+          this.$router.push({path:"/aTitle"});
+        }
+        if(uid==undefined){
+          alert("搜索结果没有帐号")
+        }
+      }
+    }
+  }
+</script>
+

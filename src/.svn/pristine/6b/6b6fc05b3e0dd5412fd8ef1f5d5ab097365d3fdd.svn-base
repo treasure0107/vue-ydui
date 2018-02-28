@@ -1,0 +1,22 @@
+<template>
+    <div></div>
+</template>
+
+<style scoped>
+
+</style>
+
+<script>
+//    import common from '../';
+
+    export default {
+        data() {
+            return {};
+        },
+        created() {
+
+        },
+        methods: {}
+    }
+</script>
+

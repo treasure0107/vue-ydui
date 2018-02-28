@@ -1,0 +1,32 @@
+import index from '../page/index.vue'
+import content from '../page/content.vue'
+import districtSiteList from '../page/districtSiteList.vue'
+import login from '../page/login.vue'
+import register from '../page/register.vue'
+import changePassword from '../page/changePassword .vue'
+export default [
+  {
+    path: '/',
+    component: index
+  },
+  {
+    path: '/content',
+    component: content
+  },
+  {
+    path: '/districtSiteList',
+    component: districtSiteList
+  },
+  {
+    path: '/login',
+    component: login
+  },
+  {
+    path: '/register',
+    component: register
+  },
+  {
+    path: '/changePassword',
+    component: changePassword
+  }
+]

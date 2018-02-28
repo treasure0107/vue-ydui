@@ -1,0 +1,88 @@
+
+<template>
+    <yd-layout>    
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link">
+                <div slot="left" class="wl_left">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        <p>姓名</p>
+                        <p>申请项目：item.title</p>
+                    </div>
+                </div>
+            </yd-cell-item>
+            
+        </yd-cell-group>
+    </yd-layout>
+</template>
+<script>
+
+import apicom from '../config/api.js'
+export default {
+    data(){
+        return {
+            prolist:[],
+            titleval:"等候参观名单"
+        }
+    },
+    created () {
+        // $("title").text("等候参观名单");
+        document.title = this.titleval;
+        // window.location.href="http://apis.map.qq.com/tools/routeplan/eword=田心村&epointx=114.109428&epointy=22.56745?referer=myapp&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4"
+         
+    },
+    mounted () {
+        // this.$http.post(apicom.apihost+'project/getProByPush',{},{emulateJSON:true}).then(function(res){
+        //     this.prolist=res.body.obj;
+        //     console.log(res.body);  
+        // },function(res){
+        //     console.log(res.body);
+        // });
+            
+    },
+    methods: {
+
+    }
+}
+</script>
+<style scoped>
+
+    .wl_left{
+        overflow: hidden;
+    }
+    .wl_left>div{
+        float:left;
+        display: inline-block;
+    }
+    .wl_left>div:first-child{
+        width: 0.5rem;
+        height: 0.5rem;
+        background-image: url(../images/vueimg/qbjl.svg);
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        position: relative;
+        top: 0.13rem;
+    }
+    .wl_left>div:last-child{
+        margin-left:0.3rem;
+    }
+    .wl_left p:first-child{
+        font-size: 0.28rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#333333;
+    }
+    .wl_left p:last-child{
+        font-size: 0.22rem;
+        font-family: "PingFang Regular", sans-serif;
+        color:#333333;
+    }
+   .cell-item{
+        height: 1.3rem;
+        margin-top: 0.18rem;
+   }
+  /* .m-cell{
+        background-color: #f4f8ff !important;
+   }*/
+</style>

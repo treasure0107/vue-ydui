@@ -1,0 +1,131 @@
+<template>
+  <div>
+    <div class="dis_tit">
+      <div class="r_box"></div>
+      <span class="tit_name">深圳</span>
+      <span class="total_site">工地总数: 800套</span>
+      <span class="otherCities">其他城市</span>
+    </div>
+    <div class="dis_content">
+      <yd-cell-group>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">福田</span>
+        </yd-cell-item>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">南山</span>
+        </yd-cell-item>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">罗湖</span>
+        </yd-cell-item>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">龙华</span>
+        </yd-cell-item>
+      </yd-cell-group>
+    </div>
+    <div>
+      <yd-cell-group>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">福田</span>
+        </yd-cell-item>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">南山</span>
+        </yd-cell-item>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">罗湖</span>
+        </yd-cell-item>
+        <yd-cell-item arrow type="link" href="#">
+          <span slot="left">龙华</span>
+        </yd-cell-item>
+      </yd-cell-group>
+    </div>
+
+  </div>
+</template>
+
+<style scoped>
+
+  .dis_tit {
+    width: 100%;
+    height: 1rem;
+    position: relative;
+  }
+
+  .r_box {
+    background-color: rgb(105, 171, 242);
+    box-shadow: 0px 3px 8px 0px rgba(61, 119, 182, 0.35);
+    width: 0.22rem;
+    height: 0.22rem;
+    position: absolute;
+    left: 0.5rem;
+    top: 0.38rem;
+  }
+
+  .tit_name {
+    font-size: 0.42rem;
+    color: #333;
+    font-family: 'PingFang Heavy';
+    position: absolute;
+    left: 0.9rem;
+    top: 0.18rem;
+  }
+
+  .total_site {
+    font-size: 0.22rem;
+    color: #5a5a5a;
+    font-family: 'PingFang Heavy';
+    position: absolute;
+    left: 2.2rem;
+    top: 0.34rem;
+  }
+
+  .otherCities {
+    font-size: 0.22rem;
+    color: #a5a5a7;
+    position: absolute;
+    right: 0.6rem;
+    top: 0.34rem;
+  }
+
+  .otherCities::after {
+    position: absolute;
+    content: url("../images/visit/arrow_botn.svg");
+    width: 0.22rem;
+    right: -0.3rem;
+    top: 0.04rem;
+  }
+
+  .cell-item {
+    margin-left: 0.1rem;
+    font-size: 0.3rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+    height: 0.98rem;
+  }
+
+  .cell-item:not(:last-child):after {
+    border-bottom: 0.01rem solid #e5e8ee;
+  }
+
+  .cell-left, .cell-right {
+    padding-right: 0.5rem;
+  }
+
+  .dis_content .m-cell:after {
+    border-bottom: 0;
+  }
+</style>
+
+<script>
+  //    import common from '../';
+  //
+  //    export default {
+  //        data() {
+  //            return {};
+  //        },
+  //        created() {
+  //
+  //        },
+  //        methods: {}
+  //    }
+</script>
+

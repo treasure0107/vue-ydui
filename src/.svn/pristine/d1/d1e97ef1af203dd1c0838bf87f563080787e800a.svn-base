@@ -1,0 +1,429 @@
+<template>
+    <div class="dsmain">
+        <div>
+            <div class="c_header">
+                <yd-flexbox>
+                    <yd-flexbox-item>
+                        <p>{{proinfo.title}}</p>
+                        <div class="ds_hdiv">
+                            <span>预算:{{parseFloat(proinfo.budget)}}万</span> /
+                            <span>面积:{{parseFloat(proinfo.proSize)}}m<sup>2</sup></span> /
+                            <!--<span>粉丝:{{parseFloat(proinfo.isFollow)}}</span> /-->
+                            <span>已开工{{DateDiff(nowtime,proinfo.startDate)}}天</span>
+                        </div>
+                    </yd-flexbox-item>
+                    <div :class="{c_header_rightis:statusval,c_header_rightno:!statusval}" id="ds_attenbtn" @click="attentBtn">
+                        <yd-button bgcolor="#fff">{{attstatus}}</yd-button>
+                    </div>
+                </yd-flexbox>
+            </div>
+            <div v-if="hasData">
+                <yd-infinitescroll :on-infinite="getProRecordList" ref="infinitescrollDemo">
+                    <yd-list theme="1" slot="list">
+                        <div class="c_detail" v-for="item in recordList">
+                            <div class="c_leftimg">
+                                <!-- <img :src="comimg+item.coverImgUrl+'?w=30&h=30'"> -->
+                                <div class="a_itemimg" :style="{backgroundImage:'url('+comimg+item.coverImgUrl+')'}">
+                                </div>
+                            </div>
+                            <div class="c_detail_main">
+                                <div>
+                                    <!-- <p class="c_record" v-bind:class="{ lineclamp: isActive }"> -->
+                                    <p class="c_record lineclamp">
+                                        {{item.content}}
+                                    </p>
+                                    <p class="c_detail_button" @click="alltext">{{item.content.length>62?'全文':''}}</p>
+                                    <!-- <div class="c_imgs">
+                                        <yd-grids-group :rows="3" title="">
+                                            <yd-grids-item v-for="(value,index) in item.recordImgList" :key="index">
+                                                <span slot="icon"><img :src="value"></span>
+                                            </yd-grids-item>
+                                        </yd-grids-group>
+
+                                    </div> -->
+                                    <div class="c_imgs">
+                                        <!-- <ul>
+                                            <li v-for="ite in item.recordImgList">
+                                                <img :src="comimg+ite.imgUrl">
+                                            </li>
+                                        </ul> -->
+                                        <template>
+                                        <yd-lightbox>
+                                            <yd-lightbox-img v-for="(ite,index) in item.recordImgList" :key="index" :src="comimg+ite.imgUrl"></yd-lightbox-img>
+                                        </yd-lightbox>
+                                        </template>
+                                    </div>
+                                    <div class="c_detail_center">
+                                        <p><span>{{proinfo.city}}.{{proinfo.area}}</span><span @click.prevent="gpsTo(proinfo.address,proinfo.position)">&nbsp;距离{{proinfo.distance}}</span></p>
+                                        <p>{{proinfo.createTime}}</p>
+                                    </div>
+                                    <v-comment :rid="item.rid" :isEdit="isEdit" :visitUid="visitUid" :pid="item.pid" :allowVisit="allowVisit"></v-comment>
+                                   <!--  <div class="c_detail_coms">
+                                        <div><span @click="moreinfo"></span><span class="c_detail_yuyue" @click="applywatch"></span></div>
+                                        <div class="c_detail_share" v-show="showmore"><span>6</span><span>6</span><span></span></div>
+                                        <div v-show="showmore">
+                                            <input type="text" name="" placeholder="写评论"/>
+                                            <ul>
+                                                <li>
+                                                    <div class="c_detail_comitm"><i>张三</i><span>感觉不错，想去看看</span></div>
+                                                    <ul>
+                                                        <li class="c_detail_recomitm">
+                                                            <div><i>李四</i>回复<i>张三</i><span>可以，想去看看</span></div>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <div class="c_detail_comitm"><i>张三</i><span>感觉不错，想去看看</span></div>
+                                                    <ul>
+                                                        <li class="c_detail_recomitm">
+                                                            <div><i>李四</i>回复<i>张三</i><span>可以，想去看看</span></div>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <i class="c_detail_packup">{{allorup}}</i>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </yd-list>
+                    <!-- 数据全部加载完毕显示 -->
+                    <span slot="doneTip"></span>
+                    <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+                    <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+                </yd-infinitescroll>
+            </div>
+            <div class="nodata" v-else>
+                <p>{{nodata}}</p>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import vComment from '../components/comment.vue'
+export default {
+    components:{
+        vComment
+    },
+    data(){
+        return {
+            // isActive:true,
+            hasData:true,
+            isEdit:false,
+            statusval:true,
+            visitUid:'',
+            titleval:'工地详情',
+            attstatus:'关注',
+            nodata:'暂时没有记录！',
+            siteId:'',
+            // uptext:'全文',
+            comimg:this.$api.imghost,
+            proinfo:{
+                startDate:'2017-1-6'
+            },
+            nowtime:'',
+            recordList:[],
+            allowVisit:1,
+            pagenum:0,
+            page: 0,
+            pageSize: 10
+        }
+    },
+    created(){
+        this.siteId=this.$route.params.siteId;
+        this.getProInfo()
+        this.getProRecordList()
+        document.title=this.titleval
+        var date = Date.parse(new Date());
+        this.nowtime=date;
+    },
+    methods:{
+        gpsTo(address,position){
+            var pArr=position.split(",");
+            window.location.href="http://apis.map.qq.com/tools/routeplan/eword="+address+"&epointx="+pArr[1]+"&epointy="+pArr[0]+"?referer=myapp&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4"
+        },
+        attentBtn(){
+            var status;
+            if (this.statusval) {
+                status=1;
+                this.attstatus='已关注'
+                this.statusval=!this.statusval;
+            }else{
+                status=0;
+                this.attstatus='关注'
+                this.statusval=!this.statusval;
+            }
+            this.$http.post(this.$api.apihost+'project/followPro',{
+                pid:this.siteId,
+                uid:localStorage.uid,
+                status:status
+            },{emulateJSON:true}).then((res)=>{
+                if (res.body.code=='0000') {
+                }
+            },(err)=>{
+
+            });
+        },
+        // feedbackIs(res){
+        //     // console.log(res);
+        // },
+        DateDiff(sDate1,  sDate2){
+            var  aDate,  oDate1,  oDate2,  iDays
+            oDate1=sDate1
+            var arr = sDate2.split(/[- : \/]/);
+            oDate2 = new Date(arr[0], arr[1]-1, arr[2]);
+            iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)
+            return  iDays
+        },
+        getProInfo(){
+            this.$http.post(this.$api.apihost+'project/getProInfo',{
+                pid:this.siteId,
+                uid:localStorage.uid
+            },{emulateJSON:true}).then((res)=>{
+                const proinfo = res.body.obj;
+                this.proinfo=proinfo;
+                this.visitUid=proinfo.uid;
+                this.allowVisit=proinfo.allowVisit;
+                if (proinfo.isFollow==0) {
+                    this.attstatus='关注'
+                    this.statusval=true
+                }else{
+                    this.attstatus='已关注'
+                    this.statusval=false
+                }
+            },(err)=>{
+
+            });
+        },
+        alltext(e){
+            var  textval=$(e.target).text();
+            if (textval=='全文') {
+                 $(e.target).parent().find(".c_record").removeClass('lineclamp');
+                 $(e.target).text("收起");
+            }
+            if (textval=='收起') {
+                 $(e.target).parent().find(".c_record").addClass('lineclamp');
+                 $(e.target).text("全文");
+            }
+        },
+        getProRecordList(){
+            this.$http.post(this.$api.apihost+'project/getProRecordList',{
+                pid:this.siteId,
+                uid:localStorage.uid,
+                startRow:this.page,
+                rowCount:this.pageSize
+            },{emulateJSON:true}).then((res)=>{
+                if (!res.body.obj) {
+                   this.hasData=false
+                }else{
+                    const recordList = res.body.obj.recordList;
+                    this.recordList=recordList;
+                    var count=res.body.obj.count;
+                    var pagecount=Math.ceil(count/this.pageSize);
+                    if (recordList.length < this.pageSize || this.pagenum == pagecount) {
+
+                        /* 所有数据加载完毕 */
+                        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                        return;
+                    }
+                    /* 单次请求数据完毕 */
+                    this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                    this.pagenum++;
+                this.page+=this.pageSize;
+                }
+            },(err)=>{
+
+            });
+        }
+    }
+}
+</script>
+<style scoped>
+.a_itemimg{
+    display: inline-block;
+    width: 0.68rem;
+    height: 0.68rem;
+    border-radius: 50%;
+    /*background: url(data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQAB…2e88vqfX83wp6j/QzfDpeCn82HUGxJms/J+Vi8h0/LZR0ejl6eXsy5eFPlihM3YxjMYx//2Q==) center center no-repeat;*/
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 0.1rem;
+}
+.dsmain{
+    background-color: #fff;
+    min-height: 100%;
+}
+ .nodata{
+    text-align: center;
+    padding:0.5rem 0;
+}
+
+/*回复*/
+.aplayBtn{
+    position: fixed;
+    bottom:0;
+    left:0;
+    height: 1rem;
+    width: 100%;
+    background-color: #fff;
+    border:0.01rem solid #ccc;
+}
+.aplayBtn input{
+    width: 80%;
+    height: 0.8rem;
+    border:0;
+    padding:0;
+    margin:0;
+    text-indent: 0.2rem;
+}
+.aplayBtn button{
+    width: 15%;
+    height: 0.8rem;
+    border:0;
+    padding:0;
+    margin:0;
+    color:#fff;
+    background-color:#6198d4;
+    float:right;
+}
+.ds_hdiv{
+    padding:0.2rem 0;
+}
+
+.c_detail_center{
+    margin-top:0.26rem;
+}
+.c_detail_center p:first-child{
+    /*font-family: "PingFang Regular";*/
+    font-size: 0.22rem;
+    color:#6198d4;
+}
+.c_detail_center p:last-child{
+    /*font-family: "PingFang Medium";*/
+    font-size: 0.22rem;
+    color:#b0b0b0;
+    margin-top: 0.1rem;
+}
+.c_imgs{
+    padding: 0.28rem 0.8rem 0.28rem 0.28rem;
+    overflow: hidden;
+}
+.c_imgs img{
+    width: 30%;
+    height: 1.5rem;
+    margin: 0.05rem;
+    float: left;
+}
+.c_imgs ul{
+    overflow: hidden;
+}
+.c_imgs li{
+    width: 32%;
+    text-align: center;
+    margin-right: 0.8%;
+    margin-bottom: 0.18rem;
+    float: left;
+    height: 1.4rem;
+    overflow: hidden;
+}
+.c_header{
+    width: 100%;
+    padding:0.38rem 0.36rem;
+    background-color:#f4f8ff;
+}
+.c_header p{
+    /*font-family: "PingFang Heavy";*/
+    font-size: 0.4rem;
+    color:#333333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-weight: 700;
+    padding-right: 0.3rem;
+    line-height: 1;
+}
+.c_header span{
+    /*font-family: "PingFang Medium";*/
+    font-size: 0.22rem;
+    color:#b0b0b0;
+}
+.c_leftimg{
+    /*width:16%;*/
+    width:0.6rem;
+    height: 0.6rem;
+    background-color: #fff;
+    height: 100%;
+    float: left;
+    text-align: center;
+    margin-left: 0.2rem;
+}
+.c_leftimg img{
+    width:0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+}
+.c_detail{
+    background-color: #fff;
+    overflow: hidden;
+    padding:0.4rem 0.36rem 0.4rem 0;
+    border-bottom: 0.01rem solid #ccc;
+}
+.c_header_rightis button{
+    /*font-family: "PingFang Bold";*/
+    font-size: 0.3rem;
+    width: 1.4rem;
+    height: 0.76rem;
+    border: 0.02rem solid #6198d4;
+    border-radius: 0.38rem;
+    text-align: right;
+    padding: 0 0.2rem;
+    color:#6198d4;
+    background-image: url(../images/vueimg/atten.svg);
+    background-repeat:no-repeat;
+    background-size: 0.4rem 0.4rem;
+    background-position: 0.2rem center;
+}
+.c_header_rightno button{
+    /*font-family: "PingFang Bold";*/
+    font-size: 0.3rem;
+    width: 1.4rem;
+    height: 0.76rem;
+    border: 0.02rem solid #ccc;
+    border-radius: 0.38rem;
+    text-align: right;
+    padding: 0 0.2rem;
+    color:#ccc;
+    background-image: url(../images/vueimg/isattent.svg);
+    background-repeat:no-repeat;
+    background-size: 0.4rem 0.4rem;
+    background-position: 0.3rem center;
+}
+.c_detail_button{
+    /*font-family: "PingFang Bold",'Droid Sans Fallback', sans-serif;*/
+    font-size: 0.3rem;
+    color:#6198d4;
+    margin-top: 0.1rem;
+}
+.c_detail_main{
+    width: 84%;
+    float:right;
+}
+.c_record{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    font-size: 0.28rem;
+    color:#333333;
+    /*font-family: "PingFang Medium";*/
+    /*line-height: 0.2rem;*/
+}
+.lineclamp{
+    -webkit-line-clamp: 3;
+}
+</style>

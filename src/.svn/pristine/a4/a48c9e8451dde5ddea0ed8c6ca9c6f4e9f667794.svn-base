@@ -1,0 +1,194 @@
+<template>
+    <yd-layout>
+        <header class="d_header">
+            <ul>
+                <li>
+                    <i class="d_field"></i>
+                    <span class="d_district">福田区</span>
+                    <span class="d_disf">(250套)</span>
+                </li>
+                <li class="d_header_right">
+                    <div>
+                        <span class="d_disf">距离</span>
+                        <div class="d_upordown">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="d_disf">预算</span>
+                        <div class="d_upordown">
+                            
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </header>
+        <div class="a_item" v-for="item in 6">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1>170平现代中式风格装修记<button>距离200m</button></h1>
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                <div>
+                    <span><i><img src="../images/vueimg/budget_icon.svg"></i>预算:50万</span>
+                    <span><i><img src="../images/vueimg/area_icon.svg"></i>面积:170万</span>
+                    <span><i><img src="../images/vueimg/stime_icon.svg"></i>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        <yd-tabbar slot="bottom">
+            <yd-tabbar-item title="工地" link="/" active>
+                <yd-icon name="home" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="区域" link="/content">
+                <yd-icon name="shopcart-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            
+            <yd-tabbar-item title="发现" link="#">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="我的" link="#">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+        </yd-tabbar>
+
+    </yd-layout>
+</template>
+<script>
+    export default {
+        data() {
+            return {
+              lists:[]
+            }
+          },
+          created () {
+            // 组件创建完后获取数据，这里和1.0不一样，改成了这个样子
+            // this.get_data()
+            var nn=$(".a_item>div").length;
+            console.log(nn);
+          },
+          methods: {
+            // get_data: function(params) {
+            //   var v = this
+            //   if (!params) params = {}
+            //   // 我们这里用全局绑定的 $api 方法来获取数据，方便吧~
+            //   v.$api.get('topics', params, function(r) {
+            //     v.lists = r.data
+            //   })
+            // },
+          },
+    }
+</script>
+<style scoped>
+.d_upordown{
+    width: 0.24rem;
+    height: 0.24rem; 
+    background-color: #ccc;
+}
+.d_header ul{
+    overflow: hidden;
+}
+.d_header li:first-child{
+    float:left;
+}
+.d_header_right{
+    float:right;
+}
+.d_header_right div{
+    display: inline-block;
+}
+.d_district{
+    font-family: "PingFang Heavy", sans-serif;
+    font-size: 0.42rem; 
+    color:#333333;
+    margin:0 0.2rem;
+}
+.d_disf{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.22rem; 
+    color:#5a5a5a;
+}
+.d_header{
+    height: 1rem;
+    line-height: 1rem;
+}
+.d_header ul{
+    padding:0 0.5rem;
+}
+.d_field{
+    display: inline-block;
+    width: 0.22rem;
+    height: 0.22rem;
+    background-color: #6198d4;
+}
+    .a_item{
+        padding:0.3rem 0.54rem 0.3rem 0.28rem;
+        height: 2.7rem;
+        background-color: #fff;
+        margin-bottom: 0.18rem;
+        overflow: hidden;
+    }
+    .a_item>img{
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%;
+        float:left;
+    }
+    .a_item_left{
+        float: right;
+        width:calc(100% - 3.7em)
+    }
+    .a_item_left>h1{
+        font-size: 0.24rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#9d9ea0;
+        margin-bottom: 0.2rem;
+    }
+    .a_item_left>h1 button{
+        font-size: 0.18rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#6198d4;
+        width: 1.8rem;
+        height: 0.4rem;
+        padding-left: 0.2rem;
+        border:0.02rem solid #6198d4;
+        border-radius: 0.17rem;
+        float: right;
+        background-image: url(../images/vueimg/navig_icon.svg);
+        background-repeat:no-repeat;
+        background-size: 0.3rem 0.3rem;
+        background-position: 0.1rem 0.04rem;
+        /*top:0.9rem;
+        right: 0.2rem;*/
+    }
+    .a_item_left>p{
+        font-size: 0.32rem;
+        font-family: "PingFang Heavy", sans-serif;
+        color:#333333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
+    }
+    .a_item_left>div{
+        font-size: 0.22rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#bcbcbc;
+        margin-top:0.48rem;
+    }
+    .a_item_left>div span i img{
+        width: 0.22rem;
+    }
+    .a_item_left>div span i{
+        display: inline-block;
+        position: relative;
+        top: 0.04rem;
+        right: 0.04rem;
+    }   
+    .a_item_left>div span:first-child{
+        margin-right: 0.32rem;
+    }
+    .a_item_left>div span:last-child{
+        float: right;
+    }
+    
+</style>

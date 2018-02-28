@@ -1,0 +1,127 @@
+
+<template>
+    <yd-layout>
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link"> 
+                <span slot="left" class="e_myaten">我的关注</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="e_myspace">我的空间</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        
+        <yd-cell-group title="">
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="e_ranking">排名</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="e_choice">精品</span>
+            </yd-cell-item>
+            <yd-cell-item arrow href="#" type="link">
+                <span slot="left" class="e_nearby">查找附近</span>
+            </yd-cell-item>
+        </yd-cell-group>
+        <yd-tabbar slot="bottom">
+            <yd-tabbar-item title="工地" link="/" active>
+                <yd-icon name="home" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="区域" link="/districtSiteList">
+                <yd-icon name="shopcart-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            
+            <yd-tabbar-item title="发现" link="/">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+            <yd-tabbar-item title="我的" link="/content">
+                <yd-icon name="ucenter-outline" slot="icon"></yd-icon>
+            </yd-tabbar-item>
+        </yd-tabbar>
+
+    </yd-layout>
+</template>
+<script>
+    export default {
+
+    }
+</script>
+<style type="text/css">
+    .e_myaten{
+        background-image: url(../images/vueimg/myatten_icon.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .e_myspace{
+        background-image: url(../images/vueimg/myspace.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .e_ranking{
+        background-image: url(../images/vueimg/ranking.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .e_choice{
+        background-image: url(../images/vueimg/choice.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .e_nearby{
+        background-image: url(../images/vueimg/nearby.svg);
+        background-repeat: no-repeat;
+        padding-left:0.5rem;
+    }
+    .a_item{
+        padding:0.3rem 0.54rem 0.3rem 0.28rem;
+        height: 2.7rem;
+        background-color: #fff;
+        margin-bottom: 0.18rem;
+        overflow: hidden;
+    }
+    .a_item>img{
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%; 
+        float:left;
+    }
+    .a_item_left{
+        float: right;
+        position: relative;
+        width:calc(100% - 3.7em)
+    }
+    .a_item_left>h1{
+        font-size: 0.24rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#9d9ea0;
+        margin-left: 0.26px;
+        margin-bottom: 0.2rem;
+    }
+    .a_item_left>button{
+        font-size: 0.18rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#6198d4;
+        width: 1.26rem;
+        height: 0.34rem;
+        border:0.02rem solid #6198d4;
+        border-radius: 0.17rem;
+        position: absolute;
+        top:0.9rem;
+        right: 0.2rem;
+    }
+    .a_item_left>p{
+        font-size: 0.32rem;
+        font-family: "PingFang Heavy", sans-serif;
+        color:#333333;
+    }
+    .a_item_left>div{
+        font-size: 0.22rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#bcbcbc;
+        margin-top:0.48rem;
+    }
+    .a_item_left>div span:first-child{
+        margin-right: 0.32rem;
+    }
+    .a_item_left>div span:last-child{
+        float: right;
+    }
+</style>

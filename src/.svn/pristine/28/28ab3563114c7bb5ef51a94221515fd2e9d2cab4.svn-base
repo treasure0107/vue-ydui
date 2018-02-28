@@ -1,0 +1,354 @@
+<template>
+    <yd-layout>
+        <header class="d_header">
+            <ul>
+                <li>
+                    <i class="d_field"></i>
+                    <span class="d_district">福田区</span>
+                    <span class="d_disf">(250套)</span>
+                </li>
+                <li class="d_header_right">
+                    <!-- <div>
+                        <span class="d_disf">距离</span>
+                        <div class="d_upordown">
+                        <i></i>
+                        </div>
+                    </div> -->
+                    <div @click="getProByBudet">
+                        <span class="d_disf">预算</span>
+                        <div class="d_upordown"> 
+                        <i></i> 
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </header>
+        <yd-infinitescroll :on-infinite="getProByChoose" ref="infinitescrollDemo">
+    <yd-list theme="1" slot="list">
+        <div class="a_item" v-for="(item,imdex) in list">
+            <img :src="comimg+item.coverImgUrl">
+            <div class="a_item_left">
+                <h1><span>{{item.title}}</span><button>距离{{item.distance}}m</button></h1>
+                <router-link :to="{name:'detailInSite',params:{siteId:item.pid}}">
+                <p>{{item.content}}</p>
+                </router-link>
+                <div>
+                    <span><i><img src="../images/vueimg/budget_icon.svg"></i>预算:{{parseFloat(item.budget)}}万</span>
+                    <span><i><img src="../images/vueimg/area_icon.svg"></i>面积:{{parseFloat(item.proSize)}}平方米</span>
+                    <span><i><img src="../images/vueimg/stime_icon.svg"></i>已开工{{DateDiff(nowtime,item.startDate)}}天</span>
+                </div>
+            </div>
+        </div>
+        </yd-list>
+         <!-- 数据全部加载完毕显示 -->
+        <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+
+        <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+        <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+    </yd-infinitescroll>
+        
+    </yd-layout>
+</template>
+<script> 
+export default {
+    data () {
+        return {
+            titleval:"工地库",
+            conditionBudget:2,
+            slat:'',
+            slng:'',
+            sitename:"",
+            otherArea:"其他城市",
+            comimg:this.$api.imghost,
+            jsonpUrl:'http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455;39.949227,116.394310&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4&callback=function1',
+            page: 1,
+            pageSize: 10,
+            list: [],
+            nowtime:''
+        }
+    },
+        created () {
+            // this.geidis()
+            this.sitename=this.$route.params.sitename;
+            this.getProByChoose()
+            document.title=this.titleval
+            var date = Date.parse(new Date());
+            this.nowtime=parseInt(date);
+        },
+        methods:{
+            getDistance(slat,slng,elat,elng){
+                let lat1 = (Math.PI/180)*slat;  
+                let lat2 = (Math.PI/180)*elat;  
+                  
+                let lon1 = (Math.PI/180)*slng;  
+                let lon2 = (Math.PI/180)*elng;  
+                  
+        //      double Lat1r = (Math.PI/180)*(gp1.getLatitudeE6()/1E6);  
+        //      double Lat2r = (Math.PI/180)*(gp2.getLatitudeE6()/1E6);  
+        //      double Lon1r = (Math.PI/180)*(gp1.getLongitudeE6()/1E6);  
+        //      double Lon2r = (Math.PI/180)*(gp2.getLongitudeE6()/1E6);  
+                //地球半径  
+                let R = 6371;  
+                //两点间距离 km，如果想要米的话，结果*1000就可以了  
+                let d =  Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1))*R;  
+                return d*1000;  
+            },
+            // geidis(){
+            //     // this.$http.jsonp('http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4',jsonp:"callback").then(function(data){
+            //     //     console.log(data);
+            //     // });
+            //      let _url = "http://apis.map.qq.com/ws/distance/v1"; 
+            //     this.$http.jsonp( 
+            //         _url,
+            //         {params :{
+            //             mode: "driving",
+            //             from:"39.983171,116.308479",
+            //             to:"39.996060,116.353455",
+            //             key:"36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4"
+            //         }})
+            //     .then(function(data){
+            //             console.log(data);
+            //         },function(data){
+            //             console.log(data);
+            //         }); 
+            // },
+            getProByBudet() {
+                if (this.sitename=="其他城市") {
+                   this.sitename="";
+                }else{
+                    this.otherArea=""
+                }
+                var condBudget;
+                if (this.conditionBudget==2) {
+                    condBudget=1;
+                    this.conditionBudget=1;
+                }else{
+                    condBudget=2;
+                    this.conditionBudget=2;
+                }
+                this.list=[];
+                this.$http.post(this.$api.apihost+'project/getProByChoose', {
+                    uid:localStorage.uid,
+                    conditionArea:this.sitename,
+                    conditionBudget:condBudget,
+                    conditionDistanc:1,
+                    otherArea:this.otherArea,
+                    page: this.page,
+                    pagesize: this.pageSize
+                },{emulateJSON:true}).then( (res)=> {
+                    const _list = res.body.obj.projectList;
+
+                    this.list = [...this.list, ..._list];
+
+                    if (_list.length < this.pageSize || this.page == 3) {
+                        /* 所有数据加载完毕 */
+                        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                        return;
+                    }
+                    /* 单次请求数据完毕 */
+                    this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                    this.page++;
+                },(err)=>{
+
+                });
+            },
+               //计算天数差的函数，通用
+        DateDiff(sDate1,  sDate2){//sDate1是时间戳，sDate2是2006-12-18格式
+            var  aDate,  oDate1,  oDate2,  iDays
+           oDate1=sDate1
+           // aDate  =  sDate2.split("-")
+           var arr = sDate2.split(/[- : \/]/);
+            oDate2 = new Date(arr[0], arr[1]-1, arr[2]);
+            // console.log(oDate2);j
+           // oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])
+           iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
+           return  iDays
+        },
+            getProByChoose() {
+                if (this.sitename=="其他城市") {
+                   this.sitename="";
+                }else{
+                    this.otherArea=""
+                }
+                this.$http.post(this.$api.apihost+'project/getProByChoose', {
+                    uid:localStorage.uid,
+                    conditionArea:this.sitename,
+                    conditionBudget:2,
+                    conditionDistanc:1,
+                    otherArea:this.otherArea,
+                    page: this.page,
+                    pagesize: this.pageSize
+                },{emulateJSON:true}).then( (res)=> {
+                    const _list = res.body.obj.projectList;
+
+                    this.list = [...this.list, ..._list];
+
+                    if (_list.length < this.pageSize || this.page == 3) {
+                        /* 所有数据加载完毕 */
+                        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                        return;
+                    }
+                    /* 单次请求数据完毕 */
+                    this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                    this.page++;
+                },(err)=>{
+
+                });
+            }
+        //     getDistance(){
+        //         this.$http.get('http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455;39.949227,116.394310&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77').then(function(res){;
+        //     console.log(res);  
+        // },function(res){
+        //     console.log(res);
+        // });
+            // }
+        }
+    }
+</script>
+<style scoped>
+    /*.d_upordown{
+        width: 0.24rem;
+        height: 0.24rem; 
+        background-color: #ccc;
+    }*/
+    .d_upordown i:after{
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 7px solid #a0a0a0;
+        display: block;
+        -webkit-transition: -webkit-transform .25s cubic-bezier(.4,.6,.2,1);
+        transition: -webkit-transform .25s cubic-bezier(.4,.6,.2,1);
+        transition: transform .25s cubic-bezier(.4,.6,.2,1);
+        transition: transform .25s cubic-bezier(.4,.6,.2,1),-webkit-transform .25s cubic-bezier(.4,.6,.2,1);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    .d_header ul{
+        overflow: hidden;
+    }
+    .d_header li:first-child{
+        float:left;
+    }
+    .d_header_right{
+        float:right;
+    }
+    .d_header_right div{
+        display: inline-block;
+    }
+    .d_district{
+        font-family: "PingFang Heavy",'Droid Sans Fallback', sans-serif;
+        font-size: 0.42rem; 
+        color:#333333;
+        margin:0 0.2rem;
+    }
+    .d_disf{
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        font-size: 0.22rem; 
+        color:#5a5a5a;
+    }
+    .d_header{
+        height: 1rem;
+        line-height: 1rem;
+    }
+    .d_header ul{
+        padding:0 0.5rem;
+    }
+    .d_field{
+        display: inline-block;
+        width: 0.22rem;
+        height: 0.22rem;
+        background-color: #6198d4;
+    }
+     .a_item{
+        padding:0.3rem 0.54rem 0.3rem 0.28rem;
+      /*  height: 2.7rem;*/
+        background-color: #fff;
+        margin-bottom: 0.18rem;
+        overflow: hidden;
+    }
+    .a_item>img{
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%;
+        float:left;
+    }
+    .a_item_left{
+        float: right;
+        width:calc(100% - 3.7em)
+    }
+    .a_item_left>h1{
+        font-size: 0.24rem;
+        font-family: "PingFang Regular",'Droid Sans Fallback', sans-serif;
+        color:#9d9ea0;
+        margin-bottom: 0.2rem;
+        overflow: hidden;
+    }
+    .a_item_left>h1 span{
+        display: inline-block;
+        width: 3.8rem;
+        overflow: hidden;
+        float: left;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    font-weight: normal;
+    }
+    .a_item_left>h1 button{
+        font-size: 0.18rem;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        color:#6198d4;
+        width: 1.6rem;
+        height: 0.4rem;
+        padding-left: 0.2rem;
+        border:0.01rem solid #6198d4;
+        border-radius: 0.2rem;
+        float: right;
+        background-image: url(../images/vueimg/navig_icon.svg);
+        background-repeat:no-repeat;
+        background-size: 0.22rem 0.22rem;
+        background-position: 0.12rem 0.06rem;
+        /*top:0.9rem;
+        right: 0.2rem;*/
+    }
+    .a_item_left>p{
+        font-size: 0.32rem;
+        font-family: "PingFang Heavy",'Droid Sans Fallback', sans-serif;
+        font-weight: bold;
+        color:#333333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
+    }
+    .a_item_left>div{
+        font-size: 0.22rem;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        color:#bcbcbc;
+        margin-top:0.3rem;
+    }
+    .a_item_left>div span i img{
+        width: 0.22rem;
+        height: 0.22rem;
+    }
+    .a_item_left>div span i{
+        display: inline-block;
+        position: relative;
+        top: 0.04rem;
+        right: 0.04rem;
+    }
+    .a_item_left>div span{
+        float:left;
+    }
+    .a_item_left>div span:first-child{
+        margin-right: 0.32rem;
+    }
+    .a_item_left>div span:last-child{
+        float: right;
+    }
+    
+</style>

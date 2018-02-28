@@ -1,0 +1,201 @@
+<template>
+    <yd-layout>
+        <yd-tab :change="changeTitle">
+            <yd-tab-panel label="等候参观" tabkey="1" active>
+                <div v-if="hasData">
+                    <yd-infinitescroll :on-infinite="getVisitUserList" ref="infinitescrollDemo">
+                        <yd-list theme="1" slot="list">
+                            <yd-cell-group title="" v-for="(item,index) in userList" :key="index">
+                                <yd-cell-item type="link" :href="'/applyByperson/'+item.vid+'/'+item.uid" class="wvlist">
+                                    <div slot="left" class="wl_left">
+                                        <div :style="{backgroundImage: 'url(' + item.logoUrl + '?w=25&h=25)'}"></div>
+                                        <div>
+                                            <span>{{item.nickName}}</span>
+                                            <p>申请项目：{{item.title}}</p>
+                                        </div>
+                                    </div>
+                                    <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow-icon">
+                                </yd-cell-item>
+                            </yd-cell-group>
+                        </yd-list>
+                        <span slot="doneTip"></span>
+                        <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+                    </yd-infinitescroll>
+                </div>
+                <div class="nodata" v-else>
+                    <p>{{nodata}}</p>
+                </div>
+            </yd-tab-panel>
+            <yd-tab-panel label="我的客户" tabkey="2">
+                <div v-if="hasDatas">
+                    <yd-infinitescroll :on-infinite="getVisitUserLists" ref="infinitescrollDemos">
+                        <yd-list theme="1" slot="list">
+                            <yd-cell-group title="" v-for="(item,index) in userLists" :key="index">
+                                <yd-cell-item type="link" :href="'/applyByperson/'+item.vid+'/'+item.uid" class="wvlist">
+                                    <div slot="left" class="wl_left">
+                                        <div v-bind:style="{backgroundImage: 'url(' + item.logoUrl + '?w=25&h=25)'}"></div>
+                                        <div>
+                                            <span>{{item.nickName}}</span>
+                                            <p>申请项目：{{item.title}}</p>
+                                        </div>
+                                    </div>
+                                    <img slot="right" src="../images/visit/arrow_right.svg" type="img" class="arrow-icon">
+                                </yd-cell-item>
+                            </yd-cell-group>
+                        </yd-list>
+                        <span slot="doneTip"></span>
+                        <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+                    </yd-infinitescroll>
+                </div>
+                <div class="nodata" v-else>
+                    <p>{{nodata}}</p>
+                </div>
+            </yd-tab-panel>
+        </yd-tab>
+    </yd-layout>
+</template>
+<script>
+export default {
+    data(){
+        return {
+            prolist:[],
+            titleval:"等候参观名单",
+            hasData:true,
+            hasDatas:true,
+            nodata:'暂时没有数据！',
+            pagenum:0,
+            page: 0,
+            pageSize: 10,
+            pagenums:0,
+            pages: 0,
+            pageSizes: 10,
+            userList:[],
+            userLists:[]
+        }
+    },
+    created () {
+        document.title = this.titleval;
+        this.getVisitUserList();
+        this.getVisitUserLists();
+    },
+    mounted () {
+    },
+    methods: {
+        changeTitle(label,tabkey){
+            document.title=this.titleval=label
+        },
+        getVisitUserList(){
+            if (localStorage.uid) {
+                this.$http.post(this.$api.apihost+'visit/getVisitUserList',{
+                    uid:localStorage.uid,
+                    type:1,
+                    startRow:this.page,
+                    rowCount:this.pageSize
+                },{emulateJSON:true}).then(function(res){
+                    if (res.body.obj=="") {
+                        this.hasData=false
+                    }else{
+                        this.hasData=true
+                        const userList=res.body.obj.userList;
+                        this.userList = [...this.userList, ...userList];
+                        var count=res.body.obj.count;
+                        var pagecount=Math.ceil(count/this.pageSize);
+                        if (userList.length < this.pageSize || this.pagenum == pagecount) {
+                            this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                            return;
+                        }
+                        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                        this.pagenum++;
+                        this.page+=this.pageSize;
+                    }
+                },function(res){
+                    console.log(res.body);
+                });
+            }else{
+                alert("未登录");
+            }
+        },
+        getVisitUserLists(){
+            if (localStorage.uid) {
+                this.$http.post(this.$api.apihost+'visit/getVisitUserList',{
+                    uid:localStorage.uid,
+                    type:2,
+                    startRow:this.pages,
+                    rowCount:this.pageSizes
+                },{emulateJSON:true}).then(function(res){
+                    if (res.body.obj=="") {
+                        this.hasDatas=false
+                    }else{
+                        this.hasData=true
+                        const userLists=res.body.obj.userList;
+                        this.userLists = [...this.userLists, ...userLists];
+                        var count=res.body.obj.count;
+                        var pagecount=Math.ceil(count/this.pageSizes);
+                        if (userLists.length < this.pageSizes || this.pagenums == pagecount) {
+                            this.$refs.infinitescrollDemos.$emit('ydui.infinitescroll.loadedDone');
+                            return;
+                        }
+                        this.$refs.infinitescrollDemos.$emit('ydui.infinitescroll.finishLoad');
+                        this.pagenums++;
+                        this.pages+=this.pageSizes;
+                    }
+                },function(res){
+                    console.log(res.body);
+                });
+            }else{
+                alert("未登录");
+            }
+        },
+    }
+}
+</script>
+<style scoped>
+    .arrow-icon{
+        width: 0.16rem;
+        margin-right: 0.24rem;
+    }
+    .nodata{
+        text-align: center;
+        padding:0.5rem 0;
+    }
+    .wl_left{
+        overflow: hidden;
+    }
+    .wl_left>div{
+        float:left;
+        display: inline-block;
+    }
+    .wl_left>div:first-child{
+        width: 0.5rem;
+        height: 0.5rem;
+        background-image: url(../images/vueimg/qbjl.svg);
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        position: relative;
+        top: 0.3rem;
+        background-size: 100%;
+    }
+    .wl_left>div:last-child{
+        margin-left:0.3rem;
+        height: 1.3rem;
+        line-height: 0.56rem;
+    }
+    .wl_left span:first-child{
+        display: block;
+        font-size: 0.28rem;
+        font-family: "PingFang Medium",'Droid Sans Fallback', sans-serif;
+        color:#333333;
+    }
+    .wl_left p{
+        display: block;
+        font-size: 0.22rem;
+        max-width: 5rem;
+        font-family: "PingFang Regular",'Droid Sans Fallback', sans-serif;
+        color:#333333;
+         overflow: hidden;
+        text-overflow: ellipsis;
+        /*display: -webkit-box;*/
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>

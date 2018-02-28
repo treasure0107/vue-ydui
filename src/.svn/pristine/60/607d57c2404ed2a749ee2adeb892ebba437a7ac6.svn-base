@@ -1,0 +1,88 @@
+<template>
+  <div>
+    <div class="cation_head">
+      <div class="cation_con">
+        <div class="cation_tit">
+          <p>170平现代中式风格装修记-环保实用</p>
+          <span class="good_rate">好评率:99%</span>
+        </div>
+
+        <div class="budget_area">预算: 50万 / 面积: 170万 / 已开工10天</div>
+        <div class="visit_hours ">参观时间 2017-07-26 12:00</div>
+      </div>
+      <div class="cation_img">
+        <img src="" alt="">
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+  .cation_head {
+    padding-top: 0.5rem;
+    background-color: #fff;
+    overflow: hidden;
+    border:1px solid red;
+  }
+
+  .cation_con {
+    width: 4.4rem;
+    float: left;
+    margin-left: 0.5rem;
+  }
+
+  .cation_tit p {
+    font-size: 0.4rem;
+    font-family: 'PingFang Heavy';
+    color: #333;
+  }
+
+  .cation_tit {
+    position: relative;
+  }
+  .good_rate{
+    font-size:0.2rem;
+    color:#6198d4;
+    position: absolute;
+    right: 0.3rem;
+    top: 0.66rem;
+    width: 1.42rem;
+    height: 0.34rem;
+    line-height: 0.34rem;
+    border:2px solid #a3c3e6;
+    text-align: center;
+    border-radius: 0.17rem;
+    font-family: 'PingFang Medium';
+  }
+  .budget_area{
+    font-size:0.22rem;
+    color:#b0b0b0;
+    margin-top: 0.1rem;
+  }
+  .cation_img {
+    width: 1.8rem;
+    height: 1.8rem;
+    background-color: #666;
+    float: right;
+    margin-right: 0.4rem;
+  }
+  .visit_hours{
+    font-size:0.22rem;
+    color:#ff6d6d;
+  }
+</style>
+
+<script>
+  //    import common from '../';
+  //
+  //    export default {
+  //        data() {
+  //            return {};
+  //        },
+  //        created() {
+  //
+  //        },
+  //        methods: {}
+  //    }
+</script>
+

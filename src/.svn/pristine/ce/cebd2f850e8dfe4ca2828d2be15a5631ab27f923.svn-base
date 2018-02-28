@@ -1,0 +1,28 @@
+<template>
+  <div class="maindiv">
+    <!-- <ul>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/content">About</router-link></li>
+    </ul> -->
+    <router-view class="view" keep-alive transition transition-mode="out-in"></router-view>
+  </div>
+</template>
+
+<script>
+// import './script/jquery.fileupload.js';
+</script>
+<style>
+  .maindiv{
+    height: 100%;
+    background-color: #f4f8ff;
+  }
+  /*底部公用*/
+footer svg{
+    width: 0.4rem;
+}
+.tabbar-active{
+    color:#6198d4 !important;
+}
+.footer_svg{fill-rule:evenodd;clip-rule:evenodd;fill:#5A5A5A;}
+.footer_svgs{fill-rule:evenodd;clip-rule:evenodd;fill:#6198D4;}
+</style>

@@ -1,0 +1,120 @@
+<template>
+  <div class="aCount">
+      <div class="aCount-head">
+        <span class="aCount-face"></span>
+        <div class="aCount-con">
+          <h1>BLUE</h1>
+          <h2>手机号：15912345678</h2>
+        </div>
+      </div>
+      <h2 class="aCount-area">已授权工地</h2>
+      <div class="aCount-body">
+        <ul class="aCount-title">
+          <li><span class="aCount-name">已授权项目标题</span><button class="aCount-cancel">取消授权</button></li>
+          <li><span class="aCount-name">已授权项目标题</span><button class="aCount-cancel">取消授权</button></li>
+          <li><span class="aCount-name">已授权项目标题</span><button class="aCount-cancel">取消授权</button></li>
+          <li><span class="aCount-name">已授权项目标题</span><button class="aCount-cancel">取消授权</button></li>
+          <li><span class="aCount-name">已授权项目标题</span><button class="aCount-cancel">取消授权</button></li>
+          <li><span class="aCount-name">已授权项目标题</span><button class="aCount-cancel">取消授权</button></li>
+        </ul>
+      </div>
+    <div class="aCount-new">授权项目</div>
+  </div>
+
+</template>
+
+<script>
+    export default {
+
+    }
+</script>
+
+<style>
+    .aCount-head:after{
+      content:"";
+      display:block;
+      clear:both;
+    }
+    .aCount-head {
+      padding:0.26rem 0 0.26rem 0.46rem;
+      margin-top:0.18rem;
+      background-color: #fff;
+    }
+    .aCount-face{
+      float:left;
+      width:1rem;
+      height:1rem;
+      border-radius:50%;
+      background: url(../images/space/defau-face.svg) center center no-repeat;
+      background-size: cover;
+    }
+  .aCount-con{
+    float:left;
+    padding-left:0.24rem;
+  }
+    .aCount-con h1{
+      font-family: "PingFang bold", sans-serif;
+      font-size: 0.36rem;
+      color:#333;
+      font-weight:normal;
+      margin-bottom:0.1rem;
+    }
+    .aCount-con h2{
+      font-family: "PingFang Medium", sans-serif;
+      font-size: 0.22rem;
+      color:#9d9ea0;
+      font-weight:normal;
+    }
+  .aCount-area{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.22rem;
+    color:#b6b6b6;
+    height:0.46rem;
+    line-height: 0.46rem;
+    font-weight:normal;
+    padding-left:0.46rem;
+  }
+    .aCount-title{
+      background-color: #fff;
+    }
+  .aCount-title li{
+    height:1.06rem;
+    line-height:1.06rem;
+    overflow: hidden;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .aCount-name{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#333;
+    float:left;
+    padding-left:0.46rem;
+  }
+  .aCount-cancel{
+    font-size:0.24rem;
+    font-family: "PingFang Medium", sans-serif;
+    color: rgb(157, 158, 160);
+    float:right;
+    width:1.43rem;
+    text-align: center;
+    height:0.54rem;
+    line-height: 0.54rem;
+    margin-right:0.46rem;
+    border:0.01rem solid #ccc;
+    border-radius:0.1rem;
+    margin-top:0.25rem;
+  }
+  .aCount-new{
+    position:fixed;
+    bottom:0;
+    left:0;
+    font-size:0.36rem;
+    font-family: "PingFang bold", sans-serif;
+    color: #6198d4;
+    width:100%;
+    text-align: center;
+    height:1rem;
+    line-height: 1rem;
+    background-color: #fff;
+  }
+</style>

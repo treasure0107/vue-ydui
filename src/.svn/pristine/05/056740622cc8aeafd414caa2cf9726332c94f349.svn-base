@@ -1,0 +1,5 @@
+export default {
+    apihost:'http://192.168.1.240/yuyue/',
+    imghost : "http://192.168.1.240:4869/",
+    upimgurl:"http://192.168.1.240:1000/upload"
+}

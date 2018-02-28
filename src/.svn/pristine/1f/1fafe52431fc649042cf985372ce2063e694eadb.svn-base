@@ -1,0 +1,338 @@
+<template>
+    <yd-layout>
+        <header class="d_header">
+            <ul>
+                <li>
+                    <i class="d_field"></i>
+                    <span class="d_district">福田区</span>
+                    <span class="d_disf">(250套)</span>
+                </li>
+                <li class="d_header_right">
+                    <div>
+                        <span class="d_disf">距离</span>
+                        <div class="d_upordown">
+                        <i></i>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="d_disf">预算</span>
+                        <div class="d_upordown"> 
+                        <i></i> 
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </header>
+        <yd-infinitescroll :on-infinite="loadList" ref="infinitescrollDemo">
+    <yd-list theme="1" slot="list">
+        <div class="a_item" v-for="(item,imdex) in list">
+            <img src="http://img1.caijing.com.cn/2014/1017/1413507662679.jpg">
+            <div class="a_item_left">
+                <h1><span>{{item.title}}</span><button>距离200m</button></h1>
+                <router-link :to="{name:'detailInSite',params:{siteId:item.title}}">
+                <p>装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。保证实用、安全、环保三大要素的基础上，走现代简约风格。</p>
+                </router-link>
+                <div>
+                    <span><i><img src="../images/vueimg/budget_icon.svg"></i>预算:50万</span>
+                    <span><i><img src="../images/vueimg/area_icon.svg"></i>面积:170万</span>
+                    <span><i><img src="../images/vueimg/stime_icon.svg"></i>已开工10天</span>
+                </div>
+            </div>
+        </div>
+        </yd-list>
+         <!-- 数据全部加载完毕显示 -->
+        <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+
+        <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+        <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+    </yd-infinitescroll>
+        
+    </yd-layout>
+</template>
+<script> 
+    export default {
+        components:{
+            // footerBar
+        },
+        data () {
+            return {
+                titleval:"工地库",
+                slat:'',
+                slng:'',
+                jsonpUrl:'http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455;39.949227,116.394310&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4&callback=function1',
+                page: 1,
+                pageSize: 10,
+                list: [
+                    {
+                        img: "http://img1.shikee.com/try/2016/06/23/14381920926024616259.jpg",
+                        title: "标题标题标题标题标题",
+                        marketprice: 56.23,
+                        productprice: 89.36
+                    },
+                    {
+                        img: "http://img1.shikee.com/try/2016/06/21/10172020923917672923.jpg",
+                        title: "骆驼男装2016夏装男士短袖T恤 圆领衣服 印花男装体恤 半袖打底衫",
+                        marketprice: 56.23,
+                        productprice: 89.36
+                    },
+                    {
+                        img: "http://img1.shikee.com/try/2016/06/23/15395220917905380014.jpg",
+                        title: "条纹短袖T恤男士韩版衣服大码潮流男装夏季圆领体恤2016新款半袖",
+                        marketprice: 56.23,
+                        productprice: 89.36
+                    },
+                    {
+                        img: "http://img1.shikee.com/try/2016/06/25/14244120933639105658.jpg",
+                        title: "夏季青少年衣服男生潮牌t恤 男士 夏秋学生 日系棉短袖半袖男小衫",
+                        marketprice: 56.23,
+                        productprice: 89.36
+                    },
+                    {
+                        img: "http://img1.shikee.com/try/2016/06/26/12365720933909085511.jpg",
+                        title: "2016夏装新款时尚潮流短袖T恤男纯棉V领日系青少年韩版夏季上衣服",
+                        marketprice: 56.23,
+                        productprice: 89.36
+                    },
+                    {
+                        img: "http://img1.shikee.com/try/2016/06/19/09430120929215230041.jpg",
+                        title: "男装衣服男夏t恤 男士短袖t恤圆领夏季潮牌宽松原宿风半截袖男",
+                        marketprice: 56.23,
+                        productprice: 89.36
+                    }
+                ]
+            }
+        },
+        created () {
+            // this.geidis()
+            document.title=this.titleval
+        },
+        mounted () {
+            // this.geidis();
+            var _self=this;
+            document.getElementById("geoPage").addEventListener('message', function(event) {
+                // 接收位置信息
+                var loc = event.data; 
+                // console.log('location:'+loc.lat);
+                _self.slat= loc.lat;
+                _self.slng= loc.lng; 
+            }, false);
+            let disval=_self.getDistance(39.983171,116.308479,39.996060,116.353455);
+            if (disval>1000) {
+               disval=(disval/1000).toFixed(2);
+               disval=disval+"公里";
+            }else{
+                display=disval.toFixed(2);
+                display=display+"米";
+            }
+            console.log("距离是："+disval); 
+        },
+        methods:{
+            getDistance(slat,slng,elat,elng){
+
+                let lat1 = (Math.PI/180)*slat;  
+                let lat2 = (Math.PI/180)*elat;  
+                  
+                let lon1 = (Math.PI/180)*slng;  
+                let lon2 = (Math.PI/180)*elng;  
+                  
+        //      double Lat1r = (Math.PI/180)*(gp1.getLatitudeE6()/1E6);  
+        //      double Lat2r = (Math.PI/180)*(gp2.getLatitudeE6()/1E6);  
+        //      double Lon1r = (Math.PI/180)*(gp1.getLongitudeE6()/1E6);  
+        //      double Lon2r = (Math.PI/180)*(gp2.getLongitudeE6()/1E6);  
+                //地球半径  
+                let R = 6371;  
+                //两点间距离 km，如果想要米的话，结果*1000就可以了  
+                let d =  Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1))*R;  
+                return d*1000;  
+            },
+            // geidis(){
+            //     // this.$http.jsonp('http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455&key=36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4',jsonp:"callback").then(function(data){
+            //     //     console.log(data);
+            //     // });
+            //      let _url = "http://apis.map.qq.com/ws/distance/v1"; 
+            //     this.$http.jsonp( 
+            //         _url,
+            //         {params :{
+            //             mode: "driving",
+            //             from:"39.983171,116.308479",
+            //             to:"39.996060,116.353455",
+            //             key:"36QBZ-26U34-WJDUH-D677E-F34ZS-EOFS4"
+            //         }})
+            //     .then(function(data){
+            //             console.log(data);
+            //         },function(data){
+            //             console.log(data);
+            //         }); 
+            // },
+            loadList() {
+                this.$http.jsonp('http://list.ydui.org/getdata.php?type=backposition', {
+                    params: {
+                        page: this.page,
+                        pagesize: this.pageSize
+                    }
+                }).then(function (response) {
+                    const _list = response.body;
+
+                    this.list = [...this.list, ..._list];
+
+                    if (_list.length < this.pageSize || this.page == 3) {
+                        /* 所有数据加载完毕 */
+                        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                        return;
+                    }
+                    /* 单次请求数据完毕 */
+                    this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+                    this.page++;
+                });
+            }
+        //     getDistance(){
+        //         this.$http.get('http://apis.map.qq.com/ws/distance/v1/?mode=driving&from=39.983171,116.308479&to=39.996060,116.353455;39.949227,116.394310&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77').then(function(res){;
+        //     console.log(res);  
+        // },function(res){
+        //     console.log(res);
+        // });
+            // }
+        }
+    }
+</script>
+<style>
+/*.d_upordown{
+    width: 0.24rem;
+    height: 0.24rem; 
+    background-color: #ccc;
+}*/
+.d_upordown i:after{
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 7px solid #a0a0a0;
+    display: block;
+    -webkit-transition: -webkit-transform .25s cubic-bezier(.4,.6,.2,1);
+    transition: -webkit-transform .25s cubic-bezier(.4,.6,.2,1);
+    transition: transform .25s cubic-bezier(.4,.6,.2,1);
+    transition: transform .25s cubic-bezier(.4,.6,.2,1),-webkit-transform .25s cubic-bezier(.4,.6,.2,1);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+.d_header ul{
+    overflow: hidden;
+}
+.d_header li:first-child{
+    float:left;
+}
+.d_header_right{
+    float:right;
+}
+.d_header_right div{
+    display: inline-block;
+}
+.d_district{
+    font-family: "PingFang Heavy", sans-serif;
+    font-size: 0.42rem; 
+    color:#333333;
+    margin:0 0.2rem;
+}
+.d_disf{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.22rem; 
+    color:#5a5a5a;
+}
+.d_header{
+    height: 1rem;
+    line-height: 1rem;
+}
+.d_header ul{
+    padding:0 0.5rem;
+}
+.d_field{
+    display: inline-block;
+    width: 0.22rem;
+    height: 0.22rem;
+    background-color: #6198d4;
+}
+    .a_item{
+        padding:0.3rem 0.54rem 0.3rem 0.28rem;
+        height: 2.7rem;
+        background-color: #fff;
+        margin-bottom: 0.18rem;
+        overflow: hidden;
+    }
+    .a_item>img{
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%;
+        float:left;
+    }
+    .a_item_left{
+        float: right;
+        width:calc(100% - 3.7em)
+    }
+    .a_item_left>h1{
+        font-size: 0.24rem;
+        font-family: "PingFang Regular", sans-serif;
+        color:#9d9ea0;
+        margin-bottom: 0.2rem;
+        overflow: hidden;
+    }
+    .a_item_left>h1 span{
+        display: inline-block;
+        width: 3.8rem;
+        overflow: hidden;
+        float: left;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    }
+    .a_item_left>h1 button{
+        font-size: 0.18rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#6198d4;
+        width: 1.6rem;
+        height: 0.4rem;
+        padding-left: 0.2rem;
+        border:0.01rem solid #6198d4;
+        border-radius: 0.2rem;
+        float: right;
+        background-image: url(../images/vueimg/navig_icon.svg);
+        background-repeat:no-repeat;
+        background-size: 0.22rem 0.22rem;
+        background-position: 0.12rem 0.06rem;
+        /*top:0.9rem;
+        right: 0.2rem;*/
+    }
+    .a_item_left>p{
+        font-size: 0.32rem;
+        font-family: "PingFang Heavy", sans-serif;
+        color:#333333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
+    }
+    .a_item_left>div{
+        font-size: 0.22rem;
+        font-family: "PingFang Medium", sans-serif;
+        color:#bcbcbc;
+        margin-top:0.3rem;
+    }
+    .a_item_left>div span i img{
+        width: 0.22rem;
+    }
+    .a_item_left>div span i{
+        display: inline-block;
+        position: relative;
+        top: 0.04rem;
+        right: 0.04rem;
+    }   
+    .a_item_left>div span:first-child{
+        margin-right: 0.32rem;
+    }
+    .a_item_left>div span:last-child{
+        float: right;
+    }
+    
+</style>

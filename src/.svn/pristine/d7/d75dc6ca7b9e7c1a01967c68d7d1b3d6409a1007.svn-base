@@ -1,0 +1,240 @@
+<template>
+  <div class="space">
+    <div class="space-head">
+      <div class="space-con">
+        <router-link to="" class="space-face"></router-link>
+        <router-link to="" class="space-name">Home</router-link>
+      </div>
+    </div>
+    <div class="space-body">
+          <svg version="1.0" class="space-release"  @click="reProject" x="0px" y="0px"
+                viewBox="0 0 120 100" style="enable-background:new 0 0 120 100;" xml:space="preserve">
+          <rect class="st0" width="120" height="100"/>
+          <g>
+            <path class="st1" d="M81.5,73.4H38.6c-4.7,0-8.6-3.7-8.6-8.3v-25c0-4.6,3.8-8.3,8.6-8.3h6c1.3-3.1,4.3-5.2,7.9-5.2h15
+              c3.6,0,6.7,2.2,7.9,5.2h6c4.7,0,8.6,3.7,8.6,8.3v25C90.1,69.7,86.2,73.4,81.5,73.4L81.5,73.4L81.5,73.4z M60.1,37
+              c-8.3,0-15,6.5-15,14.6s6.7,14.6,15,14.6s15-6.5,15-14.6S68.4,37,60.1,37L60.1,37L60.1,37z M60.1,62c-5.9,0-10.7-4.7-10.7-10.4
+              s4.8-10.4,10.7-10.4s10.7,4.7,10.7,10.4S66,62,60.1,62L60.1,62L60.1,62z"/>
+          </g>
+      </svg>
+      <yd-infinitescroll :on-infinite="loadList" ref="infinitescrollDemo">
+        <yd-list theme="1" slot="list">
+            <div class="space-show" v-for="item in list">
+              <h1 class="space-proName"><router-link to="/detailInSpace" class="space-faceName" style="background:url(../../images/space/space_face.jpg) center center no-repeat;background-size:cover;"></router-link><router-link to="/detailInSpace" class="space-faceDesc">{{item.title}}</router-link></h1>
+              <ul class="space-sall">
+                <li v-for="val in item.recordList">
+                  <h2 class="space-time">{{val.createTime}}</h2>
+                  <router-link to="/detailInSpace" class="space-proTrack">
+                    <div class="space-image">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <p>{{val.content}}</p>
+                  </router-link>
+                </li>
+                <li>
+                  <h2 class="space-time">7月05日</h2>
+                  <router-link to="/detailInSpace" class="space-proTrack">
+                    <div class="space-image space-imgOne">
+
+                    </div>
+                    <p>终于开始动工了，推迟了一周开始记录。拆除+改水改电已经完成，水管听工人推荐，买的金德的，但据说市场假的比较多，托人在市…</p>
+                  </router-link>
+                </li>
+                <li>
+                  <h2 class="space-time">7月01日</h2>
+                  <router-link to="/detailInSpace" class="space-proTrack">装修原则：保证实用、安全、环保三大要素的基础上，走现代简约风格。色彩上以浅色素色为主，大方干净。客厅和书房有一定时尚科技感，卧</router-link>
+                </li>
+              </ul>
+              <h3 class="space-shrink" @click="slidup">展开</h3>
+            </div>
+        </yd-list>
+        <!-- 数据全部加载完毕显示 -->
+        <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+        <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+        <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+      </yd-infinitescroll>
+    </div>
+  </div>
+</template>
+<script>
+    import comapi from '../../config/api.js'
+    export default {
+      data(){
+        return{
+          comUrl:comapi.imghost,
+          arrDown:require("../../images/space/arrow-down.svg"),
+          arrUp:require("../../images/space/arrow-top.svg"),
+          page: 1,
+          pageSize: 10,
+          list: []
+        }
+      },
+      created () {
+        // this.geidis()
+        this.loadList();
+      },
+      methods: {
+        loadList() {
+          this.$http.post(comapi.apihost+'project/getRecordByUser',{uid:1,page:this.page,recordNum:this.pageSize},{emulateJSON:true}).then(function (response) {
+              const _list = response.body.obj.proList;
+              this.list = [...this.list, ..._list];
+
+              if (_list.length < this.pageSize || this.page == 3) {
+                /* 所有数据加载完毕 */
+                this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+                return;
+              }
+              /* 单次请求数据完毕 */
+              this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+              this.page++;
+            });
+          },
+        slidup(e){
+          if($(".space-sall li:nth-child(2)").css("display")=="none"){
+            $(".space-sall li:not(:first-child)").slideDown();
+            $(e.target).text("收起").css({"background":"url("+this.arrDown+") center center no-repeat","background-size":"0.2rem 0.13rem"});
+          }else{
+            $(".space-sall li:not(:first-child)").slideUp();
+            $(e.target).text("展开").css({"background":"url("+this.arrUp+") center center no-repeat","background-size":"0.2rem 0.13rem"});
+          }
+        },
+        reProject(){
+          this.$router.push({ path: '/reProject'})
+        }
+      }
+    }
+</script>
+<style>
+  .space-head {
+    width:7.5rem;
+    height:2.88rem;
+    background:url(../../images/space/space_banner.jpg) center center no-repeat;
+    position:relative;
+  }
+  .space-sall li:not(:first-child){
+    display:none;
+  }
+  .space-con{
+    position:absolute;
+    left:0.48rem;
+    bottom:-0.28rem;
+  }
+  .space-face{
+    display:inline-block;
+    width:1.42rem;
+    height:1.42rem;
+    background-color: #e3e8f4;
+    border:0.03rem solid #fff;
+    vertical-align: middle;
+    margin-right:0.15rem;
+  }
+  .space-name{
+    font-family: "PingFang Medium", sans-serif;
+    color:#fff;
+    text-shadow: 0 3px 8px rgba(120, 115, 112, 0.52);
+  }
+  .space-body{
+    padding-left:0.44rem;
+  }
+  .space-release{
+    width:1.2rem;
+    height:1rem;
+    margin-top:0.71rem;
+    margin-left:0.04rem;
+  }
+  .st0{fill:#EBEEF4;}
+  .st1{fill:#A6AFC1;}
+  .space-proName{
+    margin-top:0.6rem;
+    padding-bottom:0.3rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .space-faceName{
+    display:inline-block;
+    width:0.68rem;
+    height:0.68rem;
+    border-radius:50%;
+    background:url(../../images/space/space_face.jpg) center center no-repeat;
+    background-size:cover;
+    vertical-align: middle;
+    margin-right:0.1rem;
+  }
+  .space-show{
+    border-bottom:0.19rem solid #f4f8ff;
+  }
+  .space-show li{
+    padding-bottom:0.45rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .space-faceDesc{
+    font-family: "PingFang Bold", sans-serif;
+    color:#333;
+  }
+  .space-time{
+    font-family: "PingFang Medium", sans-serif;
+    color:#9d9ea0;
+    padding:0.3rem 0 0.2rem;
+  }
+  .space-proTrack:after{
+    content:"";
+    display:block;
+    clear:both;
+  }
+  .space-proTrack{
+    display:block;
+    font-family: "PingFang Regular", sans-serif;
+    color:#333;
+    padding-right:0.44rem;
+  }
+
+  .space-image{
+    float:left;
+    width:2.04rem;
+    margin-right:0.37rem;
+  }
+  .space-image span{
+    float:left;
+    width:1rem;
+    height:1rem;
+    margin-right:0.04rem;
+    margin-bottom:0.04rem;
+    background: url(../../images/space/space01.jpg) center center no-repeat;
+    background-size: cover;
+  }
+  .space-image span:nth-child(2n){
+    margin-right:0;
+  }
+  .space-image span:nth-child(3),.space-image span:nth-child(4){
+    margin-bottom:0;
+  }
+  .space-proTrack p{
+    font-family: "PingFang Regular", sans-serif;
+    color:#333;
+    float:left;
+    width:4.1rem;
+    /*line-height:0.2rem;*/
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    margin-top:-0.05rem;
+  }
+  .space-imgOne.space-image{
+    height:1.43rem;
+    background: url(../../images/space/space05.jpg) center center no-repeat;
+    background-size: cover;
+  }
+  .space-show .space-imgOne p{
+    -webkit-line-clamp: 4;
+  }
+  .space-shrink{
+    font-family: "PingFang Regular", sans-serif;
+    font-size:0.24rem;
+    height:0.84rem;
+    line-height:0.84rem;
+    text-indent:2.92rem;
+    color:#6198d4;
+    background: url(../../images/space/arrow-down.svg) 3.5rem center no-repeat;
+    background-size: 0.2rem 0.13rem;
+  }
+</style>

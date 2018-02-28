@@ -1,0 +1,507 @@
+<template>
+  <div class="reProject">
+    <div class="reProject-head">
+      <textarea placeholder="项目状态介绍..."></textarea>
+      <ul class="reProject-headList">
+        <li class="reProject-headItem active">
+          <span class="reProject-headDel" @click="del"></span>
+          <div class="reProject-headCon" @click="cover">设为封面</div>
+        </li>
+        <li class="reProject-headItem">
+          <span class="reProject-headDel"  @click="del"></span>
+          <div class="reProject-headCon" @click="cover">设为封面</div>
+        </li>
+        <li class="upload_img" @click="show">+</li>
+      </ul>
+      <router-link to="/proTitle" class="reProject-title">{{proInfo.title}}</router-link>
+    </div>
+    <div class="reProject-body">
+      <ul class="reProject-con">
+        <li>
+          <router-link to="" class="reProject-address" v-if="proInfo.province!=''"><label>项目地址</label><span class="reProject-deAdd">{{proInfo.province}}{{proInfo.city}}{{proInfo.area}}</span></router-link>
+          <router-link to="/projectAdd" class="reProject-address" v-else><label>项目地址</label><span class="reProject-deAdd">{{address}}</span></router-link>
+        </li>
+        <li class="reProject-budget">
+          <label>预&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;算</label>
+          <input type="text" placeholder="填写项目预算" :value="proInfo.budget" v-if="proInfo.budget!=''" readonly>
+          <input type="text" placeholder="填写项目预算"  v-else>
+          <span>万元</span>
+        </li>
+        <li>
+          <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积</label>
+          <input type="text" placeholder="填写项目面积" :value="proInfo.proSize" v-if="proInfo.proSize!=''" readonly>
+          <input type="text" placeholder="填写项目面积" v-else>
+          <span>平方米</span>
+        </li>
+      </ul>
+      <yd-cell-group>
+        <yd-cell-item>
+          <span slot="left" class="reProject-date">开工日期</span>
+          <yd-datetime type="date" v-model="datetime" slot="right"></yd-datetime>
+        </yd-cell-item>
+      </yd-cell-group>
+    </div>
+    <div class="reProject-foot">
+      <div class="reProject-footNav">
+        <span>是否需要提供预约？</span>
+        <div class="switch_case">
+          <yd-switch v-model="switch1" :disabled="other" color="#6198d4"></yd-switch>
+        </div>
+      </div>
+      <ul class="reProject-footDeco" v-show="switch1">
+        <li>
+          <yd-checkbox val="1">提供装修合同</yd-checkbox>
+          <ul class="deco_contract">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <span class="upload" @click="show">上传</span>
+        </li>
+        <li>
+          <yd-checkbox val="2">已提供施工图</yd-checkbox>
+          <ul class="deco_contract">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <span class="upload" @click="show">上传</span>
+        </li>
+      </ul>
+      <div class="reProject-footNav aRecord-look">
+        <span>是否隐藏浏览？</span>
+        <div class="switch_case">
+          <yd-switch v-model="swit" color="#6198d4"></yd-switch>
+        </div>
+      </div>
+      <button class="reProject-send" @click="releasepro">发送</button>
+    </div>
+    <div class="mask-action" v-show="reveal" @click="mask"></div>
+    <div class="m-action">
+      <ul>
+        <li><label for="camear">拍摄</label> <input type="file" accept="image/*"  id="camear" capture="camera" /></li>
+        <li><label for="picture">从手机相册中选择</label> <input type="text" accept="image/*" id="picture" name="myfile" multiple></li>
+        <li><label class="cancel" @click="hide">取消</label></li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    data () {
+      return {
+        budge:"",
+        address: "",
+        title: "",
+        swit: true,
+        other: false,
+        reveal: false,
+        proInfo: {},
+        switch1: false,
+        datetime: '2018-03-29',
+        yearFormat: '<span style="color:#F00;">{value}<i style="font-size: 12px;margin-left: 1px;">年</i></span>',
+        monthFormat: '<span style="color:#0BB20C;">{value}<i style="font-size: 12px;margin-left: 1px;">月</i></span>',
+        dayFormat: '<span style="color:#FFB400;">{value}<i style="font-size: 12px;margin-left: 1px;">日</i></span>',
+      }
+    },
+    mounted(){
+      this.address=localStorage.address;
+      this.title=localStorage.proTitle;
+    },
+    created(){
+      this.getProInfo();
+    },
+    watch:{
+      swit(){
+        console.log(this.swit);
+      }
+    },
+    methods: {
+      getProInfo() {
+        this.$http.post(this.$api.apihost+'project/getProInfo',{pid:this.$route.params.pid},{emulateJSON:true}).then(function (response) {
+          this.proInfo= response.body.obj;
+        });
+      },
+      show () {
+        this.reveal = true;
+        $(".m-action").addClass("action-active");
+      },
+      hide() {
+        this.reveal = false;
+        $(".m-action").removeClass("action-active");
+      },
+      mask(){
+        this.reveal = false;
+        $(".m-action").removeClass("action-active");
+      },
+      del(e){
+        $(e.target).parent().remove();
+      },
+      releasepro(){
+        this.$router.push('/detailInSpace')
+      },
+      cover(e){
+        $(e.target).parent().addClass("active").siblings().removeClass("active");
+      },
+      upload(){
+        this.$http.get(this.$api.upimgurl,{emulateJSON:true}).then(function (response) {
+          const _list = response.body.obj.titleList;
+          this.list = [...this.list, ..._list];
+        });
+      }
+    }
+  }
+</script>
+<style>
+  .mask-action{
+    background-color: rgba(0,0,0,.4);
+    right: 0;
+    top: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .mask-action,.m-action{
+    position: fixed;
+    z-index: 500;
+    bottom: 0;
+    left: 0;
+  }
+  .m-action{
+    text-align: center;
+    width: 100%;
+    background-color: #efeff4;
+    -webkit-transform: translateY(100%);
+    transform: translateY(100%);
+    -webkit-transition: -webkit-transform .3s;
+    transition: -webkit-transform .3s;
+    transition: transform .3s;
+    transition: transform .3s,-webkit-transform .3s;
+    display:block;
+  }
+  .action-active{
+    -webkit-transform: translate(0);
+    transform: translate(0);
+  }
+  .m-action li{
+    width:100%;
+    height:0.98rem;
+    line-height: 0.98rem;
+    background-color: #fff;
+    position:relative;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .m-action li:nth-child(2){
+    border-bottom:0.1rem solid #f4f8ff;
+  }
+  .m-action li label{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.32rem;
+    color:#333;
+    display:block;
+    width:100%;
+    height:100%;
+    text-align: center;
+  }
+  .m-cell:after{
+    border-bottom:none !important;
+  }
+  .m-action li  input{
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:0;
+  }
+  .datetime-head>a:last-child{
+    color:#6198d4;
+  }
+  .reProject-head{
+    padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .reProject-head textarea{
+    font-family: "PingFang Medium", sans-serif;
+    font-size:0.26rem;
+    color:#9d9ea0;
+    text-indent:0.07rem;
+    width:6.51rem;
+    height: 1.05rem;
+    overflow-y:scroll ;
+    margin-top:0.28rem;
+    border:none;
+    margin-bottom:0.235rem;
+  }
+  .reProject-head textarea::-webkit-scrollbar{
+    display: none;
+  }
+  .reProject-headList:after{
+    content:"";
+    display:block;
+    clear:both;
+  }
+  .reProject-headList{
+    padding-bottom:0.2rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .reProject-headItem{
+    float:left;
+    width:1.4rem;
+    height:1.2rem;
+    background: url(../images/space/reProject.jpg) center center no-repeat;
+    background-size: cover;
+    position:relative;
+    margin-right:0.22rem;
+    margin-bottom:0.22rem;
+  }
+  .upload_img{
+    font-family: "PingFang Regular", sans-serif;
+    font-size: 1.2rem;
+    line-height: 0.783;
+    color:#b0b0b0;
+    float:left;
+    width:1.39rem;
+    text-align: center;
+    height:1.19rem;
+    border:0.01rem solid #b0b0b0;
+  }
+  .reProject-headList .reProject-headItem:nth-child(4)~.reProject-headItem{
+    margin-bottom:0;
+  }
+  .reProject-headDel{
+    width:0.31rem;
+    height:0.31rem;
+    position:absolute;
+    top:-0.155rem;
+    right:-0.155rem;
+    background: url(../images/space/dete.svg) center center no-repeat;
+    background-size: 100%;
+  }
+  .reProject-headDelete{
+    width:0.31rem;
+    height:0.31rem;
+  }
+  .reProject-headItem.active .reProject-headCon{
+    opacity:1;
+  }
+  .reProject-headCon{
+    color:#fff;
+    font-size:0.16rem;
+    position:absolute;
+    width:100%;
+    text-align: center;
+    height:1.2rem;
+    line-height: 1.2rem;
+    background-color: rgba(0,0,0,.3);
+    opacity:0;
+  }
+  .reProject-title{
+    font-family: "PingFang Heavy", sans-serif;
+    font-size: 0.38rem;
+    display:inline-block;
+    height:0.88rem;
+    line-height: 0.88rem;
+    width:6.51rem;
+    background: url(../images/visit/arrow_right.svg) right center no-repeat;
+    background-size: 0.14rem 0.2rem;
+  }
+  .reProject-body{
+    padding-left:0.5rem;
+    border-top:0.16rem solid #f4f8ff;
+    background-color: #fff;
+  }
+  .reProject-con li{
+    height:0.88rem;
+    line-height: 0.88rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .reProject-address{
+    display:block;
+    width:6.51rem;
+    height:100%;
+    overflow: hidden;
+    background: url(../images/visit/arrow_right.svg) right center no-repeat,url(../images/visit/navigation.svg) 5.99rem center no-repeat;
+    background-size: 0.14rem 0.2rem,0.23rem 0.29rem;
+  }
+  .reProject-address label{
+    float:left;
+  }
+  .reProject-address .reProject-deAdd{
+    float:left;
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    padding-left:0.4rem;
+    width:4.6rem;
+    word-break:keep-all;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .reProject-con li label{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#333;
+  }
+  .reProject-con li input{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#d4d4d4;
+    width:4.56rem;
+    padding-left:0.4rem;
+    border:none;
+  }
+  .reProject-budget span{
+    margin-left:0.28rem;
+  }
+  .reProject-con li span{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#b0b0b0;
+  }
+  .reProject-foot{
+    border-top: 0.16rem solid #f4f8ff;
+  }
+  .reProject-footNav{
+    height:0.88rem;
+    line-height: 0.88rem;
+    overflow:hidden;
+    padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .reProject-footDeco{
+    padding-left:0.5rem;
+    background-color: #fff;
+  }
+  .reProject-footDeco .m-cell-box{
+    margin-bottom:0;
+    /*border-bottom:0.16rem solid #f4f8ff;*/
+    background-color: #fff;
+  }
+  .reProject-footDeco .cell-icon{
+    margin-right:-0.01rem;
+  }
+  .m-cell-box .cell-item{
+    padding-left:0;
+    height:0.88rem;
+    line-height: 0.88rem;
+    background-color: #fff;
+  }
+  .m-cell-box .cell-right{
+    padding-right:0.47rem;
+  }
+  .m-cell-box .cell-right .datetime-input{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color: #d4d4d4;
+    height:0.88rem;
+    line-height: 0.88rem;
+    width:5.02rem;
+    padding-left:0.4rem;
+    position:relative;
+    top:-0.06rem;
+    background: url(../images/visit/arrow_right.svg) right center no-repeat;
+    background-size: 0.14rem 0.2rem;
+  }
+  .reProject-date{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color: #333;
+    margin-left: -0.08rem;
+  }
+  .reProject-footNav span{
+    float:left;
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#333;
+  }
+  .reProject-footNav .switch_case{
+    float:right;
+    padding-top:0.3rem;
+    margin-right:0.49rem;
+  }
+  .switch_case input{
+    width:0.52rem;
+    height:0.32rem;
+    border-radius:0.16rem;
+  }
+  .switch_case .m-switch:after,.switch_case  .m-switch:before{
+    height:0.3rem;
+    width:0.3rem;
+    border-radius:0.15rem;
+  }
+  .switch_case  .m-switch:before{
+    width:0.5rem;
+  }
+  .reProject-footDeco>li{
+    height:0.88rem;
+    line-height: 0.88rem;
+    overflow: hidden;
+    border-top:0.01rem solid #e5e8ee;
+  }
+  .m-checkbox{
+    float:left;
+  }
+  .deco_contract{
+    float:left;
+    margin-left:0.88rem;
+    padding-top:0.2rem;
+  }
+  .deco_contract li{
+    float:left;
+    width:0.6rem;
+    height:0.46rem;
+    background: url(../images/space/reProject01.jpg) right center no-repeat;
+    background-size:cover;
+    margin-left:0.15rem;
+  }
+  .upload{
+    font-family: "PingFang Medium", sans-serif;
+    font-size: 0.28rem;
+    color:#b0b0b0;
+    float:right;
+    padding-right:0.29rem;
+    margin-right:0.49rem;
+    background: url(../images/visit/arrow_right.svg) right center no-repeat;
+    background-size: 0.14rem 0.2rem;
+  }
+  .reProject-footDeco .m-checkbox>.checkbox-icon{
+    width:0.39rem !important;
+    height:0.39rem !important;
+    vertical-align: middle;
+    border-radius:50%;
+    color:#6198d4 !important;
+  }
+  .reProject-footDeco .m-checkbox>.checkbox-text{
+    font-family: "PingFang Medium", sans-serif;
+    font-size:0.24rem;
+    color: rgb(97, 152, 212);
+  }
+  .reProject-send{
+    font-family: "PingFang Bold", sans-serif;
+    font-size:0.32rem;
+    color:#fff;
+    width:6.4rem;
+    text-align: center;
+    height:0.92rem;
+    line-height: 0.92rem;
+    margin-top:0.56rem;
+    margin-bottom:0.34rem;
+    background-color: #6198d4;
+    border-radius:0.05rem;
+    border:none;
+    outline: none;
+    margin-left:0.5rem;
+  }
+  .aRecord-look{
+    border-top: 0.16rem solid #f4f8ff;;
+  }
+</style>

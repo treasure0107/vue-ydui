@@ -1,0 +1,592 @@
+<template>
+  <div>
+    <yd-tab>
+      <yd-tab-panel label="全部" active>
+        <!--按需加载-->
+        <yd-infinitescroll :on-infinite="getAllVisit" ref="infinitescrollDemo">
+          <yd-list theme="1" slot="list">
+            <div v-for="item in list">
+              <div class="cation_head">
+                <router-link :to="{path:'/applicationDetails/'+item.vid,params:{vid:item.vid}}">
+                  <div class="cation_img">
+                    <img :src="imgurl+item.coverImgUrl" alt="">
+                  </div>
+                  <div class="cation_con">
+                    <div class="cation_tit">
+                      <p>{{item.title}}</p>
+                    </div>
+
+                    <div class="budget_area">预算: {{item.budget}} / 面积: {{item.proSize}} / 已开工{{item.startDate}}天</div>
+                    <div class="visit_hours ">参观时间 {{item.startTime}}</div>
+                  </div>
+                </router-link>
+              </div>
+              <div>
+                <div class="contact_con" v-if="item.status==1">
+                  <span class="icon_v">待参观</span>
+                  <span class="cancel_btn" @click="cancelVisit(item.vid)">取消预约</span>
+                  <span class="contact_btn"><a :href="'tel:'+item.phone">联系Ta</a></span>
+                </div>
+                <div v-if="item.status==5" class="contact_con">
+                  <span class="icon_v">待评价</span>
+                  <div @click="evaluateBtn(item.pid)">
+                    <yd-button class="contact_btn appraise_btn" size="small" type="hollow">
+                      评价
+                    </yd-button>
+                  </div>
+                </div>
+                <div class="contact_con icon_p" v-if="item.status==6">
+                  <span>已评价</span>
+                </div>
+                <div class="contact_con icon_p" v-if="item.status==3">
+                  <span>已取消</span>
+                </div>
+              </div>
+
+              <div class="main"></div>
+            </div>
+          </yd-list>
+          <!-- 数据全部加载完毕显示 -->
+          <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+          <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+          <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+        </yd-infinitescroll>
+
+      </yd-tab-panel>
+
+      <yd-tab-panel label="待参观">
+        <!--按需加载-->
+        <yd-infinitescroll :on-infinite="getWaitingToVisit" ref="infinitescrollDemo">
+          <yd-list theme="1" slot="list">
+            <div v-for="item in waitingList">
+              <div class="cation_head">
+                <router-link :to="{path:'/applicationDetails/'+item.vid,params:{vid:item.vid}}">
+                  <div class="visit_pic">
+                    <img :src="imgurl+item.coverImgUrl" alt="">
+                  </div>
+                  <div class="cation_con">
+                    <div class="cation_tit">
+                      <p>{{item.title}}</p>
+                    </div>
+
+                    <div class="budget_area">
+                      预算:{{item.budget}}/面积:{{item.proSize}}/已开工{{DateDiff(nowtime, item.startDate)}}天
+                    </div>
+                    <div class="visit_hours ">参观时间 {{item.startTime}} </div>
+                  </div>
+                </router-link>
+              </div>
+              <div class="contact_con">
+            <span class="cancel_btn" @click="cancelVisit(item.vid)" :data-vid="item.vid"
+                  :data-uid="item.uid">取消预约</span>
+                <span class="contact_btn"><a :href="'tel:'+item.phone">联系Ta</a></span>
+              </div>
+              <div class="main"></div>
+            </div>
+          </yd-list>
+          <!-- 数据全部加载完毕显示 -->
+          <span slot="doneTip">啦啦啦，啦啦啦，没有数据啦~~</span>
+          <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+          <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+        </yd-infinitescroll>
+      </yd-tab-panel>
+      <yd-tab-panel label="待评价">
+        <div v-for="item in evaluationList">
+          <div class="cation_head">
+            <router-link :to="{path:'/applicationDetails/'+item.vid,params:{vid:item.vid}}">
+              <div class="cation_con">
+                <div class="cation_tit">
+                  <p>{{item.title}}</p>
+                </div>
+
+                <div class="budget_area">
+                  预算:{{item.budget}}/面积:{{item.proSize}}/已开工{{DateDiff(nowtime, item.startDate)}}天
+                </div>
+                <div class="visit_hours ">参观时间 {{item.startTime}}</div>
+              </div>
+              <div class="cation_img">
+                <img :src="imgurl+item.coverImgUrl" alt="">
+              </div>
+            </router-link>
+          </div>
+          <div class="contact_con">
+            <div @click="evaluateBtn(item.pid)">
+              <yd-button class="contact_btn appraise_btn" size="small" type="hollow">
+                评价
+              </yd-button>
+            </div>
+
+          </div>
+          <!--<v-comment :rid="item.rid" :isEdit="isEdit" :visitUid="visitUid" :pid="item.pid" @isfeedback="feedbackIs"></v-comment>-->
+          <div class="main"></div>
+        </div>
+      </yd-tab-panel>
+    </yd-tab>
+    <!--评价的弹窗-->
+    <div>
+      <yd-popup v-model="commentModel" position="center" width="90%" class="appraise_con">
+        <div class="construct_t">
+          <p class="construct_title">施工工艺</p>
+          <yd-cell-item class="construct_item">
+            <yd-rate slot="left" v-model="rateNum" activeColor="#6198d4"></yd-rate>
+            <!--<span slot="right">值是: {{rateNum}}</span>-->
+          </yd-cell-item>
+        </div>
+        <div class="construct_t">
+          <p class="construct_title">师傅态度</p>
+          <div class="attitude_m" v-model="mannerLevel">
+            <span v-bind:class="{ ardour_m:isard ,ardour_mt:!isard}" @click="ardour_m">热情</span>
+            <span v-bind:class="{ friendly_m:isfriend,friendly_mt:!isfriend}" @click="friendly_m">友善</span>
+            <span v-bind:class="{ same_as:isas,same_ast:!isas}" @click="sameAs">一般</span>
+          </div>
+        </div>
+        <div class="text_area">
+          <yd-cell-item>
+            <yd-textarea slot="right" placeholder="写几句评价吧!" maxlength="100" v-model="textArea"></yd-textarea>
+          </yd-cell-item>
+        </div>
+        <p style="text-align: center;">
+          <yd-button-group>
+            <yd-button class="button_sure" size="large" type="primary" @click.native="proEvaluateBtn">确定
+            </yd-button>
+          </yd-button-group>
+        </p>
+      </yd-popup>
+    </div>
+  </div>
+</template>
+
+<script>
+  import {Tab, TabPanel} from 'vue-ydui/dist/lib.rem/tab';
+  /* 使用px：import {CellGroup, CellItem} from 'vue-ydui/dist/lib.px/cell'; */
+  //  Vue.component(Tab.name, Tab);
+  //  Vue.component(TabPanel.name, TabPanel);
+  import apicom from '../config/api.js'
+
+  export default {
+    data() {
+      return {
+        commentModel: false,
+        isard: false,
+        isfriend: true,
+        isas: true,
+        rateNum: 5,
+        list: [],
+        waitingList: [],
+        evaluationList: [],
+        imgurl: apicom.imghost,
+        nowtime: '',
+        page: 1,
+        pageSize: 10,
+        textArea: '',
+        mannerLevel: 3,
+        pid: ''
+      };
+    },
+    created() {
+      this.getWaitingToVisit();
+      this.getAllVisit();
+      this.getPendingEvaluation();
+      this.ardour_m;
+      this.friendly_m;
+      this.sameAs;
+      var date = Date.parse(new Date());
+      this.nowtime = date
+    },
+    methods: {
+      evaluateBtn(pid) {
+//        @click.native="commentModel = true"
+        this.commentModel = true;
+        this.pid = pid;
+      },
+      //全部
+      getAllVisit() {
+        //拼接url
+        const postUrl = apicom.apihost + 'visit/getVisitByWait';
+        //请求数据
+        this.$http.post(postUrl, {
+          uid: 100000,
+          startRow: this.page,
+          rowCount: this.pageSize
+        }, {emulateJSON: true}).then(res => {
+//          console.log(res.body.obj.visitList);
+//          this.allList = res.body.obj.visitList;
+          const _list = res.body.obj.visitList;
+          this.list = [...this.list, ..._list];
+          if (_list.length < this.pageSize - 1 || this.page == 3) {
+            /* 所有数据加载完毕 */
+            this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+            return;
+          }
+          /* 单次请求数据完毕 */
+          this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+          this.page++;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //待参观 status=4
+      getWaitingToVisit() {
+        //拼接url
+        const postUrl = apicom.apihost + 'visit/getVisitByWait';
+        //请求数据
+        this.$http.post(postUrl, {
+          uid: 100000,
+          startRow: this.page,
+          rowCount: this.pageSize,
+          status: 4
+        }, {emulateJSON: true}).then(res => {
+//          this.waitingList = res.body.obj.visitList;
+          const _list = res.body.obj.visitList;
+          this.waitingList = [...this.waitingList, ..._list];
+          if (_list.length < this.pageSize - 1 || this.page == 3) {
+            /* 所有数据加载完毕 */
+            this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+            return;
+          }
+          /* 单次请求数据完毕 */
+          this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+          this.page++;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //待评价 status=5
+      getPendingEvaluation() {
+        //拼接url   const getUrl = apicom.apihost + 'visit/getVisitByWait?uid=100000&startRow=0&rowCount=6';
+        const postUrl = apicom.apihost + 'visit/getVisitByWait';
+        //请求数据   localStorage.uid
+        this.$http.post(postUrl, {
+          uid: 100000,
+          startRow: 0,
+          rowCount: 6,
+          status: 5
+        }, {emulateJSON: true}).then(res => {
+//          console.log(res.body.obj.visitList);
+          this.evaluationList = res.body.obj.visitList;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //    取消预约
+      cancelVisit(vid) {
+//        const canUrl = apicom.apihost + 'visit/cancelVisit?uid=100000&vid=' + vid;
+        const canUrl = apicom.apihost + 'visit/cancelVisit';
+        this.$http.post(canUrl,{
+          uid:100000,
+          vid:vid
+        },{emulateJSON:true}).then(res => {
+//          console.log(res);
+          this.$router.go(0);  //刷新页面
+        }, err => {
+          console.log(err);
+        })
+      },
+//      评价 (点击时间)
+      ardour_m() {
+        this.isard = !this.isard;
+        this.isfriend = true;
+        this.isas = true;
+        if (this.isard) {
+          this.mannerLevel = 3;
+        } else {
+          this.mannerLevel = 3;
+        }
+      },
+      friendly_m() {
+        if (this.isfriend) {
+          this.mannerLevel = 2;
+        } else {
+          this.mannerLevel = 3;
+        }
+        this.isfriend = !this.isfriend
+        this.isard = true;
+        this.isas = true;
+      },
+      sameAs() {
+        this.isas = !this.isas
+        this.isard = true;
+        this.isfriend = true;
+        if (!this.isas) {
+          this.mannerLevel = 1;
+        } else {
+          this.mannerLevel = 3;
+        }
+      },
+      proEvaluateBtn() {
+//        console.log(this.rateNum);
+//        console.log(this.mannerLevel);
+//        console.log(this.pid);
+        if (this.textArea == "") {
+          alert("请您写几句评价吧!");
+          return false;
+        }
+        const postUrl = apicom.apihost + 'visit/proEvaluate';
+        this.$http.post(postUrl, {
+          pid: this.pid,                    //项目id
+          constructLevel: this.rateNum,    //施工工艺评分
+          mannerLevel: this.mannerLevel,  //态度评分
+          content: this.textArea,        //评价内容
+          uid: 100000                   //评价人ID
+        }, {emulateJSON: true}).then(res => {
+//          console.log(res);
+          alert(res.body.msg);
+          this.commentModel = false;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //计算天数差的函数，通用
+      DateDiff(sDate1, sDate2) {//sDate1是时间戳，sDate2是2006-12-18格式
+        var aDate, oDate1, oDate2, iDays;
+        oDate1 = sDate1;
+        aDate = sDate2.split("-");
+        oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]);
+        iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);    //把相差的毫秒数转换为天数
+        return iDays
+      }
+    }
+
+  }
+</script>
+
+<style scoped>
+  .icon_v{
+    font-size: 0.24rem;
+    color:#ff5757;
+  }
+  .icon_p{
+    font-size: 0.24rem;
+    color:#9d9ea0;
+  }
+  .main {
+    width: 100%;
+    height: 0.22rem;
+    background-color: #f4f8ff;
+  }
+
+  .cation_head {
+    padding-top: 0.46rem;
+    background-color: #fff;
+    overflow: hidden;
+    padding-bottom: 0.46rem;
+    border-bottom: 1px solid #e5e8ee;
+    /*margin-top: 0.22rem;*/
+  }
+
+  /*左边的图片*/
+  .cation_img, .visit_pic {
+    width: 1.8rem;
+    height: 1.8rem;
+    background-color: #666;
+    float: left;
+    margin-left: 0.46rem;
+    border-radius: 0.06rem;
+  }
+
+  .cation_img {
+    margin-right: 0;
+  }
+
+  .cation_img img, .visit_pic img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cation_con {
+    width: 4.4rem;
+    float: left;
+    margin-left: 0.46rem;
+  }
+
+  .cation_tit p {
+    font-size: 0.32rem;
+    font-family: 'PingFang Medium';
+    color: #333;
+  }
+
+  .budget_area, .visit_hours {
+    font-size: 0.22rem;
+    font-family: 'PingFang Regular';
+    color: #333;
+  }
+
+  .budget_area {
+    padding-top: 0.32rem;
+  }
+
+  .visit_hours {
+    padding-top: 0.26rem;
+  }
+
+  .contact_con {
+    height: 0.88rem;
+    background-color: #fff;
+    position: relative;
+  }
+
+  .contact_con span {
+    position: absolute;
+    top: 0.16rem;
+    width: 1.46rem;
+    height: 0.56rem;
+    line-height: 0.56rem;
+    text-align: center;
+    font-size: 0.24rem;
+    font-family: 'PingFang Regular';
+    border-radius: 0.04rem;
+  }
+
+  .cancel_btn {
+    right: 2.2rem;
+    border: 0.01rem solid #ccc;
+    color: #9d9ea0;
+  }
+
+  .contact_btn {
+    right: 0.5rem;
+    border: 0.01rem solid #6198d4;
+    color: #6198d4;
+  }
+
+  .tab-nav .tab-nav-item a {
+    font-size: 0.26rem;
+    color: #bababa;
+    font-family: 'PingFang Medium';
+  }
+
+  .tab-nav-item:not(:last-child):after {
+    border-right: 1px solid #e5e8ee;
+  }
+
+  .tab-nav .tab-active a {
+    color: #6198d4;
+  }
+
+  .tab-nav-item.tab-active:before {
+    background-color: #6198d4;
+  }
+
+  /*--弹窗--*/
+  .btn {
+    padding: 0;
+  }
+
+  .contact_con .appraise_btn {
+    position: absolute;
+    top: 0.16rem;
+    width: 1.46rem;
+    height: 0.56rem;
+    line-height: 0.56rem;
+    text-align: center;
+    font-size: 0.24rem;
+    font-family: 'PingFang Regular';
+    border-radius: 0.04rem;
+    right: 0.5rem;
+    border: 0.01rem solid #6198d4;
+    color: #6198d4;
+  }
+
+  .tab-nav li.tab-nav-item a {
+    font-size: 0.26rem;
+    color: #bababa;
+    font-family: 'PingFang Medium';
+  }
+
+  .construct_t {
+    padding-top: 0.56rem;
+    padding-left: 0.46rem;
+  }
+
+  .construct_title {
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+  }
+
+  .construct_item {
+    padding-left: 0;
+  }
+
+  .button_sure {
+    height: 0.92rem;
+    font-size: 0.32rem;
+    background-color: #6198d4;
+    font-family: 'PingFang Bold';
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    border-radius: 0.06rem;
+  }
+
+  .attitude_m {
+    font-size: 0.28rem;
+    color: #a5a5a7;
+    font-family: 'PingFang Medium';
+    margin-top: 0.3rem;
+    margin-bottom: 0.56rem;
+    position: relative;
+  }
+
+  .ardour_m, .ardour_mt {
+    margin-left: 0.6rem;
+  }
+
+  .friendly_m, .friendly_mt {
+    margin: 0 1.34rem;
+  }
+
+  .text_area {
+    margin: 0 0.46rem;
+    border: 0.01rem solid #e5e8ee;
+  }
+
+  .ardour_m::before {
+    position: absolute;
+    left: 0.01rem;
+    top: -0.06rem;
+    content: url(../images/visit/hollowg.svg);
+    width: 0.5rem;
+  }
+
+  .ardour_mt::before {
+    position: absolute;
+    left: 0.01rem;
+    top: -0.06rem;
+    content: url(../images/visit/solidg.svg);
+    width: 0.5rem;
+  }
+
+  .friendly_m::before {
+    position: absolute;
+    left: 2.02rem;
+    top: -0.06rem;
+    content: url(../images/visit/hollows.svg);
+    width: 0.5rem;
+  }
+
+  .friendly_mt::before {
+    position: absolute;
+    left: 2.02rem;
+    top: -0.06rem;
+    content: url(../images/visit/solids.svg);
+    width: 0.5rem;
+  }
+
+  .same_as::before {
+    position: absolute;
+    left: 4rem;
+    top: -0.06rem;
+    content: url(../images/visit/hollowd.svg);
+    width: 0.5rem;
+  }
+
+  .same_ast::before {
+    position: absolute;
+    left: 4rem;
+    top: -0.06rem;
+    content: url(../images/visit/solidd.svg);
+    width: 0.5rem;
+  }
+
+
+</style>

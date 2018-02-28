@@ -1,0 +1,136 @@
+<template>
+    <div class="reProject">
+      <div class="reProject-head">
+        <textarea placehold="项目状态介绍"></textarea>
+        <ul class="reProject-headList">
+          <li class="reProject-headItem">
+            <svg class="reProject-headDelete"  x="0px" y="0px" viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
+                <g>
+                  <path class="st0" d="M15,0C6.7,0,0,6.7,0,15c0,8.3,6.7,15,15,15s15-6.7,15-15C30,6.7,23.3,0,15,0z M22.5,17h-15c-1.1,0-2-0.9-2-2
+                    c0-1.1,0.9-2,2-2h15c1.1,0,2,0.9,2,2C24.5,16.1,23.6,17,22.5,17z"/>
+                  <path class="st1" d="M22.5,13h-15c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2C24.5,13.9,23.6,13,22.5,13z"/>
+                </g>
+            </svg>
+            <div class="reProject-headCon">设为封面</div>
+          </li>
+          <li class="reProject-headItem">
+            <svg class="reProject-headDelete"  x="0px" y="0px" viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
+                <g>
+                  <path class="st0" d="M15,0C6.7,0,0,6.7,0,15c0,8.3,6.7,15,15,15s15-6.7,15-15C30,6.7,23.3,0,15,0z M22.5,17h-15c-1.1,0-2-0.9-2-2
+                    c0-1.1,0.9-2,2-2h15c1.1,0,2,0.9,2,2C24.5,16.1,23.6,17,22.5,17z"/>
+                  <path class="st1" d="M22.5,13h-15c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2C24.5,13.9,23.6,13,22.5,13z"/>
+                </g>
+            </svg>
+            <div class="reProject-headCon">设为封面</div>
+          </li>
+          <li class="reProject-headItem">
+            <svg class="reProject-headDelete"  x="0px" y="0px" viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
+                <g>
+                  <path class="st0" d="M15,0C6.7,0,0,6.7,0,15c0,8.3,6.7,15,15,15s15-6.7,15-15C30,6.7,23.3,0,15,0z M22.5,17h-15c-1.1,0-2-0.9-2-2
+                    c0-1.1,0.9-2,2-2h15c1.1,0,2,0.9,2,2C24.5,16.1,23.6,17,22.5,17z"/>
+                  <path class="st1" d="M22.5,13h-15c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2C24.5,13.9,23.6,13,22.5,13z"/>
+                </g>
+            </svg>
+            <div class="reProject-headCon">设为封面</div>
+          </li>
+          <li class="reProject-headItem">
+            <svg class="reProject-headDelete"  x="0px" y="0px" viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
+                <g>
+                  <path class="st0" d="M15,0C6.7,0,0,6.7,0,15c0,8.3,6.7,15,15,15s15-6.7,15-15C30,6.7,23.3,0,15,0z M22.5,17h-15c-1.1,0-2-0.9-2-2
+                    c0-1.1,0.9-2,2-2h15c1.1,0,2,0.9,2,2C24.5,16.1,23.6,17,22.5,17z"/>
+                  <path class="st1" d="M22.5,13h-15c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2C24.5,13.9,23.6,13,22.5,13z"/>
+                </g>
+            </svg>
+            <div class="reProject-headCon">设为封面</div>
+          </li>
+          <li class="reProject-headItem">
+            <svg class="reProject-headDelete"  x="0px" y="0px" viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
+                <g>
+                  <path class="st0" d="M15,0C6.7,0,0,6.7,0,15c0,8.3,6.7,15,15,15s15-6.7,15-15C30,6.7,23.3,0,15,0z M22.5,17h-15c-1.1,0-2-0.9-2-2
+                    c0-1.1,0.9-2,2-2h15c1.1,0,2,0.9,2,2C24.5,16.1,23.6,17,22.5,17z"/>
+                  <path class="st1" d="M22.5,13h-15c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2C24.5,13.9,23.6,13,22.5,13z"/>
+                </g>
+            </svg>
+            <div class="reProject-headCon">设为封面</div>
+          </li>
+          <li class="reProject-headItem">
+            <svg class="reProject-headDelete"  x="0px" y="0px" viewBox="0 0 30 30" style="enable-background:new 0 0 30 30;" xml:space="preserve">
+                <g>
+                  <path class="st0" d="M15,0C6.7,0,0,6.7,0,15c0,8.3,6.7,15,15,15s15-6.7,15-15C30,6.7,23.3,0,15,0z M22.5,17h-15c-1.1,0-2-0.9-2-2
+                    c0-1.1,0.9-2,2-2h15c1.1,0,2,0.9,2,2C24.5,16.1,23.6,17,22.5,17z"/>
+                  <path class="st1" d="M22.5,13h-15c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h15c1.1,0,2-0.9,2-2C24.5,13.9,23.6,13,22.5,13z"/>
+                </g>
+            </svg>
+            <div class="reProject-headCon">设为封面</div>
+          </li>
+        </ul>
+        <router-link to="" class="space-proTrack"></router-link>
+      </div>
+    </div>
+</template>
+
+<script>
+  export default {
+  }
+</script>
+<style>
+  .st0{fill:#FF5D5D;}
+  .st1{fill:#FFFFFF;}
+  .reProject-head{
+      padding-left:0.5rem;
+  }
+  .reProject-head textarea{
+    font-family: "PingFang Medium", sans-serif;
+    font-size:0.26rem;
+    color:#9d9ea0;
+    text-indent:0.07rem;
+    width:6.51rem;
+    height: 1.05rem;
+    overflow-y:scroll ;
+    margin-top:0.28rem;
+    border:none;
+    margin-bottom:0.235rem;
+  }
+  .reProject-head textarea::-webkit-scrollbar{
+    display: none;
+   }
+  .reProject-headList:after{
+    content:"";
+    display:block;
+    clear:both;
+  }
+  .reProject-headList{
+    padding-bottom:0.2rem;
+    border-bottom:0.01rem solid #e5e8ee;
+  }
+  .reProject-headItem{
+    float:left;
+    width:1.4rem;
+    height:1.2rem;
+    background: url(../images/space/reProject.jpg) center center no-repeat;
+    background-size: cover;
+    position:relative;
+    margin-right:0.22rem;
+    margin-bottom:0.22rem;
+  }
+  .reProject-headList .reProject-headItem:nth-child(4)~.reProject-headItem{
+    margin-bottom:0;
+  }
+  .reProject-headDelete{
+    width:0.31rem;
+    height:0.31rem;
+    position:absolute;
+    top:-0.155rem;
+    right:-0.155rem;
+  }
+  .reProject-headCon{
+    color:#fff;
+    font-size:0.16rem;
+    position:absolute;
+    width:100%;
+    text-align: center;
+    height:1.2rem;
+    line-height: 1.2rem;
+    background-color: rgba(0,0,0,.3);
+  }
+</style>

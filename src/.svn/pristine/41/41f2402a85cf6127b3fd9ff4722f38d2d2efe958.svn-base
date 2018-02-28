@@ -1,0 +1,367 @@
+<template>
+  <div>
+    <yd-tab>
+      <yd-tab-panel label="全部">
+        <div v-for="item in allList">
+          <div class="cation_head">
+            <div class="cation_img">
+              <img :src="imgurl+item.coverImgUrl" alt="">
+            </div>
+            <div class="cation_con">
+              <div class="cation_tit">
+                <p>{{item.title}}</p>
+              </div>
+
+              <div class="budget_area">预算: {{item.budget}} / 面积: {{item.proSize}} / 已开工{{item.startDate}}天</div>
+              <div class="visit_hours ">参观时间 {{item.startTime}}</div>
+            </div>
+          </div>
+          <div class="contact_con">
+            <span class="cancel_btn" @click="cancelVisit(item.vid)">取消预约</span>
+            <span class="contact_btn"><a :href="'tel:'+item.phone">联系Ta</a></span>
+          </div>
+          <div class="main"></div>
+        </div>
+      </yd-tab-panel>
+      <yd-tab-panel label="待参观">
+        <div v-for="item in waitingList">
+          <div class="cation_head">
+            <router-link v-bind="{to:'/applicationDetails/'+item.pid}">
+              <div class="visit_pic">
+                <img :src="imgurl+item.coverImgUrl" alt="">
+              </div>
+              <div class="cation_con">
+                <div class="cation_tit">
+                  <p>{{item.title}}</p>
+                </div>
+
+                <div class="budget_area">预算: {{item.budget}} / 面积: {{item.proSize}} / 已开工{{item.startDate}}</div>
+                <div class="visit_hours ">参观时间 {{item.startTime}} </div>
+              </div>
+            </router-link>
+          </div>
+          <div class="contact_con">
+            <span class="cancel_btn" @click="cancelVisit(item.vid)" :data-vid="item.vid"
+                  :data-uid="item.uid">取消预约</span>
+            <span class="contact_btn"><a :href="'tel:'+item.phone">联系Ta</a></span>
+          </div>
+          <div class="main"></div>
+        </div>
+      </yd-tab-panel>
+      <yd-tab-panel label="待评价" active>
+        <div v-for="item in evaluationList">
+          <div class="cation_head">
+            <div class="cation_con">
+              <div class="cation_tit">
+                <p>{{item.title}}</p>
+              </div>
+
+              <div class="budget_area">预算: {{item.budget}} / 面积: {{item.proSize}} / 已开工{{item.startDate}}天</div>
+              <div class="visit_hours ">参观时间 {{item.startTime}}</div>
+            </div>
+            <div class="cation_img">
+              <img :src="imgurl+item.coverImgUrl" alt="">
+            </div>
+          </div>
+          <div class="contact_con">
+
+            <yd-button class="contact_btn appraise_btn" size="small" type="hollow" @click.native="show1 = true">评价
+            </yd-button>
+          </div>
+          <div class="main"></div>
+        </div>
+      </yd-tab-panel>
+    </yd-tab>
+    <!--评价的弹窗-->
+    <div>
+      <yd-popup v-model="show1" position="center" width="90%" class="appraise_con">
+        <div class="construct_t">
+          <p class="construct_title">施工工艺</p>
+          <yd-cell-item class="construct_item">
+            <yd-rate slot="left" v-model="rate1"></yd-rate>
+            <span slot="right">值是: 0</span>
+          </yd-cell-item>
+        </div>
+        <div class="construct_t">
+          <p class="construct_title">师傅态度</p>
+          <div class="attitude_m">
+            <span class="ardour_m">热情</span>
+            <span class="friendly_m">友善</span>
+            <span>一般</span>
+          </div>
+        </div>
+        <div class="text_area">
+          <yd-cell-item>
+            <yd-textarea slot="right" placeholder="写几句评价吧!" maxlength="100"></yd-textarea>
+          </yd-cell-item>
+        </div>
+        <p style="text-align: center;">
+          <yd-button-group>
+            <yd-button class="button_sure" size="large" type="primary" @click.native="show1 = false">确定
+            </yd-button>
+          </yd-button-group>
+        </p>
+      </yd-popup>
+    </div>
+  </div>
+</template>
+
+
+<script>
+  //  import Vue from 'vue';
+  import {Tab, TabPanel} from 'vue-ydui/dist/lib.rem/tab';
+  /* 使用px：import {CellGroup, CellItem} from 'vue-ydui/dist/lib.px/cell'; */
+
+  //  Vue.component(Tab.name, Tab);
+  //  Vue.component(TabPanel.name, TabPanel);
+  import apicom from '../config/api.js'
+
+  export default {
+    data() {
+      return {
+        show1: false,
+        rate1: 0,
+        allList: [],
+        waitingList: [],
+        evaluationList: [],
+        imgurl: apicom.imghost
+      };
+    },
+    created() {
+      this.getWaitingToVisit();
+      this.getAllVisit();
+      this.getPendingEvaluation();
+    },
+    methods: {
+      //全部
+      getAllVisit() {
+        //拼接url
+        const getUrl = apicom.apihost + 'visit/getVisitByWait?uid=100000&startRow=0&rowCount=6';
+        //请求数据
+        this.$http.get(getUrl).then(res => {
+          console.log(res.body.obj.visitList);
+          this.allList = res.body.obj.visitList;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //待参观 status=4
+      getWaitingToVisit() {
+        //拼接url
+        const getUrl = apicom.apihost + 'visit/getVisitByWait?uid=100000&startRow=0&rowCount=6&status=4';
+//        const getUrl = apicom.apihost + 'visit/getVisitByWait';
+//        this.$http.post(getUrl,{uid:100000,startRow:0,rowCount:6,status:1}).then(res =>{
+        //请求数据
+        this.$http.get(getUrl).then(res => {
+//          console.log(res.body.obj.visitList);
+          this.waitingList = res.body.obj.visitList;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //待评价 status=5
+      getPendingEvaluation(){
+        //拼接url
+        const getUrl = apicom.apihost + 'visit/getVisitByWait?uid=100000&startRow=0&rowCount=6';
+        //请求数据
+        this.$http.get(getUrl).then(res => {
+          console.log(res.body.obj.visitList);
+          this.evaluationList = res.body.obj.visitList;
+        }, err => {
+          console.log(err);
+        })
+      },
+      //    取消预约
+      cancelVisit(vid) {
+        const canUrl = apicom.apihost + 'visit/cancelVisit?uid=100000&vid=' + vid;
+        this.$http.get(canUrl).then(res => {
+          console.log(res);
+          alert("取消预约成功")
+        }, err => {
+          console.log(err);
+        })
+      }
+    }
+
+  }
+</script>
+
+<style type="text/css">
+  .main {
+    width: 100%;
+    height: 0.22rem;
+    background-color: #f4f8ff;
+  }
+
+  .cation_head {
+    padding-top: 0.46rem;
+    background-color: #fff;
+    overflow: hidden;
+    padding-bottom: 0.46rem;
+    border-bottom: 1px solid #e5e8ee;
+    /*margin-top: 0.22rem;*/
+  }
+
+  /*左边的图片*/
+  .cation_img, .visit_pic {
+    width: 1.8rem;
+    height: 1.8rem;
+    background-color: #666;
+    float: left;
+    margin-left: 0.46rem;
+    border-radius: 0.06rem;
+  }
+
+  .cation_img img, .visit_pic img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cation_con {
+    width: 4.4rem;
+    float: left;
+    margin-left: 0.46rem;
+  }
+
+  .cation_tit p {
+    font-size: 0.32rem;
+    font-family: 'PingFang Medium';
+    color: #333;
+  }
+
+  .budget_area, .visit_hours {
+    font-size: 0.22rem;
+    font-family: 'PingFang Regular';
+    color: #333;
+  }
+
+  .budget_area {
+    padding-top: 0.32rem;
+  }
+
+  .visit_hours {
+    padding-top: 0.26rem;
+  }
+
+  .contact_con {
+    height: 0.88rem;
+    background-color: #fff;
+    position: relative;
+  }
+
+  .contact_con span {
+    position: absolute;
+    top: 0.16rem;
+    width: 1.46rem;
+    height: 0.56rem;
+    line-height: 0.56rem;
+    text-align: center;
+    font-size: 0.24rem;
+    font-family: 'PingFang Regular';
+    border-radius: 0.04rem;
+  }
+
+  .cancel_btn {
+    right: 2.2rem;
+    border: 0.01rem solid #ccc;
+    color: #9d9ea0;
+  }
+
+  .contact_btn {
+    right: 0.5rem;
+    border: 0.01rem solid #6198d4;
+    color: #6198d4;
+  }
+
+  .tab-nav .tab-nav-item a {
+    font-size: 0.26rem;
+    color: #bababa;
+    font-family: 'PingFang Medium';
+  }
+
+  .tab-nav-item:not(:last-child):after {
+    border-right: 1px solid #e5e8ee;
+  }
+
+  .tab-nav .tab-active a {
+    color: #6198d4;
+  }
+
+  .tab-nav-item.tab-active:before {
+    background-color: #6198d4;
+  }
+
+  /*--弹窗--*/
+  .btn {
+    padding: 0;
+  }
+
+  .contact_con .appraise_btn {
+    position: absolute;
+    top: 0.16rem;
+    width: 1.46rem;
+    height: 0.56rem;
+    line-height: 0.56rem;
+    text-align: center;
+    font-size: 0.24rem;
+    font-family: 'PingFang Regular';
+    border-radius: 0.04rem;
+    right: 0.5rem;
+    border: 0.01rem solid #6198d4;
+    color: #6198d4;
+  }
+
+  .tab-nav li.tab-nav-item a {
+    font-size: 0.26rem;
+    color: #bababa;
+    font-family: 'PingFang Medium';
+  }
+
+  .construct_t {
+    padding-top: 0.56rem;
+    padding-left: 0.46rem;
+  }
+
+  .construct_title {
+    font-size: 0.28rem;
+    color: #333;
+    font-family: 'PingFang Medium';
+  }
+
+  .construct_item {
+    padding-left: 0;
+  }
+
+  .button_sure {
+    height: 0.92rem;
+    font-size: 0.32rem;
+    background-color: #6198d4;
+    font-family: 'PingFang Bold';
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    border-radius: 0.06rem;
+  }
+
+  .attitude_m {
+    font-size: 0.28rem;
+    color: #a5a5a7;
+    font-family: 'PingFang Medium';
+    margin-top: 0.3rem;
+    margin-bottom: 0.56rem;
+  }
+
+  .ardour_m {
+    margin-left: 0.6rem;
+  }
+
+  .friendly_m {
+    margin: 0 1.34rem;
+  }
+
+  .text_area {
+    margin: 0 0.46rem;
+    border: 0.01rem solid #e5e8ee;
+  }
+
+
+</style>
